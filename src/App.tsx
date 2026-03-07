@@ -1,69 +1,41 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 
-import Home from "./pages/Home";
-import Dashboard from "./components/Dashboard";
-import MemberInfo from "./pages/MemberInfo";
-import LoginForm from "./components/LoginForm";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MainLayout from "./layouts/MainLayout";
 
-function AppRoutes() {
-  const { isAuthenticated } = useAuth();
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import MemberInfo from "./pages/MemberInfo";
+import Dashboard from "./components/Dashboard";
 
-  return (
-    <Routes>
-      {/* Login page */}
-      <Route
-        path="/login"
-        element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginForm />
-        }
-      />
-
-      {/* Protected routes */}
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/member/:id"
-        element={
-          <ProtectedRoute>
-            <MemberInfo />
-          </ProtectedRoute>
-        }
-      />
-
-      {/* fallback */}
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
-  );
-}
-
-const App: React.FC = () => {
+function App() {
   return (
     <AuthProvider>
       <Router>
-        <AppRoutes />
+        <Routes>
+
+          {/* public */}
+          <Route path="/login" element={<Login />} />
+
+          {/* protected */}
+          <Route element={<ProtectedRoute />}>
+
+            <Route element={<MainLayout />}>
+
+              <Route path="/" element={<Home />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/member/:id" element={<MemberInfo />} />
+
+            </Route>
+
+          </Route>
+
+        </Routes>
       </Router>
     </AuthProvider>
   );
-};
+}
 
 export default App;
 // import React from "react";

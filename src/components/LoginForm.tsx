@@ -34,7 +34,7 @@ const LoginForm = () => {
 
       login(res.data.token);
 
-      navigate("/");
+      navigate("/dashboard");
     } catch {
       setError("Invalid login credentials");
     }
