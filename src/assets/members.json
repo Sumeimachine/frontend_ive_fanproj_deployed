@@ -1,0 +1,32 @@
+[
+  {
+    "id": "yujin",
+    "name": "Yujin",
+    "photoUrl": "/images/members/yujin.jpg"
+  },
+  {
+    "id": "wonyoung",
+    "name": "Wonyoung",
+    "photoUrl": "/images/members/wonyoung.jpg"
+  },
+  {
+    "id": "liz",
+    "name": "Liz",
+    "photoUrl": "/images/members/liz.jpg"
+  },
+  {
+    "id": "gaeul",
+    "name": "Gaeul",
+    "photoUrl": "/images/members/gaeul.jpg"
+  },
+  {
+    "id": "rei",
+    "name": "Rei",
+    "photoUrl": "/images/members/rei.jpg"
+  },
+  {
+    "id": "leeseo",
+    "name": "Leeseo",
+    "photoUrl": "/images/members/leeseo.jpg"
+  }
+]

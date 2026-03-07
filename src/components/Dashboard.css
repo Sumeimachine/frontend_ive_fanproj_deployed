@@ -1,0 +1,137 @@
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #0d0d0d;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.video-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 900px) {
+  .video-section {
+    flex-direction: row;
+  }
+}
+
+.video-card {
+  flex: 1;
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 20px;
+  text-decoration: none;
+  color: white;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.video-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.video-card img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.video-card h2 {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.video-card p {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.sort-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.sort-buttons button {
+  background-color: #1f1f1f;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.sort-buttons button:hover {
+  background-color: #2c2c2c;
+}
+
+.sort-buttons .active {
+  background-color: #7e3ff2;
+}
+
+.chart-container {
+  background: #1a1a1a;
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 40px;
+}
+
+.chart-container h2 {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.dropdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 800px) {
+  .dropdowns {
+    flex-direction: row;
+  }
+}
+
+.dropdowns select {
+  flex: 1;
+  padding: 8px;
+  background: #0d0d0d;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.chart {
+  width: 100%;
+  height: 350px;
+}
