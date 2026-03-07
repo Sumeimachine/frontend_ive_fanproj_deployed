@@ -1,6 +1,6 @@
 import { useState } from "react";
-import api from "../services/Api";
-import { useAuth } from "../context/authContext";
+import api from "../services/src/services/api";
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 interface LoginData {
