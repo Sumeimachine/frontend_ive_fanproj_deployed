@@ -14,23 +14,17 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-
           {/* public */}
           <Route path="/login" element={<Login />} />
 
           {/* protected */}
           <Route element={<ProtectedRoute />}>
-
             <Route element={<MainLayout />}>
-
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/member/:id" element={<MemberInfo />} />
-
             </Route>
-
           </Route>
-
         </Routes>
       </Router>
     </AuthProvider>

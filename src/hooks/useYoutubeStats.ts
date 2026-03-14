@@ -18,7 +18,7 @@ export const useYoutubeStats = (apiKey: string) => {
     const fetchStats = async () => {
       try {
         const songs = (await import("../assets/songs.json")).default;
-        
+
         const results = await Promise.all(
           songs.map(async (song: { name: string; youtubeId: string }) => {
             const res = await axios.get(
@@ -29,7 +29,7 @@ export const useYoutubeStats = (apiKey: string) => {
                   id: song.youtubeId,
                   key: apiKey,
                 },
-              }
+              },
             );
 
             const data = res.data.items[0].statistics;
@@ -40,7 +40,7 @@ export const useYoutubeStats = (apiKey: string) => {
               likes: Number(data.likeCount || 0),
               comments: Number(data.commentCount || 0),
             };
-          })
+          }),
         );
 
         setStats(results);

@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
           const song = IVE_SONGS.find((s) => s.name === songName)!;
           try {
             const res = await axios.get(
-              `${import.meta.env.VITE_API_URL}/Youtube/trends?videoIds=${song.youtubeId}`
+              `${import.meta.env.VITE_API_URL}/Youtube/trends?videoIds=${song.youtubeId}`,
             );
             const data = (res.data as any)[0] || {};
             return {
@@ -73,11 +73,13 @@ const Dashboard: React.FC = () => {
               youtubeId: song.youtubeId,
             };
           }
-        })
+        }),
       );
 
       setMetrics((prev) => {
-        const otherMetrics = prev.filter((m) => !selectedSongs.includes(m.song));
+        const otherMetrics = prev.filter(
+          (m) => !selectedSongs.includes(m.song),
+        );
         return [...otherMetrics, ...updatedMetrics];
       });
     } catch (err) {
@@ -88,7 +90,8 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const getThumbnail = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+  const getThumbnail = (id: string) =>
+    `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
   // react-select options
   const songOptions = IVE_SONGS.map((s) => ({ value: s.name, label: s.name }));
@@ -103,7 +106,10 @@ const Dashboard: React.FC = () => {
           youtubeId: song.youtubeId,
         }));
 
-  const comparisonData = songA && songB ? songsToShow.filter((m) => [songA, songB].includes(m.song)) : [];
+  const comparisonData =
+    songA && songB
+      ? songsToShow.filter((m) => [songA, songB].includes(m.song))
+      : [];
 
   return (
     <Box
@@ -124,10 +130,19 @@ const Dashboard: React.FC = () => {
           IVE YouTube Metrics Dashboard
         </Heading>
 
-        {error && <Text color="red.400" mb={4}>{error}</Text>}
+        {error && (
+          <Text color="red.400" mb={4}>
+            {error}
+          </Text>
+        )}
 
         {/* Searchable Dropdowns */}
-        <Stack direction={{ base: "column", md: "row" }} spacing={4} justify="center" mb={8}>
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          spacing={4}
+          justify="center"
+          mb={8}
+        >
           <Box maxW="300px">
             <ReactSelect
               options={songOptions}
@@ -142,7 +157,7 @@ const Dashboard: React.FC = () => {
                   borderRadius: "12px",
                 }),
                 singleValue: (base) => ({ ...base, color: "#fff" }), // selected text
-                input: (base) => ({ ...base, color: "#fff" }),       // typing/search text
+                input: (base) => ({ ...base, color: "#fff" }), // typing/search text
                 placeholder: (base) => ({ ...base, color: "#fff" }), // placeholder text
                 menu: (base) => ({ ...base, background: "#2C2440" }),
                 option: (base, state) => ({
@@ -194,7 +209,15 @@ const Dashboard: React.FC = () => {
         </Stack>
 
         {/* Song Cards */}
-        <Grid templateColumns={{ base: "1fr", sm: "repeat(2,1fr)", md: "repeat(3,1fr)" }} gap={{ base: 6, md: 10 }} mb={12}>
+        <Grid
+          templateColumns={{
+            base: "1fr",
+            sm: "repeat(2,1fr)",
+            md: "repeat(3,1fr)",
+          }}
+          gap={{ base: 6, md: 10 }}
+          mb={12}
+        >
           {songsToShow.map((song) => (
             <Box
               key={song.song}
@@ -204,13 +227,25 @@ const Dashboard: React.FC = () => {
               boxShadow="0 8px 25px rgba(0,0,0,0.3)"
               backdropFilter="blur(8px)"
               transition="all 0.3s"
-              _hover={{ transform: "scale(1.05)", boxShadow: "0 12px 40px rgba(0,0,0,0.6)" }}
+              _hover={{
+                transform: "scale(1.05)",
+                boxShadow: "0 12px 40px rgba(0,0,0,0.6)",
+              }}
             >
-              <Image src={getThumbnail(song.youtubeId)} alt={song.song} w="100%" h="200px" objectFit="cover" />
+              <Image
+                src={getThumbnail(song.youtubeId)}
+                alt={song.song}
+                w="100%"
+                h="200px"
+                objectFit="cover"
+              />
               <VStack py={4}>
-                <Heading fontSize="lg" color="#E6E0F8">{song.song}</Heading>
+                <Heading fontSize="lg" color="#E6E0F8">
+                  {song.song}
+                </Heading>
                 <Text fontSize="md" color="#CDB4DB">
-                  {song.youtubeViews.toLocaleString()} views • {song.youtubeLikes.toLocaleString()} likes
+                  {song.youtubeViews.toLocaleString()} views •{" "}
+                  {song.youtubeLikes.toLocaleString()} likes
                 </Text>
                 <Button
                   as="a"
@@ -232,17 +267,51 @@ const Dashboard: React.FC = () => {
 
         {/* Comparison Chart */}
         {comparisonData.length === 2 && (
-          <Box bg="rgba(255,255,255,0.08)" borderRadius="20px" p={6} backdropFilter="blur(8px)">
-            <Heading fontSize="xl" mb={6} color="#E6E0F8">Compare Two Songs</Heading>
+          <Box
+            bg="rgba(255,255,255,0.08)"
+            borderRadius="20px"
+            p={6}
+            backdropFilter="blur(8px)"
+          >
+            <Heading fontSize="xl" mb={6} color="#E6E0F8">
+              Compare Two Songs
+            </Heading>
             <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={comparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+              <BarChart
+                data={comparisonData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.1)"
+                />
                 <XAxis dataKey="song" tick={{ fill: "#E6E0F8" }} />
                 <YAxis tick={{ fill: "#E6E0F8" }} />
-                <Tooltip formatter={(value: any) => value.toLocaleString()} contentStyle={{ backgroundColor: "rgba(40,40,60,0.9)", borderRadius: 10, border: "none", color: "#fff" }} />
-                <Legend verticalAlign="top" wrapperStyle={{ color: "#E6E0F8" }} />
-                <Bar dataKey="youtubeViews" fill="#B8C0FF" name="Views" radius={[10, 10, 0, 0]} />
-                <Bar dataKey="youtubeLikes" fill="#FFAFCC" name="Likes" radius={[10, 10, 0, 0]} />
+                <Tooltip
+                  formatter={(value: any) => value.toLocaleString()}
+                  contentStyle={{
+                    backgroundColor: "rgba(40,40,60,0.9)",
+                    borderRadius: 10,
+                    border: "none",
+                    color: "#fff",
+                  }}
+                />
+                <Legend
+                  verticalAlign="top"
+                  wrapperStyle={{ color: "#E6E0F8" }}
+                />
+                <Bar
+                  dataKey="youtubeViews"
+                  fill="#B8C0FF"
+                  name="Views"
+                  radius={[10, 10, 0, 0]}
+                />
+                <Bar
+                  dataKey="youtubeLikes"
+                  fill="#FFAFCC"
+                  name="Likes"
+                  radius={[10, 10, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </Box>
@@ -345,7 +414,6 @@ export default Dashboard;
 //         youtubeLikes: 0,
 //         youtubeId: song.youtubeId,
 //       }));
-
 
 //   // Comparison chart only if exactly two songs selected
 //   const comparisonData =

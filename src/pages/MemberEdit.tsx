@@ -27,13 +27,28 @@ const MemberEdit: React.FC = () => {
   };
 
   return (
-    <Box p={10} bgGradient="radial(circle at top, #1A152A, #0A0812 80%)" color="white" minH="100vh">
+    <Box
+      p={10}
+      bgGradient="radial(circle at top, #1A152A, #0A0812 80%)"
+      color="white"
+      minH="100vh"
+    >
       <Button mb={6} onClick={() => navigate(-1)}>
         ← Back
       </Button>
       <Heading mb={6}>Edit {member.name}</Heading>
-      <Input mb={4} placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-      <Input mb={4} placeholder="Photo URL" value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} />
+      <Input
+        mb={4}
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <Input
+        mb={4}
+        placeholder="Photo URL"
+        value={photoUrl}
+        onChange={(e) => setPhotoUrl(e.target.value)}
+      />
       <Button colorScheme="teal" onClick={handleSave}>
         Save Changes
       </Button>

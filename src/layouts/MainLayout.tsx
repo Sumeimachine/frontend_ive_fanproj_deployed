@@ -7,25 +7,21 @@ const MainLayout = () => {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
-      
-      <div style={{
-        width: "220px",
-        background: "#1A152A",
-        color: "#fff",
-        padding: "20px",
-        display: "flex",
-        flexDirection: "column"
-      }}>
-        
+      <div
+        style={{
+          width: "220px",
+          background: "#1A152A",
+          color: "#fff",
+          padding: "20px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <h2>IVE KPOP</h2>
 
-        <button onClick={() => navigate("/dashboard")}>
-          Dashboard
-        </button>
+        <button onClick={() => navigate("/dashboard")}>Dashboard</button>
 
-        <button onClick={() => navigate("/")}>
-          Members
-        </button>
+        <button onClick={() => navigate("/")}>Members</button>
 
         <button
           onClick={() => {
@@ -36,13 +32,11 @@ const MainLayout = () => {
         >
           Logout
         </button>
-
       </div>
 
       <div style={{ flex: 1 }}>
         <Outlet />
       </div>
-
     </div>
   );
 };

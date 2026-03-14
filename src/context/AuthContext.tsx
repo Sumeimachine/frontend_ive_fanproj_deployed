@@ -14,7 +14,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    Boolean(localStorage.getItem("token"))
+    Boolean(localStorage.getItem("token")),
   );
 
   const login = (token: string) => {

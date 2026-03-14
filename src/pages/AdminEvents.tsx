@@ -2,7 +2,6 @@ import { useState } from "react";
 import api from "../services/src/services/api";
 
 export default function AdminEvents() {
-
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 

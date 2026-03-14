@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Button, Heading, Input, VStack, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  Input,
+  VStack,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import membersDataRaw from "../assets/members.json";
 
 interface Member {
@@ -21,7 +29,12 @@ const MemberInfo: React.FC = () => {
 
   if (!member) {
     return (
-      <Box p={10} color="white" bgGradient="radial(circle at top, #1A152A, #0A0812 80%)" minH="100vh">
+      <Box
+        p={10}
+        color="white"
+        bgGradient="radial(circle at top, #1A152A, #0A0812 80%)"
+        minH="100vh"
+      >
         <Text>Member not found.</Text>
         <Button mt={4} onClick={() => navigate(-1)}>
           ← Back
@@ -36,13 +49,24 @@ const MemberInfo: React.FC = () => {
   };
 
   return (
-    <Box p={10} color="white" bgGradient="radial(circle at top, #1A152A, #0A0812 80%)" minH="100vh">
+    <Box
+      p={10}
+      color="white"
+      bgGradient="radial(circle at top, #1A152A, #0A0812 80%)"
+      minH="100vh"
+    >
       <Button mb={6} onClick={() => navigate(-1)}>
         ← Back
       </Button>
       <VStack spacing={6} align="start" maxW="500px" mx="auto">
         <Heading>{member.name}</Heading>
-        <Image src={photoUrl} alt={name} borderRadius="20px" w="100%" objectFit="cover" />
+        <Image
+          src={photoUrl}
+          alt={name}
+          borderRadius="20px"
+          w="100%"
+          objectFit="cover"
+        />
 
         <VStack w="100%" spacing={4}>
           <Input

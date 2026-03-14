@@ -36,7 +36,11 @@ const Home: React.FC = () => {
       </Heading>
 
       <Grid
-        templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }}
+        templateColumns={{
+          base: "1fr",
+          sm: "repeat(2, 1fr)",
+          md: "repeat(3, 1fr)",
+        }}
         gap={{ base: 6, md: 10 }}
         maxW="1200px"
         mx="auto"
