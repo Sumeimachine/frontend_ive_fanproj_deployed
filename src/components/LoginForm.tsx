@@ -7,32 +7,87 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  HStack,
   Input,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { authApi } from "../services/api/authApi";
+
+type AuthMode = "login" | "register" | "forgot" | "reset" | "verify";
 
 const LoginForm = () => {
+  const [mode, setMode] = useState<AuthMode>("login");
+
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  const clearMessages = () => {
+    setError("");
+    setSuccess("");
+  };
+
+  const switchMode = (nextMode: AuthMode) => {
+    setMode(nextMode);
+    clearMessages();
+  };
+
+  const handleLogin = async () => {
+    await login({ username, password });
+    navigate("/dashboard");
+  };
+
+  const handleRegister = async () => {
+    const response = await authApi.register({ username, email, password });
+    setSuccess(response || "Registered. Please verify your email.");
+  };
+
+  const handleForgotPassword = async () => {
+    const response = await authApi.forgotPassword(email);
+    setSuccess(response || "Password reset email sent.");
+  };
+
+  const handleResetPassword = async () => {
+    const response = await authApi.resetPassword(token, newPassword);
+    setSuccess(response || "Password successfully reset.");
+  };
+
+  const handleVerifyEmail = async () => {
+    const response = await authApi.verifyEmail(token);
+    setSuccess(response || "Email verified.");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    clearMessages();
     setIsSubmitting(true);
 
     try {
-      await login({ username, password });
-      navigate("/dashboard");
+      if (mode === "login") {
+        await handleLogin();
+      } else if (mode === "register") {
+        await handleRegister();
+      } else if (mode === "forgot") {
+        await handleForgotPassword();
+      } else if (mode === "reset") {
+        await handleResetPassword();
+      } else if (mode === "verify") {
+        await handleVerifyEmail();
+      }
     } catch {
-      setError("Login failed. Verify your credentials and email verification state.");
+      setError("Request failed. Please check your input and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -40,7 +95,7 @@ const LoginForm = () => {
 
   return (
     <Box
-      maxW="430px"
+      maxW="500px"
       w="100%"
       p={{ base: 6, md: 8 }}
       borderRadius="2xl"
@@ -50,10 +105,29 @@ const LoginForm = () => {
     >
       <VStack spacing={6} align="stretch">
         <Heading size="lg" color="white">
-          Welcome back 👋
+          Account Access
         </Heading>
+
+        <HStack spacing={2} overflowX="auto">
+          <Button size="sm" onClick={() => switchMode("login")} variant={mode === "login" ? "solid" : "outline"} colorScheme="purple">
+            Login
+          </Button>
+          <Button size="sm" onClick={() => switchMode("register")} variant={mode === "register" ? "solid" : "outline"} colorScheme="purple">
+            Register
+          </Button>
+          <Button size="sm" onClick={() => switchMode("forgot")} variant={mode === "forgot" ? "solid" : "outline"} colorScheme="purple">
+            Forgot
+          </Button>
+          <Button size="sm" onClick={() => switchMode("reset")} variant={mode === "reset" ? "solid" : "outline"} colorScheme="purple">
+            Reset
+          </Button>
+          <Button size="sm" onClick={() => switchMode("verify")} variant={mode === "verify" ? "solid" : "outline"} colorScheme="purple">
+            Verify
+          </Button>
+        </HStack>
+
         <Text color="gray.300" fontSize="sm">
-          Sign in with your backend auth endpoint at <b>/api/Auth/login</b>.
+          Connected to backend auth endpoints under <b>/api/Auth/*</b>.
         </Text>
 
         {error && (
@@ -63,31 +137,79 @@ const LoginForm = () => {
           </Alert>
         )}
 
+        {success && (
+          <Alert status="success" borderRadius="md">
+            <AlertIcon />
+            {success}
+          </Alert>
+        )}
+
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align="stretch">
-            <FormControl isRequired>
-              <FormLabel color="gray.200">Username</FormLabel>
-              <Input
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-                autoComplete="username"
-              />
-            </FormControl>
+            {(mode === "login" || mode === "register") && (
+              <FormControl isRequired>
+                <FormLabel color="gray.200">Username</FormLabel>
+                <Input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter username"
+                />
+              </FormControl>
+            )}
 
-            <FormControl isRequired>
-              <FormLabel color="gray.200">Password</FormLabel>
-              <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                placeholder="Enter password"
-                autoComplete="current-password"
-              />
-            </FormControl>
+            {(mode === "register" || mode === "forgot") && (
+              <FormControl isRequired>
+                <FormLabel color="gray.200">Email</FormLabel>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter email"
+                />
+              </FormControl>
+            )}
+
+            {(mode === "login" || mode === "register") && (
+              <FormControl isRequired>
+                <FormLabel color="gray.200">Password</FormLabel>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                />
+              </FormControl>
+            )}
+
+            {(mode === "reset" || mode === "verify") && (
+              <FormControl isRequired>
+                <FormLabel color="gray.200">Token</FormLabel>
+                <Input
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="Paste token"
+                />
+              </FormControl>
+            )}
+
+            {mode === "reset" && (
+              <FormControl isRequired>
+                <FormLabel color="gray.200">New Password</FormLabel>
+                <Input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password"
+                />
+              </FormControl>
+            )}
 
             <Button type="submit" colorScheme="purple" isLoading={isSubmitting}>
-              Sign In
+              {mode === "login" && "Sign In"}
+              {mode === "register" && "Create Account"}
+              {mode === "forgot" && "Send Reset Email"}
+              {mode === "reset" && "Reset Password"}
+              {mode === "verify" && "Verify Email"}
             </Button>
           </VStack>
         </form>
