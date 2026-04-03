@@ -51,33 +51,31 @@ const Dashboard: React.FC = () => {
     setError("");
 
     try {
-      const updatedMetrics: SongMetrics[] = await Promise.all(
-        selectedSongs.map(async (songName) => {
-          const song = IVE_SONGS.find((s) => s.name === songName)!;
-          try {
-            const response = await youtubeApi.getTrends([song.youtubeId]);
-            const data = response[0] || { Views: 0, Likes: 0 };
-            return {
-              song: song.name,
-              youtubeViews: data.Views ?? 0,
-              youtubeLikes: data.Likes ?? 0,
-              youtubeId: song.youtubeId,
-            };
-          } catch {
-            return {
-              song: song.name,
-              youtubeViews: 0,
-              youtubeLikes: 0,
-              youtubeId: song.youtubeId,
-            };
-          }
-        }),
+      const selectedSongModels = selectedSongs
+        .map((songName) => IVE_SONGS.find((song) => song.name === songName))
+        .filter((song): song is Song => Boolean(song));
+
+      const response = await youtubeApi.getTrends(
+        selectedSongModels.map((song) => song.youtubeId),
       );
 
+      const trendsByVideoId = new Map(
+        response.map((item) => [item.Song, item] as const),
+      );
+
+      const updatedMetrics: SongMetrics[] = selectedSongModels.map((song) => {
+        const trend = trendsByVideoId.get(song.youtubeId);
+
+        return {
+          song: song.name,
+          youtubeViews: Number(trend?.Views ?? 0),
+          youtubeLikes: Number(trend?.Likes ?? 0),
+          youtubeId: song.youtubeId,
+        };
+      });
+
       setMetrics((prev) => {
-        const otherMetrics = prev.filter(
-          (m) => !selectedSongs.includes(m.song),
-        );
+        const otherMetrics = prev.filter((m) => !selectedSongs.includes(m.song));
         return [...otherMetrics, ...updatedMetrics];
       });
     } catch (err) {
