@@ -12,9 +12,9 @@ export const authApi = {
     return data;
   },
 
-  verifyEmail: async (token: string) => {
+  verifyEmail: async (params: { token?: string; email?: string }) => {
     const { data } = await httpClient.get<string>("/Auth/verify-email", {
-      params: { token },
+      params,
     });
     return data;
   },

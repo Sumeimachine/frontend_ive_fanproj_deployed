@@ -62,4 +62,5 @@ npm run build
 - Login expects backend response with at least `token`.
 - If backend also returns `refreshToken`, it is stored automatically.
 - Profile bootstrap calls `/User/profile` after login when `username` or `role` are absent in login response.
+- Email verification page is available at `/auth/verify-email` and auto-verifies using `token` or `email` query params.
 - Content editor currently stores data in localStorage for quick iteration and can be swapped to backend persistence later.

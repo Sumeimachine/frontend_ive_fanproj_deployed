@@ -65,8 +65,8 @@ const LoginForm = () => {
   };
 
   const handleVerifyEmail = async () => {
-    const response = await authApi.verifyEmail(token);
-    setSuccess(response || "Email verified.");
+    const response = await authApi.verifyEmail({ email });
+    setSuccess(response || "Verification check sent.");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -157,7 +157,7 @@ const LoginForm = () => {
               </FormControl>
             )}
 
-            {(mode === "register" || mode === "forgot") && (
+            {(mode === "register" || mode === "forgot" || mode === "verify") && (
               <FormControl isRequired>
                 <FormLabel color="gray.200">Email</FormLabel>
                 <Input
@@ -181,7 +181,7 @@ const LoginForm = () => {
               </FormControl>
             )}
 
-            {(mode === "reset" || mode === "verify") && (
+            {mode === "reset" && (
               <FormControl isRequired>
                 <FormLabel color="gray.200">Token</FormLabel>
                 <Input

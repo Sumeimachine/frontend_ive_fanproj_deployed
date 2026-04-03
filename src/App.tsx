@@ -10,6 +10,7 @@ import Dashboard from "./components/Dashboard";
 import ContentPages from "./pages/ContentPages";
 import DynamicContentPage from "./pages/DynamicContentPage";
 import ContentEditor from "./pages/ContentEditor";
+import EmailVerification from "./pages/EmailVerification";
 
 function AppRoutes() {
   const { bootstrapProfile } = useAuth();
@@ -21,6 +22,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/auth/verify-email" element={<EmailVerification />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
