@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Box, Button, Heading, Spinner, Text, VStack } from "@chakra-ui/react";
 import { authApi } from "../services/api/authApi";
@@ -12,12 +12,21 @@ export default function EmailVerification() {
   const [message, setMessage] = useState("Verifying your account...");
 
   const hasPayload = useMemo(() => Boolean(token || email), [token, email]);
+  const hasTriggered = useRef(false);
 
   useEffect(() => {
+    if (hasTriggered.current) {
+      return;
+    }
+
+    hasTriggered.current = true;
+
     const verify = async () => {
       if (!hasPayload) {
         setStatus("error");
-        setMessage("Missing verification payload. Please use the email verification link again.");
+        setMessage(
+          "Missing verification payload. Please use the email verification link again.",
+        );
         return;
       }
 
