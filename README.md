@@ -1,16 +1,56 @@
-# React + Vite
+# DiveIntoIVE Frontend (Refactored)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This frontend is now structured to integrate cleanly with your ASP.NET backend APIs (`/api/Auth`, `/api/User`, `/api/Admin`, `/api/Youtube`) and to make page content easier to edit.
 
-Currently, two official plugins are available:
+## What changed
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Centralized HTTP client with auth token interceptor: `src/services/httpClient.ts`
+- API modules per backend domain:
+  - `src/services/api/authApi.ts`
+  - `src/services/api/userApi.ts`
+  - `src/services/api/adminApi.ts`
+  - `src/services/api/youtubeApi.ts`
+- Stronger auth state management in `src/context/AuthContext.tsx`
+- Improved login UI + behavior in `src/components/LoginForm.tsx` and `src/pages/Login.tsx`
+- Added editable page system:
+  - Page templates in `src/content/pageTemplates.ts`
+  - Page list in `src/pages/ContentPages.tsx`
+  - Dynamic renderer in `src/pages/DynamicContentPage.tsx`
+  - Simple editor in `src/pages/ContentEditor.tsx`
+- Expanded routes in `src/App.tsx`
+- Sidebar navigation updated in `src/layouts/MainLayout.tsx`
 
-## React Compiler
+## Environment setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Create `.env` (or `.env.local`) with:
 
-## Expanding the ESLint configuration
+```bash
+VITE_API_URL=https://your-backend-host/api
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Example:
+
+```bash
+VITE_API_URL=http://localhost:5086/api
+```
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Build and lint
+
+```bash
+npm run lint
+npm run build
+```
+
+## Notes for backend integration
+
+- Login expects backend response with at least `token`.
+- If backend also returns `refreshToken`, it is stored automatically.
+- Profile bootstrap calls `/User/profile` after login when `username` or `role` are absent in login response.
+- Content editor currently stores data in localStorage for quick iteration and can be swapped to backend persistence later.

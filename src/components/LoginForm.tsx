@@ -1,73 +1,98 @@
 import { useState } from "react";
-import api from "../services/src/services/api";
-import { useAuth } from "../context/AuthContext";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-
-interface LoginData {
-  username: string;
-  password: string;
-}
-
-interface LoginResponse {
-  token: string;
-}
+import { useAuth } from "../context/AuthContext";
 
 const LoginForm = () => {
-  const [form, setForm] = useState<LoginData>({
-    username: "",
-    password: "",
-  });
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
     try {
-      const res = await api.post<LoginResponse>("/Auth/login", form);
-
-      login(res.data.token);
-
+      await login({ username, password });
       navigate("/dashboard");
     } catch {
-      setError("Invalid login credentials");
+      setError("Login failed. Verify your credentials and email verification state.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "auto", padding: "2rem" }}>
-      <h2>Login</h2>
+    <Box
+      maxW="430px"
+      w="100%"
+      p={{ base: 6, md: 8 }}
+      borderRadius="2xl"
+      bg="rgba(255,255,255,0.06)"
+      backdropFilter="blur(8px)"
+      boxShadow="0 10px 35px rgba(0,0,0,0.4)"
+    >
+      <VStack spacing={6} align="stretch">
+        <Heading size="lg" color="white">
+          Welcome back 👋
+        </Heading>
+        <Text color="gray.300" fontSize="sm">
+          Sign in with your backend auth endpoint at <b>/api/Auth/login</b>.
+        </Text>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-      >
-        <input
-          name="username"
-          placeholder="Username"
-          value={form.username}
-          onChange={handleChange}
-        />
+        {error && (
+          <Alert status="error" borderRadius="md">
+            <AlertIcon />
+            {error}
+          </Alert>
+        )}
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit}>
+          <VStack spacing={4} align="stretch">
+            <FormControl isRequired>
+              <FormLabel color="gray.200">Username</FormLabel>
+              <Input
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Enter username"
+                autoComplete="username"
+              />
+            </FormControl>
 
-        <button type="submit">Login</button>
-      </form>
+            <FormControl isRequired>
+              <FormLabel color="gray.200">Password</FormLabel>
+              <Input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Enter password"
+                autoComplete="current-password"
+              />
+            </FormControl>
 
-      {error && <p>{error}</p>}
-    </div>
+            <Button type="submit" colorScheme="purple" isLoading={isSubmitting}>
+              Sign In
+            </Button>
+          </VStack>
+        </form>
+      </VStack>
+    </Box>
   );
 };
 
