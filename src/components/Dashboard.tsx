@@ -60,7 +60,9 @@ const Dashboard: React.FC = () => {
       );
 
       const trendsByVideoId = new Map(
-        response.map((item) => [item.Song, item] as const),
+        response
+          .map((item) => [item.Song ?? item.song, item] as const)
+          .filter(([videoId]) => Boolean(videoId)),
       );
 
       const updatedMetrics: SongMetrics[] = selectedSongModels.map((song) => {
@@ -68,8 +70,8 @@ const Dashboard: React.FC = () => {
 
         return {
           song: song.name,
-          youtubeViews: Number(trend?.Views ?? 0),
-          youtubeLikes: Number(trend?.Likes ?? 0),
+          youtubeViews: Number(trend?.Views ?? trend?.views ?? 0),
+          youtubeLikes: Number(trend?.Likes ?? trend?.likes ?? 0),
           youtubeId: song.youtubeId,
         };
       });

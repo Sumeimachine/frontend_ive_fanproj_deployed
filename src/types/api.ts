@@ -22,7 +22,10 @@ export interface UserProfile {
 }
 
 export interface YoutubeTrend {
-  Song: string;
-  Views: number;
-  Likes: number;
+  Song?: string;
+  Views?: number | string;
+  Likes?: number | string;
+  song?: string;
+  views?: number | string;
+  likes?: number | string;
 }
