@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -42,6 +42,57 @@ const Dashboard: React.FC = () => {
   const [songB, setSongB] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+
+  const fetchInitialMetrics = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const chunkSize = 20;
+      const videoIdChunks: string[][] = [];
+
+      for (let i = 0; i < IVE_SONGS.length; i += chunkSize) {
+        videoIdChunks.push(
+          IVE_SONGS.slice(i, i + chunkSize).map((song) => song.youtubeId),
+        );
+      }
+
+      const responses = await Promise.all(
+        videoIdChunks.map((chunk) => youtubeApi.getTrends(chunk)),
+      );
+
+      const trendsByVideoId = new Map(
+        responses
+          .flat()
+          .map((item) => [item.Song ?? item.song, item] as const)
+          .filter(([videoId]) => Boolean(videoId)),
+      );
+
+      const initialMetrics: SongMetrics[] = IVE_SONGS.map((song) => {
+        const trend = trendsByVideoId.get(song.youtubeId);
+
+        return {
+          song: song.name,
+          youtubeViews: Number(trend?.Views ?? trend?.views ?? 0),
+          youtubeLikes: Number(trend?.Likes ?? trend?.likes ?? 0),
+          youtubeId: song.youtubeId,
+        };
+      });
+
+      setMetrics(initialMetrics);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to fetch initial metrics.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void fetchInitialMetrics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const fetchMetrics = async () => {
     const selectedSongs = [songA, songB].filter(Boolean);
@@ -97,12 +148,14 @@ const Dashboard: React.FC = () => {
   const songsToShow =
     songA || songB
       ? metrics.filter((m) => [songA, songB].includes(m.song))
-      : IVE_SONGS.map((song) => ({
-          song: song.name,
-          youtubeViews: 0,
-          youtubeLikes: 0,
-          youtubeId: song.youtubeId,
-        }));
+      : metrics.length > 0
+        ? metrics
+        : IVE_SONGS.map((song) => ({
+            song: song.name,
+            youtubeViews: 0,
+            youtubeLikes: 0,
+            youtubeId: song.youtubeId,
+          }));
 
   const comparisonData =
     songA && songB
