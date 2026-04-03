@@ -1,6 +1,29 @@
 # DiveIntoIVE Frontend (Refactored)
 
-This frontend is now structured to integrate cleanly with your ASP.NET backend APIs (`/api/Auth`, `/api/User`, `/api/Admin`, `/api/Youtube`) and to make page content easier to edit.
+This frontend is structured to integrate with your ASP.NET backend APIs (`/api/Auth`, `/api/User`, `/api/Admin`, `/api/Youtube`) and make page content easier to edit.
+
+## API connection for your backend
+
+Your API docs are at:
+
+- `https://api.iveph.com/swagger/index.html`
+
+For local development, this project now includes a Vite proxy:
+
+- Frontend calls `/backend-api/*`
+- Vite forwards to `https://api.iveph.com/api/*`
+
+So if `VITE_API_URL` is not set, API calls still work in dev through the proxy.
+
+## Environment setup
+
+Create `.env` (or `.env.local`) with:
+
+```bash
+VITE_API_URL=https://api.iveph.com/api
+```
+
+If omitted, the app falls back to `/backend-api` (proxy mode in `vite.config.ts`).
 
 ## What changed
 
@@ -19,20 +42,6 @@ This frontend is now structured to integrate cleanly with your ASP.NET backend A
   - Simple editor in `src/pages/ContentEditor.tsx`
 - Expanded routes in `src/App.tsx`
 - Sidebar navigation updated in `src/layouts/MainLayout.tsx`
-
-## Environment setup
-
-Create `.env` (or `.env.local`) with:
-
-```bash
-VITE_API_URL=https://your-backend-host/api
-```
-
-Example:
-
-```bash
-VITE_API_URL=http://localhost:5086/api
-```
 
 ## Run locally
 

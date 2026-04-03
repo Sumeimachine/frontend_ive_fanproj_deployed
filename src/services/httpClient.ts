@@ -1,7 +1,12 @@
 import axios from "axios";
 
+const defaultApiBaseUrl = "/backend-api";
+
 const httpClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || defaultApiBaseUrl,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 httpClient.interceptors.request.use((config) => {
