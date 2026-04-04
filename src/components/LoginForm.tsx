@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { authApi } from "../services/api/authApi";
 
-type AuthMode = "login" | "register" | "forgot" | "reset" | "verify";
+type AuthMode = "login" | "register" | "forgot" | "verify";
 
 const LoginForm = () => {
   const [mode, setMode] = useState<AuthMode>("login");
@@ -24,9 +24,6 @@ const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [token, setToken] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,10 +56,6 @@ const LoginForm = () => {
     setSuccess(response || "Password reset email sent.");
   };
 
-  const handleResetPassword = async () => {
-    const response = await authApi.resetPassword(token, newPassword);
-    setSuccess(response || "Password successfully reset.");
-  };
 
   const handleVerifyEmail = async () => {
     const response = await authApi.resendVerification(email);
@@ -81,8 +74,6 @@ const LoginForm = () => {
         await handleRegister();
       } else if (mode === "forgot") {
         await handleForgotPassword();
-      } else if (mode === "reset") {
-        await handleResetPassword();
       } else if (mode === "verify") {
         await handleVerifyEmail();
       }
@@ -117,9 +108,6 @@ const LoginForm = () => {
           </Button>
           <Button size="sm" onClick={() => switchMode("forgot")} variant={mode === "forgot" ? "solid" : "outline"} colorScheme="purple">
             Forgot
-          </Button>
-          <Button size="sm" onClick={() => switchMode("reset")} variant={mode === "reset" ? "solid" : "outline"} colorScheme="purple">
-            Reset
           </Button>
           <Button size="sm" onClick={() => switchMode("verify")} variant={mode === "verify" ? "solid" : "outline"} colorScheme="purple">
             Resend Verify
@@ -181,34 +169,10 @@ const LoginForm = () => {
               </FormControl>
             )}
 
-            {mode === "reset" && (
-              <FormControl isRequired>
-                <FormLabel color="gray.200">Token</FormLabel>
-                <Input
-                  value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  placeholder="Paste token"
-                />
-              </FormControl>
-            )}
-
-            {mode === "reset" && (
-              <FormControl isRequired>
-                <FormLabel color="gray.200">New Password</FormLabel>
-                <Input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password"
-                />
-              </FormControl>
-            )}
-
             <Button type="submit" colorScheme="purple" isLoading={isSubmitting}>
               {mode === "login" && "Sign In"}
               {mode === "register" && "Create Account"}
               {mode === "forgot" && "Send Reset Email"}
-              {mode === "reset" && "Reset Password"}
               {mode === "verify" && "Resend Verification"}
             </Button>
           </VStack>

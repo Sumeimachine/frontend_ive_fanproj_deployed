@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
@@ -32,9 +33,11 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/member/:id" element={<MemberInfo />} />
-          <Route path="/pages" element={<ContentPages />} />
-          <Route path="/pages/editor" element={<ContentEditor />} />
-          <Route path="/pages/:slug" element={<DynamicContentPage />} />
+          <Route element={<AdminRoute />}>
+            <Route path="/pages" element={<ContentPages />} />
+            <Route path="/pages/editor" element={<ContentEditor />} />
+            <Route path="/pages/:slug" element={<DynamicContentPage />} />
+          </Route>
         </Route>
       </Route>
 

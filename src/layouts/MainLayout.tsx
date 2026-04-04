@@ -2,16 +2,20 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import { useAuth } from "../context/AuthContext";
 
-const navItems = [
-  { label: "Members", to: "/" },
-  { label: "Dashboard", to: "/dashboard" },
-  { label: "Pages", to: "/pages" },
-  { label: "Content Editor", to: "/pages/editor" },
-];
-
 export default function MainLayout() {
   const navigate = useNavigate();
   const { logout, username, role } = useAuth();
+
+  const navItems = [
+    { label: "Members", to: "/" },
+    { label: "Dashboard", to: "/dashboard" },
+    ...(role === "Admin"
+      ? [
+          { label: "Pages", to: "/pages" },
+          { label: "Content Editor", to: "/pages/editor" },
+        ]
+      : []),
+  ];
 
   const handleLogout = async () => {
     await logout();

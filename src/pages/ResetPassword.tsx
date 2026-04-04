@@ -99,6 +99,10 @@ export default function ResetPassword() {
               <Button type="submit" colorScheme="purple" isLoading={isSubmitting}>
                 Update Password
               </Button>
+
+              <Button as="a" href="/login" variant="outline">
+                Back to Login
+              </Button>
             </VStack>
           </form>
         </VStack>
