@@ -1,175 +1,57 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-
+import { useEffect } from "react";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import MainLayout from "./layouts/MainLayout";
-
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import MemberInfo from "./pages/MemberInfo";
 import Dashboard from "./components/Dashboard";
+import ContentPages from "./pages/ContentPages";
+import DynamicContentPage from "./pages/DynamicContentPage";
+import ContentEditor from "./pages/ContentEditor";
+import EmailVerification from "./pages/EmailVerification";
+import ResetPassword from "./pages/ResetPassword";
 
-function App() {
+function AppRoutes() {
+  const { bootstrapProfile } = useAuth();
+
+  useEffect(() => {
+    void bootstrapProfile();
+  }, [bootstrapProfile]);
+
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/auth/verify-email" element={<EmailVerification />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/auth/reset-password" element={<ResetPassword />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/member/:id" element={<MemberInfo />} />
+          <Route element={<AdminRoute />}>
+            <Route path="/pages" element={<ContentPages />} />
+            <Route path="/pages/editor" element={<ContentEditor />} />
+            <Route path="/pages/:slug" element={<DynamicContentPage />} />
+          </Route>
+        </Route>
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
+
+export default function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          {/* public */}
-          <Route path="/login" element={<Login />} />
-
-          {/* protected */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/member/:id" element={<MemberInfo />} />
-            </Route>
-          </Route>
-        </Routes>
+        <AppRoutes />
       </Router>
     </AuthProvider>
   );
 }
-
-export default App;
-// import React from "react";
-// import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-// import Home from "./pages/Home";
-// import Dashboard from "./components/Dashboard";
-// import MemberInfo from "./pages/MemberInfo"; // ✅ import the member info page
-
-// const App: React.FC = () => {
-//   return (
-//     <Router>
-//       <div style={{ display: "flex", minHeight: "100vh" }}>
-//         {/* Sidebar */}
-//         <div
-//           style={{
-//             width: "220px",
-//             background: "#1A152A",
-//             color: "#fff",
-//             display: "flex",
-//             flexDirection: "column",
-//             padding: "20px",
-//           }}
-//         >
-//           <h2 style={{ marginBottom: "40px", fontSize: "1.8rem" }}>IVE KPOP</h2>
-//           <button
-//             onClick={() => (window.location.href = "/dashboard")}
-//             style={{
-//               padding: "12px 20px",
-//               borderRadius: "12px",
-//               border: "none",
-//               background: "#3A2D56",
-//               color: "#fff",
-//               fontWeight: 600,
-//               marginBottom: "10px",
-//               cursor: "pointer",
-//               textAlign: "left",
-//             }}
-//           >
-//             Dashboard
-//           </button>
-//           <button
-//             onClick={() => (window.location.href = "/")}
-//             style={{
-//               padding: "12px 20px",
-//               borderRadius: "12px",
-//               border: "none",
-//               background: "#3A2D56",
-//               color: "#fff",
-//               fontWeight: 600,
-//               cursor: "pointer",
-//               textAlign: "left",
-//             }}
-//           >
-//             Members
-//           </button>
-//         </div>
-
-//         {/* Main content */}
-//         <div style={{ flex: 1 }}>
-//           <Routes>
-//             <Route path="/" element={<Home />} />
-//             <Route path="/dashboard" element={<Dashboard />} />
-//             {/* ✅ Member info route */}
-//             <Route path="/member/:id" element={<MemberInfo />} />
-//             {/* Fallback */}
-//             <Route path="*" element={<Navigate to="/" />} />
-//           </Routes>
-//         </div>
-//       </div>
-//     </Router>
-//   );
-// };
-
-// export default App;
-// // import React from "react";
-// // import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-// // import Home from "./pages/Home";
-// // import Dashboard from "./components/Dashboard";
-
-// // const App: React.FC = () => {
-// //   return (
-// //     <Router>
-// //       <div style={{ display: "flex", minHeight: "100vh" }}>
-// //         {/* Sidebar */}
-// //         <div
-// //           style={{
-// //             width: "220px",
-// //             background: "#1A152A",
-// //             color: "#fff",
-// //             display: "flex",
-// //             flexDirection: "column",
-// //             padding: "20px",
-// //           }}
-// //         >
-// //           <h2 style={{ marginBottom: "40px", fontSize: "1.8rem" }}>IVE KPOP</h2>
-// //           <button
-// //             onClick={() => (window.location.href = "/dashboard")}
-// //             style={{
-// //               padding: "12px 20px",
-// //               borderRadius: "12px",
-// //               border: "none",
-// //               background: "#3A2D56",
-// //               color: "#fff",
-// //               fontWeight: 600,
-// //               marginBottom: "10px",
-// //               cursor: "pointer",
-// //               textAlign: "left",
-// //             }}
-// //           >
-// //             Dashboard
-// //           </button>
-// //           <button
-// //             onClick={() => (window.location.href = "/")}
-// //             style={{
-// //               padding: "12px 20px",
-// //               borderRadius: "12px",
-// //               border: "none",
-// //               background: "#3A2D56",
-// //               color: "#fff",
-// //               fontWeight: 600,
-// //               cursor: "pointer",
-// //               textAlign: "left",
-// //             }}
-// //           >
-// //             Members
-// //           </button>
-// //         </div>
-
-// //         {/* Main content */}
-// //         <div style={{ flex: 1 }}>
-// //           <Routes>
-// //             <Route path="/" element={<Home />} />
-// //             {/* Dashboard */}
-// //             <Route path="/dashboard" element={<Dashboard />} />
-// //             <Route path="*" element={<Navigate to="/" />} />
-// //           </Routes>
-// //         </div>
-// //       </div>
-// //     </Router>
-// //   );
-// // };
-
-// // export default App;

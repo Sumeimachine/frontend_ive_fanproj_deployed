@@ -1,20 +1,19 @@
-import React from "react";
+import { Box, Container } from "@chakra-ui/react";
 import LoginForm from "../components/LoginForm";
 
-const Login: React.FC = () => {
+export default function Login() {
   return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#0f0b1f",
-      }}
+    <Box
+      minH="100vh"
+      bgGradient="radial(circle at top, #221b3a, #0a0812 75%)"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      px={4}
     >
-      <LoginForm />
-    </div>
+      <Container maxW="lg">
+        <LoginForm />
+      </Container>
+    </Box>
   );
-};
-
-export default Login;
+}
