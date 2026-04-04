@@ -1,32 +1,40 @@
 import { useState } from "react";
-import api from "../services/src/services/api";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 
 export default function AdminEvents() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const saveEvent = async () => {
-    await api.post("/events", { title, content });
-    alert("Event saved");
+  const saveEvent = () => {
+    console.log("Event payload", { title, content });
+    alert("Hook this action to your backend endpoint for creating events.");
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Create Event</h2>
+    <Box style={{ padding: "20px" }}>
+      <Heading size="md" mb={4}>
+        Create Event
+      </Heading>
 
-      <input
-        placeholder="Event title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <FormControl mb={3}>
+        <FormLabel>Event title</FormLabel>
+        <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+      </FormControl>
 
-      <textarea
-        placeholder="Event description"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
+      <FormControl mb={3}>
+        <FormLabel>Event description</FormLabel>
+        <Textarea value={content} onChange={(e) => setContent(e.target.value)} />
+      </FormControl>
 
-      <button onClick={saveEvent}>Save</button>
-    </div>
+      <Button onClick={saveEvent}>Save</Button>
+    </Box>
   );
 }

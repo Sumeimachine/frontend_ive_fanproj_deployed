@@ -1,110 +1,70 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import { useAuth } from "../context/AuthContext";
 
-const MainLayout = () => {
+export default function MainLayout() {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, username, role } = useAuth();
+
+  const navItems = [
+    { label: "Members", to: "/" },
+    { label: "Dashboard", to: "/dashboard" },
+    ...(role === "Admin"
+      ? [
+          { label: "Pages", to: "/pages" },
+          { label: "Content Editor", to: "/pages/editor" },
+        ]
+      : []),
+  ];
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      <div
-        style={{
-          width: "220px",
-          background: "#1A152A",
-          color: "#fff",
-          padding: "20px",
-          display: "flex",
-          flexDirection: "column",
-        }}
+    <Box display="flex" minH="100vh" bg="#080612">
+      <Box
+        width="260px"
+        bg="#151126"
+        color="white"
+        p={5}
+        display="flex"
+        flexDirection="column"
+        gap={3}
       >
-        <h2>IVE KPOP</h2>
+        <Text fontWeight="bold" fontSize="xl" mb={2}>
+          IVE Admin UI
+        </Text>
 
-        <button onClick={() => navigate("/dashboard")}>Dashboard</button>
+        <Text fontSize="sm" color="gray.400">
+          {username ? `${username} (${role || "User"})` : "Authenticated user"}
+        </Text>
 
-        <button onClick={() => navigate("/")}>Members</button>
+        <Stack mt={4} spacing={2}>
+          {navItems.map((item) => (
+            <Button
+              key={item.to}
+              as={NavLink}
+              to={item.to}
+              justifyContent="flex-start"
+              variant="ghost"
+              color="gray.200"
+              _activeLink={{ bg: "purple.600", color: "white" }}
+            >
+              {item.label}
+            </Button>
+          ))}
+        </Stack>
 
-        <button
-          onClick={() => {
-            logout();
-            navigate("/login");
-          }}
-          style={{ marginTop: "auto", background: "#8c2f39" }}
-        >
+        <Button mt="auto" colorScheme="red" onClick={handleLogout}>
           Logout
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      <div style={{ flex: 1 }}>
+      <Box flex="1">
         <Outlet />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
-};
-
-export default MainLayout;
-// import React from "react";
-// import { Outlet, useNavigate } from "react-router-dom";
-
-// const MainLayout: React.FC = () => {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div style={{ display: "flex", minHeight: "100vh" }}>
-
-//       {/* Sidebar */}
-//       <div
-//         style={{
-//           width: "220px",
-//           background: "#1A152A",
-//           color: "#fff",
-//           display: "flex",
-//           flexDirection: "column",
-//           padding: "20px",
-//         }}
-//       >
-//         <h2 style={{ marginBottom: "40px", fontSize: "1.8rem" }}>IVE KPOP</h2>
-
-//         <button
-//           onClick={() => navigate("/dashboard")}
-//           style={{
-//             padding: "12px 20px",
-//             borderRadius: "12px",
-//             border: "none",
-//             background: "#3A2D56",
-//             color: "#fff",
-//             fontWeight: 600,
-//             marginBottom: "10px",
-//             cursor: "pointer",
-//             textAlign: "left",
-//           }}
-//         >
-//           Dashboard
-//         </button>
-
-//         <button
-//           onClick={() => navigate("/")}
-//           style={{
-//             padding: "12px 20px",
-//             borderRadius: "12px",
-//             border: "none",
-//             background: "#3A2D56",
-//             color: "#fff",
-//             fontWeight: 600,
-//             cursor: "pointer",
-//             textAlign: "left",
-//           }}
-//         >
-//           Members
-//         </button>
-//       </div>
-
-//       {/* Page Content */}
-//       <div style={{ flex: 1 }}>
-//         <Outlet />
-//       </div>
-
-//     </div>
-//   );
-// };
-
-// export default MainLayout;
+}
