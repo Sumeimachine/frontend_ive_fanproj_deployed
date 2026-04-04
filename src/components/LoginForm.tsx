@@ -65,8 +65,8 @@ const LoginForm = () => {
   };
 
   const handleVerifyEmail = async () => {
-    const response = await authApi.verifyEmail({ email });
-    setSuccess(response || "Verification check sent.");
+    const response = await authApi.resendVerification(email);
+    setSuccess(response || "Verification email sent.");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -122,7 +122,7 @@ const LoginForm = () => {
             Reset
           </Button>
           <Button size="sm" onClick={() => switchMode("verify")} variant={mode === "verify" ? "solid" : "outline"} colorScheme="purple">
-            Verify
+            Resend Verify
           </Button>
         </HStack>
 
@@ -209,7 +209,7 @@ const LoginForm = () => {
               {mode === "register" && "Create Account"}
               {mode === "forgot" && "Send Reset Email"}
               {mode === "reset" && "Reset Password"}
-              {mode === "verify" && "Verify Email"}
+              {mode === "verify" && "Resend Verification"}
             </Button>
           </VStack>
         </form>

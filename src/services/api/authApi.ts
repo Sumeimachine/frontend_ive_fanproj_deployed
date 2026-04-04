@@ -19,6 +19,13 @@ export const authApi = {
     return data;
   },
 
+  resendVerification: async (email: string) => {
+    const { data } = await httpClient.post<string>("/Auth/resend-verification", {
+      email,
+    });
+    return data;
+  },
+
   forgotPassword: async (email: string) => {
     const { data } = await httpClient.post<string>("/Auth/forgot-password", {
       email,
