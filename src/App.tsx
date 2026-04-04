@@ -25,6 +25,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/auth/verify-email" element={<EmailVerification />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/auth/reset-password" element={<ResetPassword />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
