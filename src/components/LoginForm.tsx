@@ -18,7 +18,13 @@ import { authApi } from "../services/api/authApi";
 
 type AuthMode = "login" | "register" | "forgot" | "verify";
 
-const LoginForm = () => {
+type LoginFormProps = {
+  showSoundToggle?: boolean;
+  soundEnabled?: boolean;
+  onToggleMute?: () => void;
+};
+
+const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute }: LoginFormProps) => {
   const [mode, setMode] = useState<AuthMode>("login");
 
   const [username, setUsername] = useState("");
@@ -145,9 +151,22 @@ const LoginForm = () => {
           </Button>
         </HStack>
 
-        <Text color="whiteAlpha.780" fontSize="sm">
-          <b>Join in on the fun!</b>.
+        <Text color="whiteAlpha.800" fontSize="sm">
+          Join in on the fun! <b>fan project By PH peeps</b>.
         </Text>
+        {showSoundToggle && (
+          <Button
+            size="sm"
+            alignSelf="flex-start"
+            colorScheme="purple"
+            variant="outline"
+            bg="rgba(6, 7, 18, 0.45)"
+            backdropFilter="blur(6px)"
+            onClick={onToggleMute}
+          >
+            {soundEnabled ? "Sound: On" : "Sound: Off"}
+          </Button>
+        )}
 
         {error && (
           <Alert status="error" borderRadius="md">

@@ -1,9 +1,24 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Box, Container } from "@chakra-ui/react";
 import LoginForm from "../components/LoginForm";
 
 export default function Login() {
   const [videoFailed, setVideoFailed] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const toggleSound = () => {
+    const nextSoundEnabled = !soundEnabled;
+    setSoundEnabled(nextSoundEnabled);
+    setIsMuted(!nextSoundEnabled);
+
+    if (nextSoundEnabled) {
+      void videoRef.current?.play().catch(() => {
+        // Ignore: this can fail if browser policy blocks playback.
+      });
+    }
+  };
 
   return (
     <Box
@@ -21,12 +36,13 @@ export default function Login() {
       {!videoFailed ? (
         <Box
           as="video"
+          ref={videoRef}
           className="login-collage login-video"
           position="absolute"
           inset={0}
           src="/videos/login-bg.mp4"
           autoPlay
-          muted
+          muted={isMuted}
           loop
           playsInline
           onError={() => setVideoFailed(true)}
@@ -70,7 +86,11 @@ export default function Login() {
       />
 
       <Container maxW="lg" position="relative" zIndex={1}>
-        <LoginForm />
+        <LoginForm
+          showSoundToggle={!videoFailed}
+          soundEnabled={soundEnabled}
+          onToggleMute={toggleSound}
+        />
       </Container>
     </Box>
   );
