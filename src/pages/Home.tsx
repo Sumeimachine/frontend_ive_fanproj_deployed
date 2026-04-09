@@ -1,245 +1,138 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Grid, Image, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Heading,
+  HStack,
+  Image,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import membersDataRaw from "../assets/members.json";
 
-// ✅ Define the member type
 interface Member {
   id: string;
   name: string;
   photoUrl: string;
 }
 
-// ✅ Cast the JSON import to the typed array
 const membersData: Member[] = membersDataRaw as Member[];
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [scrollY, setScrollY] = useState(0);
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    const handlePointerMove = (event: PointerEvent) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = (event.clientY / window.innerHeight) * 2 - 1;
+      setPointer({ x, y });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
+
+  const cameraTransform = useMemo(() => {
+    const rotateX = pointer.y * -6;
+    const rotateY = pointer.x * 9;
+    const translateY = scrollY * -0.08;
+    return `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${translateY}px)`;
+  }, [pointer, scrollY]);
 
   return (
-    <Box
-      minH="100vh"
-      w="100%"
-      bgGradient="radial(circle at top, #1A152A, #0A0812 80%)"
-      color="white"
-      py={{ base: 10, md: 20 }}
-      px={{ base: 4, md: 10 }}
-    >
-      <Heading
-        as="h1"
-        fontSize={{ base: "2xl", md: "4xl" }}
-        fontWeight="700"
-        mb={{ base: 10, md: 20 }}
-        textAlign="center"
-      >
-        IVE Members
-      </Heading>
+    <Box className="home-page" minH="100vh" color="white">
+      <Box className="parallax-layer layer-back" style={{ transform: `translateY(${scrollY * 0.14}px)` }} />
+      <Box className="parallax-layer layer-mid" style={{ transform: `translateY(${scrollY * 0.22}px)` }} />
+      <Box className="parallax-layer layer-front" style={{ transform: `translateY(${scrollY * 0.32}px)` }} />
 
-      <Grid
-        templateColumns={{
-          base: "1fr",
-          sm: "repeat(2, 1fr)",
-          md: "repeat(3, 1fr)",
-        }}
-        gap={{ base: 6, md: 10 }}
-        maxW="1200px"
-        mx="auto"
-      >
-        {membersData.map((member) => (
-          <Box
-            key={member.id}
-            as="button"
-            onClick={() => navigate(`/member/${member.id}`)} // navigate to member info page
-            borderRadius="20px"
-            overflow="hidden"
-            bg="rgba(255,255,255,0.05)"
-            boxShadow="0 6px 20px rgba(0,0,0,0.3)"
-            transition="all 0.3s"
-            _hover={{
-              transform: "scale(1.05)",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-            }}
-          >
-            <Image
-              src={member.photoUrl}
-              alt={member.name || ""}
-              w="100%"
-              h="auto"
-              objectFit="cover"
-            />
-            <VStack py={4}>
-              <Text fontSize={{ base: "md", md: "lg" }} fontWeight="semibold">
-                {member.name}
-              </Text>
-            </VStack>
-          </Box>
-        ))}
-      </Grid>
+      <Container maxW="1200px" py={{ base: 12, md: 20 }} position="relative" zIndex={2}>
+        <VStack spacing={6} textAlign="center" mb={{ base: 12, md: 16 }}>
+          <Text className="eyebrow">Level 1 — Modern interactive site</Text>
+          <Heading fontSize={{ base: "3xl", md: "6xl" }} lineHeight="1.1">
+            IVE Neon Dimension
+          </Heading>
+          <Text maxW="740px" color="whiteAlpha.800" fontSize={{ base: "md", md: "lg" }}>
+            Parallax depth, smooth motion, and 3D-like cards are now built into the homepage. Move your pointer and
+            scroll to feel each layer react.
+          </Text>
+        </VStack>
+
+        <Grid templateColumns={{ base: "1fr", sm: "repeat(2,1fr)", md: "repeat(3,1fr)" }} gap={{ base: 5, md: 8 }}>
+          {membersData.map((member, index) => (
+            <Box
+              key={member.id}
+              as="button"
+              className="member-card"
+              style={{
+                animationDelay: `${index * 80}ms`,
+                transform: `translateZ(${(index % 3) * 12 + 6}px) rotateX(${pointer.y * -2.8}deg) rotateY(${pointer.x * 3.2}deg)`,
+              }}
+              onClick={() => navigate(`/member/${member.id}`)}
+            >
+              <Image src={member.photoUrl} alt={member.name} w="100%" h="340px" objectFit="cover" />
+              <VStack py={4} bg="rgba(12,11,24,0.8)">
+                <Text fontWeight="bold" fontSize="lg">
+                  {member.name}
+                </Text>
+                <Text color="purple.200" fontSize="sm">
+                  Enter profile
+                </Text>
+              </VStack>
+            </Box>
+          ))}
+        </Grid>
+      </Container>
+
+      <Box className="world-section" style={{ transform: cameraTransform }}>
+        <Container maxW="1200px" py={{ base: 12, md: 20 }}>
+          <VStack spacing={5} align="start" mb={10}>
+            <Text className="eyebrow">Level 2 — Full 3D website</Text>
+            <Heading fontSize={{ base: "2xl", md: "4xl" }}>Scroll through a 3D world concept</Heading>
+            <Text color="whiteAlpha.800" maxW="760px">
+              This section simulates camera motion in a 3D corridor. Next step can swap these blocks with real glTF
+              models and a true WebGL scene.
+            </Text>
+          </VStack>
+
+          <HStack className="world-track" spacing={6} align="stretch">
+            <Box className="world-node">
+              <Heading size="md" mb={2}>
+                Camera Move
+              </Heading>
+              <Text color="whiteAlpha.800">The corridor tilts with pointer movement and drifts with scroll depth.</Text>
+            </Box>
+            <Box className="world-node">
+              <Heading size="md" mb={2}>
+                Interactive Objects
+              </Heading>
+              <Text color="whiteAlpha.800">Cards and nodes keep subtle 3D rotations for a tactile feel.</Text>
+            </Box>
+            <Box className="world-node">
+              <Heading size="md" mb={2}>
+                Ready for 3D Models
+              </Heading>
+              <Text color="whiteAlpha.800">We can wire in your photos/textures as model materials next.</Text>
+            </Box>
+          </HStack>
+
+          <Button mt={10} colorScheme="purple" size="lg" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            Back to top
+          </Button>
+        </Container>
+      </Box>
     </Box>
   );
 };
 
 export default Home;
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import { Box, Grid, Image, Heading, Text, VStack } from "@chakra-ui/react";
-// import membersDataRaw from "../assets/members.json";
-
-// // ✅ Define the member type
-// interface Member {
-//   id: string;
-//   name: string;
-//   photoUrl: string;
-// }
-
-// // ✅ Cast the JSON import to the typed array
-// const membersData: Member[] = membersDataRaw as Member[];
-
-// const Home: React.FC = () => {
-//   const navigate = useNavigate();
-
-//   return (
-//     <Box
-//       minH="100vh"
-//       w="100%"
-//       bgGradient="radial(circle at top, #1A152A, #0A0812 80%)"
-//       color="white"
-//       py={{ base: 10, md: 20 }}
-//       px={{ base: 4, md: 10 }}
-//     >
-//       <Heading
-//         as="h1"
-//         fontSize={{ base: "2xl", md: "4xl" }}
-//         fontWeight="700"
-//         mb={{ base: 10, md: 20 }}
-//         textAlign="center"
-//       >
-//         IVE Members
-//       </Heading>
-
-//       <Grid
-//         templateColumns={{ base: "1fr", sm: "repeat(2, 1fr)", md: "repeat(3, 1fr)" }}
-//         gap={{ base: 6, md: 10 }}
-//         maxW="1200px"
-//         mx="auto"
-//       >
-//         {membersData.map((member) => (
-//           <Box
-//             key={member.id}
-//             as="button"
-//             onClick={() => navigate(`/dashboard/${member.id}`)}
-//             borderRadius="20px"
-//             overflow="hidden"
-//             bg="rgba(255,255,255,0.05)"
-//             boxShadow="0 6px 20px rgba(0,0,0,0.3)"
-//             transition="all 0.3s"
-//             _hover={{
-//               transform: "scale(1.05)",
-//               boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
-//             }}
-//           >
-//             <Image
-//               src={member.photoUrl}
-//               alt={member.name || ""}
-//               w="100%"
-//               h="auto"
-//               objectFit="cover"
-//             />
-//             <VStack py={4}>
-//               <Text fontSize={{ base: "md", md: "lg" }} fontWeight="semibold">
-//                 {member.name}
-//               </Text>
-//             </VStack>
-//           </Box>
-//         ))}
-//       </Grid>
-//     </Box>
-//   );
-// };
-
-// export default Home;
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import membersDataRaw from "../assets/members.json";
-
-// // ✅ Define the member type
-// interface Member {
-//   id: string;
-//   name: string;
-//   photoUrl: string;
-// }
-
-// // ✅ Cast the JSON import to the typed array
-// const membersData: Member[] = membersDataRaw as Member[];
-
-// const Home: React.FC = () => {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div
-//       style={{
-//         minHeight: "100vh",
-//         width: "100vw",
-//         display: "flex",
-//         flexDirection: "column",
-//         alignItems: "center",
-//         padding: "40px 20px",
-//         background: "radial-gradient(circle at top, #1A152A, #0A0812 80%)",
-//         color: "#fff",
-//         boxSizing: "border-box",
-//       }}
-//     >
-//       <h1 style={{ fontSize: "3rem", fontWeight: 700, marginBottom: "50px" }}>IVE Members</h1>
-
-//       <div
-//         style={{
-//           display: "grid",
-//         //   gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-//           gridTemplateColumns: "repeat(3, 1fr)",
-//           gap: "30px",
-//           width: "100%",
-//           maxWidth: "1200px",
-//         }}
-//       >
-//         {membersData.map((member) => (
-//           <div
-//             key={member.id}
-//             onClick={() => navigate(`/dashboard/${member.id}`)}
-//             style={{
-//               background: "rgba(255,255,255,0.05)",
-//               borderRadius: "20px",
-//               padding: "20px",
-//               textAlign: "center",
-//               cursor: "pointer",
-//               transition: "transform 0.3s ease, box-shadow 0.3s ease",
-//               boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-//             }}
-//             onMouseEnter={(e) => {
-//               e.currentTarget.style.transform = "scale(1.05)";
-//               e.currentTarget.style.boxShadow = "0 10px 30px rgba(0,0,0,0.5)";
-//             }}
-//             onMouseLeave={(e) => {
-//               e.currentTarget.style.transform = "scale(1)";
-//               e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.3)";
-//             }}
-//           >
-//             <img
-//               src={member.photoUrl}
-//               alt={member.name || ""} // ✅ ensure alt is string
-//               style={{
-//                 width: "100%",
-//                 height: "auto",
-//                 borderRadius: "15px",
-//                 marginBottom: "15px",
-//                 objectFit: "cover",
-//               }}
-//             />
-//             <h3 style={{ fontSize: "1.3rem", marginBottom: "10px" }}>{member.name}</h3>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;

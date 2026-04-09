@@ -56,7 +56,6 @@ const LoginForm = () => {
     setSuccess(response || "Password reset email sent.");
   };
 
-
   const handleVerifyEmail = async () => {
     const response = await authApi.resendVerification(email);
     setSuccess(response || "Verification email sent.");
@@ -84,22 +83,54 @@ const LoginForm = () => {
     }
   };
 
+  const inputStyles = {
+    bg: "rgba(9, 10, 22, 0.9)",
+    color: "#FFFFFF",
+    caretColor: "#FFFFFF",
+    borderColor: "whiteAlpha.300",
+    _placeholder: { color: "whiteAlpha.600" },
+    _hover: { borderColor: "purple.300" },
+    _focusVisible: {
+      borderColor: "purple.300",
+      boxShadow: "0 0 0 1px rgba(182, 124, 255, 0.8)",
+      bg: "rgba(13, 14, 28, 0.95)",
+    },
+    sx: {
+      "&, &::placeholder": {
+        WebkitTextFillColor: "#ffffff",
+      },
+      "&:-webkit-autofill, &:-webkit-autofill:hover, &:-webkit-autofill:focus": {
+        WebkitTextFillColor: "#ffffff",
+        boxShadow: "0 0 0px 1000px #131629 inset",
+        transition: "background-color 9999s ease-in-out 0s",
+      },
+    },
+  };
+
   return (
     <Box
+      className="login-panel"
       maxW="500px"
       w="100%"
       p={{ base: 6, md: 8 }}
       borderRadius="2xl"
-      bg="rgba(255,255,255,0.06)"
-      backdropFilter="blur(8px)"
-      boxShadow="0 10px 35px rgba(0,0,0,0.4)"
+      border="1px solid"
+      borderColor="whiteAlpha.280"
+      bg="linear-gradient(160deg, rgba(255,255,255,0.11), rgba(255,255,255,0.03))"
+      backdropFilter="blur(12px)"
+      boxShadow="0 20px 45px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.18)"
     >
       <VStack spacing={6} align="stretch">
-        <Heading size="lg" color="white">
-          Account Access
-        </Heading>
+        <VStack align="stretch" spacing={1}>
+          <Heading size="lg" color="white">
+            Account Access
+          </Heading>
+          <Text color="whiteAlpha.800" fontSize="sm">
+            Welcome back to IVE Neon Dimension.
+          </Text>
+        </VStack>
 
-        <HStack spacing={2} overflowX="auto">
+        <HStack className="login-mode-row" spacing={2} overflowX="auto" pb={1}>
           <Button size="sm" onClick={() => switchMode("login")} variant={mode === "login" ? "solid" : "outline"} colorScheme="purple">
             Login
           </Button>
@@ -114,8 +145,8 @@ const LoginForm = () => {
           </Button>
         </HStack>
 
-        <Text color="gray.300" fontSize="sm">
-          Connected to backend auth endpoints under <b>/api/Auth/*</b>.
+        <Text color="whiteAlpha.780" fontSize="sm">
+          <b>Join in on the fun!</b>.
         </Text>
 
         {error && (
@@ -136,40 +167,38 @@ const LoginForm = () => {
           <VStack spacing={4} align="stretch">
             {(mode === "login" || mode === "register") && (
               <FormControl isRequired>
-                <FormLabel color="gray.200">Username</FormLabel>
-                <Input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter username"
-                />
+                <FormLabel color="whiteAlpha.900">Username</FormLabel>
+                <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter username" {...inputStyles} />
               </FormControl>
             )}
 
             {(mode === "register" || mode === "forgot" || mode === "verify") && (
               <FormControl isRequired>
-                <FormLabel color="gray.200">Email</FormLabel>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter email"
-                />
+                <FormLabel color="whiteAlpha.900">Email</FormLabel>
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email" {...inputStyles} />
               </FormControl>
             )}
 
             {(mode === "login" || mode === "register") && (
               <FormControl isRequired>
-                <FormLabel color="gray.200">Password</FormLabel>
+                <FormLabel color="whiteAlpha.900">Password</FormLabel>
                 <Input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
+                  {...inputStyles}
                 />
               </FormControl>
             )}
 
-            <Button type="submit" colorScheme="purple" isLoading={isSubmitting}>
+            <Button
+              type="submit"
+              colorScheme="purple"
+              isLoading={isSubmitting}
+              bgGradient="linear(to-r, purple.500, pink.500)"
+              _hover={{ bgGradient: "linear(to-r, purple.400, pink.400)" }}
+            >
               {mode === "login" && "Sign In"}
               {mode === "register" && "Create Account"}
               {mode === "forgot" && "Send Reset Email"}
