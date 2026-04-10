@@ -177,10 +177,10 @@ const MemberInfo: React.FC = () => {
                   bg="rgba(255,255,255,0.04)"
                 >
                   <Text fontSize="sm" color="purple.100" mb={2}>
-                    Design note
+                    some modal/box here
                   </Text>
                   <Text color="whiteAlpha.800">
-                    This page is designed as a polished profile hub for fans, while admin-only editing stays separated.
+                    I don't know yet what i can put here but seems useful.
                   </Text>
                 </Box>
 
