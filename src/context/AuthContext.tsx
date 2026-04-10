@@ -14,6 +14,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   username: string;
   role: string;
+  currencyBalance: number;
+  dailyRewardClaimedToday: boolean;
   login: (dto: LoginDto) => Promise<void>;
   logout: () => Promise<void>;
   bootstrapProfile: () => Promise<void>;
@@ -31,11 +33,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   );
   const [username, setUsername] = useState<string>("");
   const [role, setRole] = useState<string>("");
+  const [currencyBalance, setCurrencyBalance] = useState<number>(0);
+  const [dailyRewardClaimedToday, setDailyRewardClaimedToday] =
+    useState<boolean>(false);
 
   const bootstrapProfile = useCallback(async () => {
     if (!localStorage.getItem("token")) {
       setUsername("");
       setRole("");
+      setCurrencyBalance(0);
+      setDailyRewardClaimedToday(false);
       return;
     }
 
@@ -43,6 +50,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const profile = await userApi.getProfile();
       setUsername(profile.username ?? "");
       setRole(profile.role ?? "");
+      setCurrencyBalance(profile.currencyBalance ?? 0);
+      setDailyRewardClaimedToday(profile.dailyRewardClaimedToday ?? false);
       setIsAuthenticated(true);
     } catch {
       localStorage.removeItem("token");
@@ -50,6 +59,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsAuthenticated(false);
       setUsername("");
       setRole("");
+      setCurrencyBalance(0);
+      setDailyRewardClaimedToday(false);
     }
   }, []);
 
@@ -64,8 +75,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsAuthenticated(true);
     setUsername(data.username ?? "");
     setRole(data.role ?? "");
+    setCurrencyBalance(data.currencyBalance ?? 0);
+    setDailyRewardClaimedToday(data.dailyRewardClaimedToday ?? false);
 
-    if (!data.username || !data.role) {
+    if (!data.username || !data.role || typeof data.currencyBalance !== "number") {
       await bootstrapProfile();
     }
   }, [bootstrapProfile]);
@@ -83,11 +96,31 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsAuthenticated(false);
     setUsername("");
     setRole("");
+    setCurrencyBalance(0);
+    setDailyRewardClaimedToday(false);
   }, []);
 
   const value = useMemo(
-    () => ({ isAuthenticated, login, logout, username, role, bootstrapProfile }),
-    [isAuthenticated, login, logout, username, role, bootstrapProfile],
+    () => ({
+      isAuthenticated,
+      login,
+      logout,
+      username,
+      role,
+      currencyBalance,
+      dailyRewardClaimedToday,
+      bootstrapProfile,
+    }),
+    [
+      isAuthenticated,
+      login,
+      logout,
+      username,
+      role,
+      currencyBalance,
+      dailyRewardClaimedToday,
+      bootstrapProfile,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

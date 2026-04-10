@@ -4,29 +4,27 @@ import {
   Box,
   Button,
   Container,
-  Grid,
   Heading,
   HStack,
-  Image,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import membersDataRaw from "../assets/members.json";
-
-interface Member {
-  id: string;
-  name: string;
-  photoUrl: string;
-}
-
-const membersData: Member[] = membersDataRaw as Member[];
+import MemberUniverseSection from "../components/MemberUniverseSection";
+import { getMemberProfiles, loadMemberProfiles } from "../services/memberProfileStore";
+import type { MemberProfile } from "../types/member";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [membersData, setMembersData] = useState<MemberProfile[]>(() => loadMemberProfiles());
   const [scrollY, setScrollY] = useState(0);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
+    void (async () => {
+      const profiles = await getMemberProfiles();
+      setMembersData(profiles);
+    })();
+
     const handleScroll = () => setScrollY(window.scrollY);
     const handlePointerMove = (event: PointerEvent) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -57,7 +55,7 @@ const Home: React.FC = () => {
       <Box className="parallax-layer layer-front" style={{ transform: `translateY(${scrollY * 0.32}px)` }} />
 
       <Container maxW="1200px" py={{ base: 12, md: 20 }} position="relative" zIndex={2}>
-        <VStack spacing={6} textAlign="center" mb={{ base: 12, md: 16 }}>
+        {/* <VStack spacing={6} textAlign="center" mb={{ base: 12, md: 16 }}>
           <Text className="eyebrow">Level 1 — Modern interactive site</Text>
           <Heading fontSize={{ base: "3xl", md: "6xl" }} lineHeight="1.1">
             IVE Neon Dimension
@@ -72,40 +70,62 @@ const Home: React.FC = () => {
           {membersData.map((member, index) => (
             <Box
               key={member.id}
-              as="button"
               className="member-card"
               style={{
                 animationDelay: `${index * 80}ms`,
                 transform: `translateZ(${(index % 3) * 12 + 6}px) rotateX(${pointer.y * -2.8}deg) rotateY(${pointer.x * 3.2}deg)`,
               }}
-              onClick={() => navigate(`/member/${member.id}`)}
             >
               <Image src={member.photoUrl} alt={member.name} w="100%" h="340px" objectFit="cover" />
-              <VStack py={4} bg="rgba(12,11,24,0.8)">
+              <VStack py={4} px={4} bg="rgba(12,11,24,0.86)" spacing={3}>
                 <Text fontWeight="bold" fontSize="lg">
                   {member.name}
                 </Text>
-                <Text color="purple.200" fontSize="sm">
-                  Enter profile
+                <Text color="purple.200" fontSize="sm" textAlign="center">
+                  {member.tagline}
                 </Text>
+                <HStack spacing={3}>
+                  <Button
+                    size="sm"
+                    colorScheme="purple"
+                    onClick={() => navigate(`/member/${member.id}`)}
+                  >
+                    View Profile
+                  </Button>
+                  {role === "Admin" && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      colorScheme="pink"
+                      onClick={() => navigate(`/member/${member.id}?edit=1`)}
+                    >
+                      Edit
+                    </Button>
+                  )}
+                </HStack>
               </VStack>
             </Box>
           ))}
-        </Grid>
+        </Grid> */}
+
+        <MemberUniverseSection
+          members={membersData}
+          onSelectMember={(memberId) => navigate(`/member/${memberId}`)}
+        />
       </Container>
 
       <Box className="world-section" style={{ transform: cameraTransform }}>
         <Container maxW="1200px" py={{ base: 12, md: 20 }}>
-          <VStack spacing={5} align="start" mb={10}>
+          {/* <VStack spacing={5} align="start" mb={10}>
             <Text className="eyebrow">Level 2 — Full 3D website</Text>
             <Heading fontSize={{ base: "2xl", md: "4xl" }}>Scroll through a 3D world concept</Heading>
             <Text color="whiteAlpha.800" maxW="760px">
               This section simulates camera motion in a 3D corridor. Next step can swap these blocks with real glTF
               models and a true WebGL scene.
             </Text>
-          </VStack>
+          </VStack> */}
 
-          <HStack className="world-track" spacing={6} align="stretch">
+          {/* <HStack className="world-track" spacing={6} align="stretch">
             <Box className="world-node">
               <Heading size="md" mb={2}>
                 Camera Move
@@ -124,7 +144,7 @@ const Home: React.FC = () => {
               </Heading>
               <Text color="whiteAlpha.800">We can wire in your photos/textures as model materials next.</Text>
             </Box>
-          </HStack>
+          </HStack> */}
 
           <Button mt={10} colorScheme="purple" size="lg" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             Back to top

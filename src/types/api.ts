@@ -8,6 +8,8 @@ export interface LoginResponse {
   refreshToken?: string;
   username?: string;
   role?: string;
+  currencyBalance?: number;
+  dailyRewardClaimedToday?: boolean;
 }
 
 export interface RegisterDto {
@@ -19,6 +21,8 @@ export interface RegisterDto {
 export interface UserProfile {
   username?: string;
   role?: string;
+  currencyBalance?: number;
+  dailyRewardClaimedToday?: boolean;
 }
 
 export interface YoutubeTrend {
