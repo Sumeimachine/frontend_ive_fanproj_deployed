@@ -43,6 +43,33 @@ const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const fetchTrendChunks = async (videoIdChunks: string[][]) => {
+    const results: Awaited<ReturnType<typeof youtubeApi.getTrends>>[] = [];
+    let hadRateLimit = false;
+
+    for (const chunk of videoIdChunks) {
+      try {
+        const chunkData = await youtubeApi.getTrends(chunk);
+        results.push(chunkData);
+      } catch (requestError: unknown) {
+        const status = (requestError as { response?: { status?: number } })?.response?.status;
+        if (status === 429) {
+          hadRateLimit = true;
+          results.push([]);
+          await delay(500);
+          continue;
+        }
+
+        throw requestError;
+      }
+
+      await delay(250);
+    }
+
+    return { results, hadRateLimit };
+  };
 
   const fetchInitialMetrics = async () => {
     setLoading(true);
@@ -58,9 +85,7 @@ const Dashboard: React.FC = () => {
         );
       }
 
-      const responses = await Promise.all(
-        videoIdChunks.map((chunk) => youtubeApi.getTrends(chunk)),
-      );
+      const { results: responses, hadRateLimit } = await fetchTrendChunks(videoIdChunks);
 
       const trendsByVideoId = new Map(
         responses
@@ -81,6 +106,9 @@ const Dashboard: React.FC = () => {
       });
 
       setMetrics(initialMetrics);
+      if (hadRateLimit) {
+        setError("Some trend requests were rate-limited (429). Showing partial data.");
+      }
     } catch (err) {
       console.error(err);
       setError("Failed to fetch initial metrics.");
@@ -106,9 +134,10 @@ const Dashboard: React.FC = () => {
         .map((songName) => IVE_SONGS.find((song) => song.name === songName))
         .filter((song): song is Song => Boolean(song));
 
-      const response = await youtubeApi.getTrends(
+      const { results, hadRateLimit } = await fetchTrendChunks([
         selectedSongModels.map((song) => song.youtubeId),
-      );
+      ]);
+      const response = results[0] ?? [];
 
       const trendsByVideoId = new Map(
         response
@@ -131,6 +160,9 @@ const Dashboard: React.FC = () => {
         const otherMetrics = prev.filter((m) => !selectedSongs.includes(m.song));
         return [...otherMetrics, ...updatedMetrics];
       });
+      if (hadRateLimit) {
+        setError("YouTube API rate-limited this refresh (429).");
+      }
     } catch (err) {
       console.error(err);
       setError("Failed to fetch metrics.");

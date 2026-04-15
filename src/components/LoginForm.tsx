@@ -49,7 +49,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
 
   const handleLogin = async () => {
     await login({ username, password });
-    navigate("/dashboard");
+    navigate("/");
   };
 
   const handleRegister = async () => {

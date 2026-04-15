@@ -116,35 +116,45 @@ const Home: React.FC = () => {
 
       <Box className="world-section" style={{ transform: cameraTransform }}>
         <Container maxW="1200px" py={{ base: 12, md: 20 }}>
-          {/* <VStack spacing={5} align="start" mb={10}>
-            <Text className="eyebrow">Level 2 — Full 3D website</Text>
-            <Heading fontSize={{ base: "2xl", md: "4xl" }}>Scroll through a 3D world concept</Heading>
+          <VStack spacing={5} align="start" mb={10}>
+            <Text className="eyebrow">IVE PH EXPERIENCE</Text> 
+            <Heading fontSize={{ base: "2xl", md: "4xl" }}>
+              Dive into IVE’s world
+            </Heading>
             <Text color="whiteAlpha.800" maxW="760px">
-              This section simulates camera motion in a 3D corridor. Next step can swap these blocks with real glTF
-              models and a true WebGL scene.
+              A fan-built interactive space inspired by IVE — blending motion, visuals, and creativity. 
+              This evolving experience will soon feature real 3D environments and deeper immersion for fans.
             </Text>
-          </VStack> */}
+          </VStack>
 
-          {/* <HStack className="world-track" spacing={6} align="stretch">
+        <HStack className="world-track" spacing={6} align="stretch">
             <Box className="world-node">
               <Heading size="md" mb={2}>
-                Camera Move
+                Dynamic Motion
               </Heading>
-              <Text color="whiteAlpha.800">The corridor tilts with pointer movement and drifts with scroll depth.</Text>
+              <Text color="whiteAlpha.800">
+                The environment responds fluidly to your movement — shifting perspective as you scroll and explore.
+              </Text>
             </Box>
+
             <Box className="world-node">
               <Heading size="md" mb={2}>
-                Interactive Objects
+                Immersive Interaction
               </Heading>
-              <Text color="whiteAlpha.800">Cards and nodes keep subtle 3D rotations for a tactile feel.</Text>
+              <Text color="whiteAlpha.800">
+                Elements subtly react in 3D space, creating a tactile and engaging browsing experience.
+              </Text>
             </Box>
+
             <Box className="world-node">
               <Heading size="md" mb={2}>
-                Ready for 3D Models
+                Evolving Experience
               </Heading>
-              <Text color="whiteAlpha.800">We can wire in your photos/textures as model materials next.</Text>
+              <Text color="whiteAlpha.800">
+                Designed to grow into a fully realized 3D world with custom models, visuals, and deeper immersion.
+              </Text>
             </Box>
-          </HStack> */}
+          </HStack>
 
           <Button mt={10} colorScheme="purple" size="lg" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
             Back to top

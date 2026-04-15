@@ -142,10 +142,10 @@ export default function MemberUniverseSection({ members, onSelectMember }: Membe
       boxShadow="0 30px 80px rgba(137, 89, 255, 0.35)"
     >
       <VStack spacing={3} textAlign="center" pt={{ base: 8, md: 10 }} px={6}>
-        {/* <Text className="eyebrow">Level 3 — Immersive WebGL</Text> */}
+        <Text className="eyebrow">DIVE INTO IVE!</Text>
         <Heading fontSize={{ base: "2xl", md: "4xl" }}>IVE Universe — Neon Card Orbit</Heading>
         <Text maxW="740px" color="whiteAlpha.800">
-          Hover over a card to highlight, then click to open
+          Hover a card to highlight, then click to open
           profile.
         </Text>
       </VStack>

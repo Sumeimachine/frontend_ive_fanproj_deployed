@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-d
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import SuperAdminRoute from "./components/SuperAdminRoute";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
@@ -13,6 +14,13 @@ import DynamicContentPage from "./pages/DynamicContentPage";
 import ContentEditor from "./pages/ContentEditor";
 import EmailVerification from "./pages/EmailVerification";
 import ResetPassword from "./pages/ResetPassword";
+import QuizGame from "./pages/QuizGame";
+import QuizLeaderboards from "./pages/QuizLeaderboards";
+import AdminQuizManager from "./pages/AdminQuizManager";
+import AdminQuizEditor from "./pages/AdminQuizEditor";
+import SuperAdminUsers from "./pages/SuperAdminUsers";
+import SuperAdminEvents from "./pages/SuperAdminEvents";
+import AboutUs from "./pages/AboutUs";
 
 function AppRoutes() {
   const { bootstrapProfile } = useAuth();
@@ -32,11 +40,20 @@ function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/quiz/daily" element={<QuizGame />} />
+          <Route path="/quiz/leaderboards" element={<QuizLeaderboards />} />
           <Route path="/member/:id" element={<MemberInfo />} />
           <Route element={<AdminRoute />}>
             <Route path="/pages" element={<ContentPages />} />
             <Route path="/pages/editor" element={<ContentEditor />} />
             <Route path="/pages/:slug" element={<DynamicContentPage />} />
+            <Route path="/admin/quizzes" element={<AdminQuizManager />} />
+            <Route path="/admin/quizzes/:quizId" element={<AdminQuizEditor />} />
+          </Route>
+          <Route element={<SuperAdminRoute />}>
+            <Route path="/super-admin/users" element={<SuperAdminUsers />} />
+            <Route path="/super-admin/events" element={<SuperAdminEvents />} />
           </Route>
         </Route>
       </Route>

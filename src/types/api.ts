@@ -25,6 +25,25 @@ export interface UserProfile {
   dailyRewardClaimedToday?: boolean;
 }
 
+export interface UserRoleSummary {
+  id: number;
+  username: string;
+  email: string;
+  role: string;
+  isEmailVerified: boolean;
+}
+
+export interface EventReward {
+  id: number;
+  title: string;
+  message: string;
+  points: number;
+  isActive?: boolean;
+  startAtUtc: string;
+  endAtUtc: string;
+  claimsCount?: number;
+}
+
 export interface YoutubeTrend {
   Song?: string;
   Views?: number | string;

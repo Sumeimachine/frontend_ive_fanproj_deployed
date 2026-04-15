@@ -132,6 +132,37 @@ body,
   animation-delay: 1.6s;
 }
 
+/* Global readability defaults for dark authenticated pages */
+.dark-shell input,
+.dark-shell textarea,
+.dark-shell select {
+  color: #ffffff !important;
+}
+
+.dark-shell input::placeholder,
+.dark-shell textarea::placeholder,
+.dark-shell select::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.dark-shell label,
+.dark-shell th,
+.dark-shell td {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.dark-shell input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.8);
+  opacity: 0.95;
+  cursor: pointer;
+}
+
+.dark-shell input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.8);
+  opacity: 0.95;
+  cursor: pointer;
+}
+
 @keyframes rise-in {
   0% {
     opacity: 0;
