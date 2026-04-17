@@ -21,6 +21,7 @@ import AdminQuizEditor from "./pages/AdminQuizEditor";
 import SuperAdminUsers from "./pages/SuperAdminUsers";
 import SuperAdminEvents from "./pages/SuperAdminEvents";
 import AboutUs from "./pages/AboutUs";
+import AboutUsEditor from "./pages/AboutUsEditor";
 
 function AppRoutes() {
   const { bootstrapProfile } = useAuth();
@@ -45,6 +46,7 @@ function AppRoutes() {
           <Route path="/quiz/leaderboards" element={<QuizLeaderboards />} />
           <Route path="/member/:id" element={<MemberInfo />} />
           <Route element={<AdminRoute />}>
+            <Route path="/about/edit" element={<AboutUsEditor />} />
             <Route path="/pages" element={<ContentPages />} />
             <Route path="/pages/editor" element={<ContentEditor />} />
             <Route path="/pages/:slug" element={<DynamicContentPage />} />

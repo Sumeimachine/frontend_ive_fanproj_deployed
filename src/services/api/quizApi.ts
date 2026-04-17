@@ -35,6 +35,11 @@ export const quizApi = {
     return data;
   },
 
+  getActiveQuizzes: async () => {
+    const { data } = await httpClient.get<Quiz[] | { message: string }>("/quizzes/active-list");
+    return data;
+  },
+
   getQuizById: async (quizId: number) => {
     const { data } = await httpClient.get<Quiz>(`/quizzes/${quizId}`);
     return data;

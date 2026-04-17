@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, AlertIcon, Box, Button, Heading, Radio, RadioGroup, Spinner, Stack, Text, VStack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Heading, Radio, RadioGroup, Select, Spinner, Stack, Text, VStack } from "@chakra-ui/react";
 import { quizApi } from "../services/api/quizApi";
 import { useAuth } from "../context/AuthContext";
 import type { Quiz, QuizSubmitResult } from "../types/quiz";
 
 export default function QuizGame() {
   const { bootstrapProfile } = useAuth();
-  const [quiz, setQuiz] = useState<Quiz | null>(null);
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [selectedQuizId, setSelectedQuizId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -15,27 +16,16 @@ export default function QuizGame() {
   useEffect(() => {
     void (async () => {
       try {
-        let fallbackMessage: string | null = null;
-
-        let res = await quizApi.getActiveQuiz("daily");
-        if ("message" in res) {
-          const fallbackTypes = ["trivia", "practice", "event"];
-          for (const type of fallbackTypes) {
-            const fallbackQuiz = await quizApi.getActiveQuiz(type);
-            if (!("message" in fallbackQuiz)) {
-              res = fallbackQuiz;
-              fallbackMessage = `No active daily quiz found. Showing active ${fallbackQuiz.type} quiz instead.`;
-              break;
-            }
-          }
-        }
+        const res = await quizApi.getActiveQuizzes();
 
         if ("message" in res) {
           setMessage(res.message);
-          setQuiz(null);
+          setQuizzes([]);
+          setSelectedQuizId(null);
         } else {
-          setQuiz(res);
-          setMessage(fallbackMessage);
+          setQuizzes(res);
+          setSelectedQuizId(res[0]?.id ?? null);
+          setMessage(null);
         }
       } catch (error) {
         setMessage("Unable to load quiz right now.");
@@ -46,10 +36,22 @@ export default function QuizGame() {
 
   }, []);
 
-  const totalQuestions = useMemo(() => quiz?.questions.length ?? 0, [quiz]);
+  const selectedQuiz = useMemo(
+    () => quizzes.find((quiz) => quiz.id === selectedQuizId) ?? null,
+    [quizzes, selectedQuizId],
+  );
+
+  const totalQuestions = useMemo(() => selectedQuiz?.questions.length ?? 0, [selectedQuiz]);
+
+  const handleQuizChange = (quizId: number) => {
+    setSelectedQuizId(quizId);
+    setAnswers({});
+    setResult(null);
+    setMessage(null);
+  };
 
   const onSubmit = async () => {
-    if (!quiz) return;
+    if (!selectedQuiz) return;
 
     const payload = Object.entries(answers).map(([questionId, answerOptionId]) => ({
       questionId: Number(questionId),
@@ -62,9 +64,9 @@ export default function QuizGame() {
     }
 
     try {
-      const submitResult = await quizApi.submitAttempt(quiz.id, payload);
+      const submitResult = await quizApi.submitAttempt(selectedQuiz.id, payload);
       setResult(submitResult);
-      setMessage(null);
+      setMessage(submitResult.message);
       await bootstrapProfile();
     } catch (error) {
       setMessage("Submit failed. Daily quiz may already be answered.");
@@ -79,7 +81,7 @@ export default function QuizGame() {
     );
   }
 
-  if (message && !quiz) {
+  if (message && !selectedQuiz) {
     return (
       <Box p={6}>
         <Alert status="info" borderRadius="md">
@@ -90,17 +92,52 @@ export default function QuizGame() {
     );
   }
 
+  if (!selectedQuiz) {
+    return (
+      <Box p={6}>
+        <Alert status="info" borderRadius="md">
+          <AlertIcon />
+          No active quiz available right now.
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box p={{ base: 4, md: 8 }}>
       <VStack align="stretch" spacing={6}>
-        <Heading size="lg" color="white">Daily IVE Quiz</Heading>
-        <Text color="white" fontSize="lg" fontWeight="semibold">{quiz?.title}</Text>
-        <Text color="whiteAlpha.900">Quiz Type: {quiz?.type}</Text>
+        <Heading size="lg" color="white">IVE Quizzes</Heading>
+        {quizzes.length > 1 && (
+          <Box>
+            <Text color="whiteAlpha.900" mb={2}>Select a quiz:</Text>
+            <Select
+              value={selectedQuiz?.id ?? ""}
+              onChange={(event) => handleQuizChange(Number(event.target.value))}
+              bg="whiteAlpha.100"
+              color="white"
+              borderColor="whiteAlpha.300"
+            >
+              {quizzes.map((quiz) => (
+                <option key={quiz.id} value={quiz.id} style={{ color: "black" }}>
+                  {quiz.title} ({quiz.type})
+                </option>
+              ))}
+            </Select>
+          </Box>
+        )}
+        <Text color="white" fontSize="lg" fontWeight="semibold">{selectedQuiz?.title}</Text>
+        <Text color="whiteAlpha.900">Quiz Type: {selectedQuiz?.type}</Text>
         <Text color="whiteAlpha.900">
-          Mode: {quiz?.isGraded ? "Graded (earns 1 currency per correct answer)" : "Practice (no currency reward)"}
+          Mode: {selectedQuiz?.isGraded ? "Graded (earns 1 currency per correct answer)" : "Practice (no currency reward)"}
         </Text>
+        {selectedQuiz?.hasCompletedFirstAttempt && (
+          <Alert status="info" borderRadius="md">
+            <AlertIcon />
+            You already completed this quiz once. You can retake for fun, but only your first attempt is counted.
+          </Alert>
+        )}
 
-        {quiz?.questions.map((question, questionIndex) => (
+        {selectedQuiz?.questions.map((question, questionIndex) => (
           <Box key={question.id} border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" p={4}>
             <Text fontWeight="bold" mb={3} color="white">
               {questionIndex + 1}. {question.prompt}
@@ -129,11 +166,11 @@ export default function QuizGame() {
         )}
 
         <Button colorScheme="purple" onClick={onSubmit}>
-          Submit Quiz
+          {selectedQuiz?.hasCompletedFirstAttempt ? "Retake Quiz (score locked)" : "Submit Quiz"}
         </Button>
 
         {result && (
-          <Alert status="success" borderRadius="md">
+          <Alert status={result.isScoreCounted ? "success" : "warning"} borderRadius="md">
             <AlertIcon />
             Score: {result.score} | Correct: {result.correctAnswers}/{result.totalQuestions} | Currency Earned: +{result.currencyAwarded} | Balance: {result.currencyBalance}
           </Alert>

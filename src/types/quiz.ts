@@ -29,6 +29,8 @@ export interface Quiz {
   startAt?: string | null;
   endAt?: string | null;
   questions: QuizQuestion[];
+  hasCompletedFirstAttempt: boolean;
+  attemptCount: number;
 }
 
 export interface QuizAdminSummary {
@@ -51,6 +53,8 @@ export interface QuizSubmitResult {
   correctAnswers: number;
   currencyAwarded: number;
   currencyBalance: number;
+  isScoreCounted: boolean;
+  message: string;
 }
 
 export interface QuizLeaderboardEntry {
