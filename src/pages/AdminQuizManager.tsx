@@ -75,7 +75,12 @@ export default function AdminQuizManager() {
   return (
     <Box p={{ base: 4, md: 8 }}>
       <VStack align="stretch" spacing={8}>
-        <Heading size="lg" color="white">Admin Quiz Manager</Heading>
+        <HStack justify="space-between" flexWrap="wrap">
+          <Heading size="lg" color="white">Admin Quiz Manager</Heading>
+          <Button colorScheme="purple" variant="outline" onClick={() => navigate("/admin/media")}>
+            Open Media Library
+          </Button>
+        </HStack>
 
         {error && (
           <Alert status="error" borderRadius="md">

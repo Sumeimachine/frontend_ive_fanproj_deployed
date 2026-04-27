@@ -1,9 +1,9 @@
-import { Suspense, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Stars, useTexture } from "@react-three/drei";
-import type { Group, Mesh } from "three";
-import { Color, Vector3 } from "three";
+import type { Group, Mesh, Texture } from "three";
+import { Color, SRGBColorSpace, Vector3 } from "three";
 import type { MemberProfile } from "../types/member";
 
 interface MemberUniverseSectionProps {
@@ -19,11 +19,87 @@ interface MemberCard3DProps {
   onSelectMember: (memberId: string) => void;
 }
 
+const FALLBACK_MEMBER_IMAGE_PATH = "/images/members/yujin.jpg";
+
+function getFallbackTextureUrl(): string {
+  const basePath = import.meta.env.BASE_URL || "/";
+  const normalizedBasePath = basePath.endsWith("/") ? basePath.slice(0, -1) : basePath;
+  return `${normalizedBasePath}${FALLBACK_MEMBER_IMAGE_PATH}`;
+}
+
+function resolveTextureUrl(photoUrl: string): string {
+  if (!photoUrl) return getFallbackTextureUrl();
+  if (!photoUrl.startsWith("/uploads/")) return photoUrl;
+
+  const apiBase = import.meta.env.VITE_API_URL;
+  if (!apiBase) return photoUrl;
+
+  return `${apiBase.replace(/\/$/, "")}${photoUrl}`;
+}
+
+function useResolvedMemberImageUrl(photoUrl: string, backupPhotoUrl?: string): string {
+  const fallbackUrl = getFallbackTextureUrl();
+  const [resolvedUrl, setResolvedUrl] = useState(fallbackUrl);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const candidateUrls = [
+      resolveTextureUrl(photoUrl),
+      resolveTextureUrl(backupPhotoUrl || ""),
+      fallbackUrl,
+    ].filter((value, index, list) => !!value && list.indexOf(value) === index);
+
+    const tryResolve = (index: number) => {
+      if (cancelled) return;
+
+      if (index >= candidateUrls.length) {
+        setResolvedUrl(fallbackUrl);
+        return;
+      }
+
+      const candidate = candidateUrls[index];
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.onload = () => {
+        if (!cancelled) {
+          setResolvedUrl(candidate);
+        }
+      };
+      image.onerror = () => {
+        tryResolve(index + 1);
+      };
+      image.src = candidate;
+    };
+
+    tryResolve(0);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [backupPhotoUrl, fallbackUrl, photoUrl]);
+
+  return resolvedUrl;
+}
+
+function useSafeMemberTexture(photoUrl: string, backupPhotoUrl?: string): Texture {
+  const resolvedUrl = useResolvedMemberImageUrl(photoUrl, backupPhotoUrl);
+  const texture = useTexture(resolvedUrl);
+
+  useEffect(() => {
+    texture.colorSpace = SRGBColorSpace;
+    texture.needsUpdate = true;
+  }, [texture]);
+
+  return texture;
+}
+
+
 function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: MemberCard3DProps) {
   const groupRef = useRef<Group>(null);
   const cardRef = useRef<Mesh>(null);
   const haloRef = useRef<Mesh>(null);
-  const texture = useTexture(member.photoUrl);
+  const texture = useSafeMemberTexture(member.photoUrl, member.backupPhotoUrl);
   const [hovered, setHovered] = useState(false);
   const { camera } = useThree();
 
@@ -61,7 +137,13 @@ function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: Mem
         onClick={() => onSelectMember(member.id)}
       >
         <planeGeometry args={[1.75, 2.38]} />
-        <meshStandardMaterial map={texture} color="#ffffff" emissive="#000000" metalness={0.08} roughness={0.34} />
+        <meshStandardMaterial
+          map={texture}
+          color="#ffffff"
+          emissive="#000000"
+          metalness={0.08}
+          roughness={0.34}
+        />
       </mesh>
 
       <mesh position={[-0.91, 0, 0.02]}>
@@ -84,7 +166,6 @@ function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: Mem
           opacity={0.95}
         />
       </mesh>
-
     </group>
   );
 }

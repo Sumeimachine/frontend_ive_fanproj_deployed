@@ -38,10 +38,12 @@ const defaultsById: Record<string, Omit<MemberProfile, "id" | "name" | "photoUrl
 };
 
 const baseMembers = membersDataRaw as Array<{ id: string; name: string; photoUrl: string }>;
+const basePhotoById = new Map(baseMembers.map((member) => [member.id, member.photoUrl]));
 
 const buildDefaults = (): MemberProfile[] =>
   baseMembers.map((member) => ({
     ...member,
+    backupPhotoUrl: member.photoUrl,
     ...(defaultsById[member.id] ?? {
       tagline: "IVE Member",
       bio: "Official profile details will be added soon.",
@@ -61,7 +63,11 @@ export const loadMemberProfiles = (): MemberProfile[] => {
     const parsed = JSON.parse(saved) as MemberProfile[];
     const parsedById = new Map(parsed.map((member) => [member.id, member]));
 
-    return fallback.map((member) => parsedById.get(member.id) ?? member);
+    return fallback.map((member) => ({
+      ...member,
+      ...(parsedById.get(member.id) ?? {}),
+      backupPhotoUrl: basePhotoById.get(member.id) ?? member.backupPhotoUrl,
+    }));
   } catch {
     return fallback;
   }
@@ -70,8 +76,12 @@ export const loadMemberProfiles = (): MemberProfile[] => {
 export const getMemberProfiles = async (): Promise<MemberProfile[]> => {
   try {
     const data = await memberApi.getAll();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    return data;
+    const normalized = data.map((member) => ({
+      ...member,
+      backupPhotoUrl: basePhotoById.get(member.id) ?? member.photoUrl,
+    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+    return normalized;
   } catch {
     return loadMemberProfiles();
   }
@@ -80,7 +90,10 @@ export const getMemberProfiles = async (): Promise<MemberProfile[]> => {
 export const getMemberProfileById = async (memberId: string): Promise<MemberProfile | null> => {
   try {
     const data = await memberApi.getById(memberId);
-    return data;
+    return {
+      ...data,
+      backupPhotoUrl: basePhotoById.get(data.id) ?? data.photoUrl,
+    };
   } catch {
     const localProfile = loadMemberProfiles().find((member) => member.id === memberId);
     return localProfile ?? null;
@@ -90,11 +103,15 @@ export const getMemberProfileById = async (memberId: string): Promise<MemberProf
 export const saveMemberProfile = async (updatedMember: MemberProfile): Promise<MemberProfile> => {
   try {
     const data = await memberApi.update(updatedMember.id, updatedMember);
+    const normalized = {
+      ...data,
+      backupPhotoUrl: basePhotoById.get(data.id) ?? data.photoUrl,
+    };
     const merged = loadMemberProfiles().map((member) =>
-      member.id === data.id ? data : member,
+      member.id === normalized.id ? normalized : member,
     );
     localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-    return data;
+    return normalized;
   } catch {
     throw new Error("Failed to save member profile to backend.");
   }

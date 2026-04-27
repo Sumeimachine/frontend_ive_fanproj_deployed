@@ -22,6 +22,7 @@ import SuperAdminUsers from "./pages/SuperAdminUsers";
 import SuperAdminEvents from "./pages/SuperAdminEvents";
 import AboutUs from "./pages/AboutUs";
 import AboutUsEditor from "./pages/AboutUsEditor";
+import AdminMediaLibrary from "./pages/AdminMediaLibrary";
 
 function AppRoutes() {
   const { bootstrapProfile } = useAuth();
@@ -52,6 +53,7 @@ function AppRoutes() {
             <Route path="/pages/:slug" element={<DynamicContentPage />} />
             <Route path="/admin/quizzes" element={<AdminQuizManager />} />
             <Route path="/admin/quizzes/:quizId" element={<AdminQuizEditor />} />
+            <Route path="/admin/media" element={<AdminMediaLibrary />} />
           </Route>
           <Route element={<SuperAdminRoute />}>
             <Route path="/super-admin/users" element={<SuperAdminUsers />} />

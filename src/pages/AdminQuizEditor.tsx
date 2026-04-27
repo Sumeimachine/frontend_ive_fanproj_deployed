@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Alert,
   AlertIcon,
@@ -9,6 +9,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Image,
   Input,
   NumberInput,
   NumberInputField,
@@ -20,12 +21,33 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { quizApi } from "../services/api/quizApi";
+import { mediaApi } from "../services/api/mediaApi";
 import type { Quiz, QuizQuestion } from "../types/quiz";
 
 interface OptionDraft {
   text: string;
   isCorrect: boolean;
+  imageUrl?: string;
 }
+
+const getApiErrorMessage = (error: unknown, fallback: string) => {
+  const responseData = (error as { response?: { data?: unknown } })?.response?.data;
+
+  if (typeof responseData === "string" && responseData.trim()) {
+    return responseData;
+  }
+
+  if (
+    responseData &&
+    typeof responseData === "object" &&
+    "message" in responseData &&
+    typeof (responseData as { message?: unknown }).message === "string"
+  ) {
+    return (responseData as { message: string }).message;
+  }
+
+  return fallback;
+};
 
 export default function AdminQuizEditor() {
   const { quizId } = useParams();
@@ -34,6 +56,9 @@ export default function AdminQuizEditor() {
   const [error, setError] = useState<string | null>(null);
   const [questionDraft, setQuestionDraft] = useState({ prompt: "", points: 1 });
   const [optionDrafts, setOptionDrafts] = useState<Record<number, OptionDraft>>({});
+  const [uploadingTarget, setUploadingTarget] = useState<string | null>(null);
+  const questionFileRefs = useRef<Record<number, HTMLInputElement | null>>({});
+  const optionFileRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   const parsedQuizId = Number(quizId);
 
@@ -106,6 +131,7 @@ export default function AdminQuizEditor() {
         question.options.map((option) =>
           quizApi.adminUpdateOption(option.id, {
             text: option.text,
+            imageUrl: option.imageUrl ?? "",
             sortOrder: option.sortOrder,
             isCorrect: option.isCorrect === true,
           }),
@@ -121,8 +147,8 @@ export default function AdminQuizEditor() {
     try {
       await quizApi.adminDeleteQuestion(questionId);
       await loadQuiz();
-    } catch {
-      setError("Failed to delete question.");
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to delete question."));
     }
   };
 
@@ -136,10 +162,11 @@ export default function AdminQuizEditor() {
     try {
       await quizApi.adminCreateOption(questionId, {
         text: draft.text.trim(),
+        imageUrl: draft.imageUrl ?? "",
         isCorrect: draft.isCorrect,
         sortOrder: question.options.length + 1,
       });
-      setOptionDrafts((prev) => ({ ...prev, [questionId]: { text: "", isCorrect: false } }));
+      setOptionDrafts((prev) => ({ ...prev, [questionId]: { text: "", isCorrect: false, imageUrl: "" } }));
       await loadQuiz();
     } catch {
       setError("Failed to add option.");
@@ -150,8 +177,117 @@ export default function AdminQuizEditor() {
     try {
       await quizApi.adminDeleteOption(optionId);
       await loadQuiz();
-    } catch {
-      setError("Failed to delete option.");
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to delete option."));
+    }
+  };
+
+  const uploadImageForQuestion = async (questionId: number, file: File) => {
+    try {
+      setUploadingTarget(`question-${questionId}`);
+      const upload = await mediaApi.uploadImage(file, "quiz");
+      setQuiz((prev) =>
+        prev
+          ? {
+              ...prev,
+              questions: prev.questions.map((question) =>
+                question.id === questionId ? { ...question, imageUrl: upload.url } : question,
+              ),
+            }
+          : prev,
+      );
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to upload question image."));
+    } finally {
+      setUploadingTarget(null);
+    }
+  };
+
+  const removeQuestionImage = async (question: QuizQuestion) => {
+    if (!question.imageUrl) return;
+
+    try {
+      await mediaApi.deleteImageByUrl(question.imageUrl);
+      setQuiz((prev) =>
+        prev
+          ? {
+              ...prev,
+              questions: prev.questions.map((item) => (item.id === question.id ? { ...item, imageUrl: "" } : item)),
+            }
+          : prev,
+      );
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to delete question image."));
+    }
+  };
+
+  const uploadImageForOptionDraft = async (questionId: number, file: File) => {
+    try {
+      setUploadingTarget(`option-draft-${questionId}`);
+      const upload = await mediaApi.uploadImage(file, "quiz");
+      setOptionDrafts((prev) => ({
+        ...prev,
+        [questionId]: { text: prev[questionId]?.text ?? "", isCorrect: prev[questionId]?.isCorrect ?? false, imageUrl: upload.url },
+      }));
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to upload option image."));
+    } finally {
+      setUploadingTarget(null);
+    }
+  };
+
+  const uploadImageForOption = async (questionId: number, optionId: number, file: File) => {
+    try {
+      setUploadingTarget(`option-${optionId}`);
+      const upload = await mediaApi.uploadImage(file, "quiz");
+      setQuiz((prev) =>
+        prev
+          ? {
+              ...prev,
+              questions: prev.questions.map((question) =>
+                question.id === questionId
+                  ? {
+                      ...question,
+                      options: question.options.map((option) =>
+                        option.id === optionId ? { ...option, imageUrl: upload.url } : option,
+                      ),
+                    }
+                  : question,
+              ),
+            }
+          : prev,
+      );
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to upload option image."));
+    } finally {
+      setUploadingTarget(null);
+    }
+  };
+
+  const removeOptionImage = async (questionId: number, optionId: number, url?: string | null) => {
+    if (!url) return;
+
+    try {
+      await mediaApi.deleteImageByUrl(url);
+      setQuiz((prev) =>
+        prev
+          ? {
+              ...prev,
+              questions: prev.questions.map((question) =>
+                question.id === questionId
+                  ? {
+                      ...question,
+                      options: question.options.map((option) =>
+                        option.id === optionId ? { ...option, imageUrl: "" } : option,
+                      ),
+                    }
+                  : question,
+              ),
+            }
+          : prev,
+      );
+    } catch (error) {
+      setError(getApiErrorMessage(error, "Failed to delete option image."));
     }
   };
 
@@ -300,6 +436,43 @@ export default function AdminQuizEditor() {
                         )
                       }
                     />
+                    {!!question.imageUrl && (
+                      <Image src={question.imageUrl} alt={`Question ${question.sortOrder}`} maxW="220px" borderRadius="md" />
+                    )}
+                    <HStack flexWrap="wrap">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        display="none"
+                        ref={(element) => {
+                          questionFileRefs.current[question.id] = element;
+                        }}
+                        onChange={(event) => {
+                          const file = event.target.files?.[0];
+                          if (file) {
+                            void uploadImageForQuestion(question.id, file);
+                          }
+                          event.currentTarget.value = "";
+                        }}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => questionFileRefs.current[question.id]?.click()}
+                        isLoading={uploadingTarget === `question-${question.id}`}
+                      >
+                        Upload Question Image
+                      </Button>
+                      {!!question.imageUrl && (
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          variant="outline"
+                          onClick={() => void removeQuestionImage(question)}
+                        >
+                          Delete Question Image
+                        </Button>
+                      )}
+                    </HStack>
                     <HStack>
                       <NumberInput
                         min={1}
@@ -327,7 +500,8 @@ export default function AdminQuizEditor() {
                     <Text fontWeight="semibold" mb={2} color="white">Options</Text>
                     <VStack align="stretch" spacing={2}>
                       {question.options.map((option) => (
-                        <HStack key={option.id} align="start">
+                        <VStack key={option.id} align="stretch" border="1px solid" borderColor="whiteAlpha.200" borderRadius="md" p={3}>
+                          <HStack align="start">
                           <Input
                             color="white"
                             _placeholder={{ color: "whiteAlpha.600" }}
@@ -379,11 +553,49 @@ export default function AdminQuizEditor() {
                           <Button size="sm" colorScheme="red" onClick={() => void deleteOption(option.id)}>
                             Delete
                           </Button>
-                        </HStack>
+                          </HStack>
+                          {!!option.imageUrl && (
+                            <Image src={option.imageUrl} alt={`Option ${option.id}`} maxW="180px" borderRadius="md" />
+                          )}
+                          <HStack flexWrap="wrap">
+                            <Input
+                              type="file"
+                              accept="image/*"
+                              display="none"
+                              ref={(element) => {
+                                optionFileRefs.current[option.id] = element;
+                              }}
+                              onChange={(event) => {
+                                const file = event.target.files?.[0];
+                                if (file) {
+                                  void uploadImageForOption(question.id, option.id, file);
+                                }
+                                event.currentTarget.value = "";
+                              }}
+                            />
+                            <Button
+                              size="xs"
+                              onClick={() => optionFileRefs.current[option.id]?.click()}
+                              isLoading={uploadingTarget === `option-${option.id}`}
+                            >
+                              Upload Option Image
+                            </Button>
+                            {!!option.imageUrl && (
+                              <Button
+                                size="xs"
+                                colorScheme="red"
+                                variant="outline"
+                                onClick={() => void removeOptionImage(question.id, option.id, option.imageUrl)}
+                              >
+                                Delete Option Image
+                              </Button>
+                            )}
+                          </HStack>
+                        </VStack>
                       ))}
                     </VStack>
 
-                    <HStack mt={3}>
+                    <VStack align="stretch" mt={3} spacing={3}>
                       <Input
                         placeholder="Add option text"
                         color="white"
@@ -392,23 +604,69 @@ export default function AdminQuizEditor() {
                         onChange={(e) =>
                           setOptionDrafts((prev) => ({
                             ...prev,
-                            [question.id]: { text: e.target.value, isCorrect: prev[question.id]?.isCorrect ?? false },
+                            [question.id]: {
+                              text: e.target.value,
+                              isCorrect: prev[question.id]?.isCorrect ?? false,
+                              imageUrl: prev[question.id]?.imageUrl ?? "",
+                            },
                           }))
                         }
                       />
-                      <Checkbox
-                        isChecked={optionDrafts[question.id]?.isCorrect ?? false}
-                        onChange={(e) =>
-                          setOptionDrafts((prev) => ({
-                            ...prev,
-                            [question.id]: { text: prev[question.id]?.text ?? "", isCorrect: e.target.checked },
-                          }))
-                        }
-                      >
-                        Correct
-                      </Checkbox>
-                      <Button size="sm" onClick={() => void addOption(question.id, question)}>Add Option</Button>
-                    </HStack>
+                      {!!optionDrafts[question.id]?.imageUrl && (
+                        <Image src={optionDrafts[question.id]?.imageUrl} alt="Draft option preview" maxW="180px" borderRadius="md" />
+                      )}
+                      <HStack>
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (file) {
+                              void uploadImageForOptionDraft(question.id, file);
+                            }
+                            event.currentTarget.value = "";
+                          }}
+                          p={1}
+                        />
+                        {!!optionDrafts[question.id]?.imageUrl && (
+                          <Button
+                            size="sm"
+                            colorScheme="red"
+                            variant="outline"
+                            onClick={() =>
+                              setOptionDrafts((prev) => ({
+                                ...prev,
+                                [question.id]: {
+                                  text: prev[question.id]?.text ?? "",
+                                  isCorrect: prev[question.id]?.isCorrect ?? false,
+                                  imageUrl: "",
+                                },
+                              }))
+                            }
+                          >
+                            Clear Draft Image
+                          </Button>
+                        )}
+                      </HStack>
+                      <HStack>
+                        <Checkbox
+                          isChecked={optionDrafts[question.id]?.isCorrect ?? false}
+                          onChange={(e) =>
+                            setOptionDrafts((prev) => ({
+                              ...prev,
+                              [question.id]: {
+                                text: prev[question.id]?.text ?? "",
+                                isCorrect: e.target.checked,
+                                imageUrl: prev[question.id]?.imageUrl ?? "",
+                              },
+                            }))
+                          }
+                        >
+                          Correct
+                        </Checkbox>
+                        <Button size="sm" onClick={() => void addOption(question.id, question)}>Add Option</Button>
+                      </HStack>
+                    </VStack>
                   </Box>
                 </Box>
               ))}

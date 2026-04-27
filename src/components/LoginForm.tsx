@@ -92,7 +92,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
   const inputStyles = {
     bg: "rgba(9, 10, 22, 0.9)",
     color: "#FFFFFF",
-    caretColor: "#FFFFFF",
+    caretcolor: "#FFFFFF",
     borderColor: "whiteAlpha.300",
     _placeholder: { color: "whiteAlpha.600" },
     _hover: { borderColor: "purple.300" },

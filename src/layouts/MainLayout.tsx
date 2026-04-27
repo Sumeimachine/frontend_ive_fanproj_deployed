@@ -22,6 +22,7 @@ export default function MainLayout() {
           { label: "Pages", to: "/pages" },
           { label: "Content Editor", to: "/pages/editor" },
           { label: "Quiz Manager", to: "/admin/quizzes" },
+          { label: "Media Library", to: "/admin/media" },
         ]
       : []),
     ...(role === "Super-Admin" ? [{ label: "Super Admin", to: "/super-admin/users" }] : []),

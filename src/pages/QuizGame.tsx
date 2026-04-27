@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, AlertIcon, Box, Button, Heading, Radio, RadioGroup, Select, Spinner, Stack, Text, VStack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Heading, Image, Radio, RadioGroup, Select, Spinner, Stack, Text, VStack } from "@chakra-ui/react";
 import { quizApi } from "../services/api/quizApi";
 import { useAuth } from "../context/AuthContext";
 import type { Quiz, QuizSubmitResult } from "../types/quiz";
@@ -142,6 +142,9 @@ export default function QuizGame() {
             <Text fontWeight="bold" mb={3} color="white">
               {questionIndex + 1}. {question.prompt}
             </Text>
+            {!!question.imageUrl && (
+              <Image src={question.imageUrl} alt={`Question ${questionIndex + 1}`} maxW="260px" borderRadius="md" mb={3} />
+            )}
 
             <RadioGroup
               onChange={(value) => setAnswers((prev) => ({ ...prev, [question.id]: Number(value) }))}
@@ -150,6 +153,9 @@ export default function QuizGame() {
               <Stack>
                 {question.options.map((option) => (
                   <Radio key={option.id} value={option.id.toString()}>
+                    {!!option.imageUrl && (
+                      <Image src={option.imageUrl} alt={option.text} maxW="180px" borderRadius="md" mb={1} />
+                    )}
                     <Text color="whiteAlpha.900">{option.text}</Text>
                   </Radio>
                 ))}
