@@ -54,6 +54,8 @@ export const mediaApi = {
       url: string;
       relativePath: string;
       fileName: string;
+      previousUrl?: string;
+      previousRelativePath?: string;
     }>("/admin/media/rename", { url, newFileNameWithoutExtension });
 
     return data;

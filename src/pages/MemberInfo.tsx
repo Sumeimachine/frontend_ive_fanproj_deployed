@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useAuth } from "../context/AuthContext";
 import { mediaApi } from "../services/api/mediaApi";
+import MediaPickerModal from "../components/MediaPickerModal";
 import {
   getMemberProfileById,
   saveMemberProfile,
@@ -228,6 +229,11 @@ const MemberInfo: React.FC = () => {
                   >
                     Upload Photo
                   </Button>
+                  <MediaPickerModal
+                    buttonLabel="Choose Existing"
+                    folder="members"
+                    onSelect={(url) => updateDraft("photoUrl", url)}
+                  />
                   <Button
                     colorScheme="red"
                     variant="outline"

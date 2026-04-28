@@ -22,6 +22,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { quizApi } from "../services/api/quizApi";
 import { mediaApi } from "../services/api/mediaApi";
+import MediaPickerModal from "../components/MediaPickerModal";
 import type { Quiz, QuizQuestion } from "../types/quiz";
 
 interface OptionDraft {
@@ -291,6 +292,50 @@ export default function AdminQuizEditor() {
     }
   };
 
+  const selectExistingImageForQuestion = (questionId: number, url: string) => {
+    setQuiz((prev) =>
+      prev
+        ? {
+            ...prev,
+            questions: prev.questions.map((question) =>
+              question.id === questionId ? { ...question, imageUrl: url } : question,
+            ),
+          }
+        : prev,
+    );
+  };
+
+  const selectExistingImageForOption = (questionId: number, optionId: number, url: string) => {
+    setQuiz((prev) =>
+      prev
+        ? {
+            ...prev,
+            questions: prev.questions.map((question) =>
+              question.id === questionId
+                ? {
+                    ...question,
+                    options: question.options.map((option) =>
+                      option.id === optionId ? { ...option, imageUrl: url } : option,
+                    ),
+                  }
+                : question,
+            ),
+          }
+        : prev,
+    );
+  };
+
+  const selectExistingImageForOptionDraft = (questionId: number, url: string) => {
+    setOptionDrafts((prev) => ({
+      ...prev,
+      [questionId]: {
+        text: prev[questionId]?.text ?? "",
+        isCorrect: prev[questionId]?.isCorrect ?? false,
+        imageUrl: url,
+      },
+    }));
+  };
+
   return (
     <Box p={{ base: 4, md: 8 }}>
       <VStack align="stretch" spacing={6}>
@@ -462,6 +507,11 @@ export default function AdminQuizEditor() {
                       >
                         Upload Question Image
                       </Button>
+                      <MediaPickerModal
+                        buttonLabel="Choose Existing"
+                        folder="quiz"
+                        onSelect={(url) => selectExistingImageForQuestion(question.id, url)}
+                      />
                       {!!question.imageUrl && (
                         <Button
                           size="sm"
@@ -580,6 +630,12 @@ export default function AdminQuizEditor() {
                             >
                               Upload Option Image
                             </Button>
+                            <MediaPickerModal
+                              size="xs"
+                              buttonLabel="Choose Existing"
+                              folder="quiz"
+                              onSelect={(url) => selectExistingImageForOption(question.id, option.id, url)}
+                            />
                             {!!option.imageUrl && (
                               <Button
                                 size="xs"
@@ -627,6 +683,11 @@ export default function AdminQuizEditor() {
                             event.currentTarget.value = "";
                           }}
                           p={1}
+                        />
+                        <MediaPickerModal
+                          buttonLabel="Choose Existing"
+                          folder="quiz"
+                          onSelect={(url) => selectExistingImageForOptionDraft(question.id, url)}
                         />
                         {!!optionDrafts[question.id]?.imageUrl && (
                           <Button
