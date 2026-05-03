@@ -4,6 +4,8 @@ import { quizApi } from "../services/api/quizApi";
 import { useAuth } from "../context/AuthContext";
 import type { Quiz, QuizSubmitResult } from "../types/quiz";
 
+const isVideoMediaUrl = (url?: string | null) => !!url && /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url);
+
 export default function QuizGame() {
   const { bootstrapProfile } = useAuth();
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -143,7 +145,9 @@ export default function QuizGame() {
               {questionIndex + 1}. {question.prompt}
             </Text>
             {!!question.imageUrl && (
-              <Image src={question.imageUrl} alt={`Question ${questionIndex + 1}`} maxW="260px" borderRadius="md" mb={3} />
+              isVideoMediaUrl(question.imageUrl)
+                ? <Box as="video" src={question.imageUrl} controls maxW="260px" borderRadius="md" mb={3} />
+                : <Image src={question.imageUrl} alt={`Question ${questionIndex + 1}`} maxW="260px" borderRadius="md" mb={3} />
             )}
 
             <RadioGroup
@@ -154,7 +158,9 @@ export default function QuizGame() {
                 {question.options.map((option) => (
                   <Radio key={option.id} value={option.id.toString()}>
                     {!!option.imageUrl && (
-                      <Image src={option.imageUrl} alt={option.text} maxW="180px" borderRadius="md" mb={1} />
+                      isVideoMediaUrl(option.imageUrl)
+                        ? <Box as="video" src={option.imageUrl} controls maxW="180px" borderRadius="md" mb={1} />
+                        : <Image src={option.imageUrl} alt={option.text} maxW="180px" borderRadius="md" mb={1} />
                     )}
                     <Text color="whiteAlpha.900">{option.text}</Text>
                   </Radio>

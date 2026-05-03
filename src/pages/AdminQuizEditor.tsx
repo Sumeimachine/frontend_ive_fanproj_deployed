@@ -25,6 +25,8 @@ import { mediaApi } from "../services/api/mediaApi";
 import MediaPickerModal from "../components/MediaPickerModal";
 import type { Quiz, QuizQuestion } from "../types/quiz";
 
+const isVideoMediaUrl = (url?: string | null) => !!url && /\.(mp4|webm|mov|m4v)(\?|$)/i.test(url);
+
 interface OptionDraft {
   text: string;
   isCorrect: boolean;
@@ -486,7 +488,9 @@ export default function AdminQuizEditor() {
                       }
                     />
                     {!!question.imageUrl && (
-                      <Image src={question.imageUrl} alt={`Question ${question.sortOrder}`} maxW="220px" borderRadius="md" />
+                      isVideoMediaUrl(question.imageUrl)
+                        ? <Box as="video" src={question.imageUrl} controls maxW="220px" borderRadius="md" />
+                        : <Image src={question.imageUrl} alt={`Question ${question.sortOrder}`} maxW="220px" borderRadius="md" />
                     )}
                     <HStack flexWrap="wrap">
                       <Input
@@ -609,7 +613,9 @@ export default function AdminQuizEditor() {
                           </Button>
                           </HStack>
                           {!!option.imageUrl && (
-                            <Image src={option.imageUrl} alt={`Option ${option.id}`} maxW="180px" borderRadius="md" />
+                            isVideoMediaUrl(option.imageUrl)
+                              ? <Box as="video" src={option.imageUrl} controls maxW="180px" borderRadius="md" />
+                              : <Image src={option.imageUrl} alt={`Option ${option.id}`} maxW="180px" borderRadius="md" />
                           )}
                           <HStack flexWrap="wrap">
                             <Input
@@ -673,7 +679,9 @@ export default function AdminQuizEditor() {
                         }
                       />
                       {!!optionDrafts[question.id]?.imageUrl && (
-                        <Image src={optionDrafts[question.id]?.imageUrl} alt="Draft option preview" maxW="180px" borderRadius="md" />
+                        isVideoMediaUrl(optionDrafts[question.id]?.imageUrl)
+                          ? <Box as="video" src={optionDrafts[question.id]?.imageUrl} controls maxW="180px" borderRadius="md" />
+                          : <Image src={optionDrafts[question.id]?.imageUrl} alt="Draft option preview" maxW="180px" borderRadius="md" />
                       )}
                       <HStack>
                         <Input
