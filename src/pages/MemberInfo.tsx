@@ -106,7 +106,7 @@ const MemberInfo: React.FC = () => {
   const handleUploadPhoto = async (file: File) => {
     try {
       setIsUploadingPhoto(true);
-      const upload = await mediaApi.uploadImage(file, "members");
+      const upload = await mediaApi.uploadMedia(file, "members");
       updateDraft("photoUrl", upload.url);
       toast({
         title: "Photo uploaded",
@@ -141,7 +141,7 @@ const MemberInfo: React.FC = () => {
     }
 
     try {
-      await mediaApi.deleteImageByUrl(draft.photoUrl);
+      await mediaApi.deleteMediaByUrl(draft.photoUrl);
       updateDraft("photoUrl", "");
       toast({
         title: "Photo deleted",

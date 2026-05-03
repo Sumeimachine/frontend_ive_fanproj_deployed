@@ -21,7 +21,7 @@ export interface MediaLibraryResponse {
 }
 
 export const mediaApi = {
-  uploadImage: async (file: File, folder = "quiz") => {
+  uploadMedia: async (file: File, folder = "quiz") => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("folder", folder);
@@ -35,7 +35,7 @@ export const mediaApi = {
     return data;
   },
 
-  deleteImageByUrl: async (url: string) => {
+  deleteMediaByUrl: async (url: string) => {
     const { data } = await httpClient.delete<{ message: string }>("/admin/media", {
       params: { url },
     });
@@ -48,7 +48,7 @@ export const mediaApi = {
     return data;
   },
 
-  renameImage: async (url: string, newFileNameWithoutExtension: string) => {
+  renameMedia: async (url: string, newFileNameWithoutExtension: string) => {
     const { data } = await httpClient.patch<{
       message: string;
       url: string;

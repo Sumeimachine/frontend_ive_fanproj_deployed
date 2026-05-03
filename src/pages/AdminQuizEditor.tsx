@@ -186,7 +186,7 @@ export default function AdminQuizEditor() {
   const uploadImageForQuestion = async (questionId: number, file: File) => {
     try {
       setUploadingTarget(`question-${questionId}`);
-      const upload = await mediaApi.uploadImage(file, "quiz");
+      const upload = await mediaApi.uploadMedia(file, "quiz");
       setQuiz((prev) =>
         prev
           ? {
@@ -208,7 +208,7 @@ export default function AdminQuizEditor() {
     if (!question.imageUrl) return;
 
     try {
-      await mediaApi.deleteImageByUrl(question.imageUrl);
+      await mediaApi.deleteMediaByUrl(question.imageUrl);
       setQuiz((prev) =>
         prev
           ? {
@@ -225,7 +225,7 @@ export default function AdminQuizEditor() {
   const uploadImageForOptionDraft = async (questionId: number, file: File) => {
     try {
       setUploadingTarget(`option-draft-${questionId}`);
-      const upload = await mediaApi.uploadImage(file, "quiz");
+      const upload = await mediaApi.uploadMedia(file, "quiz");
       setOptionDrafts((prev) => ({
         ...prev,
         [questionId]: { text: prev[questionId]?.text ?? "", isCorrect: prev[questionId]?.isCorrect ?? false, imageUrl: upload.url },
@@ -240,7 +240,7 @@ export default function AdminQuizEditor() {
   const uploadImageForOption = async (questionId: number, optionId: number, file: File) => {
     try {
       setUploadingTarget(`option-${optionId}`);
-      const upload = await mediaApi.uploadImage(file, "quiz");
+      const upload = await mediaApi.uploadMedia(file, "quiz");
       setQuiz((prev) =>
         prev
           ? {
@@ -269,7 +269,7 @@ export default function AdminQuizEditor() {
     if (!url) return;
 
     try {
-      await mediaApi.deleteImageByUrl(url);
+      await mediaApi.deleteMediaByUrl(url);
       setQuiz((prev) =>
         prev
           ? {
@@ -409,7 +409,7 @@ export default function AdminQuizEditor() {
                 </HStack>
                 <HStack>
                   <FormControl>
-                    <FormLabel color="whiteAlpha.900">Start At (UTC)</FormLabel>
+                    <FormLabel color="whiteAlpha.900">Start At (Philippine Time)</FormLabel>
                     <Input
                       color="white"
                       type="datetime-local"
@@ -418,7 +418,7 @@ export default function AdminQuizEditor() {
                     />
                   </FormControl>
                   <FormControl>
-                    <FormLabel color="whiteAlpha.900">End At (UTC)</FormLabel>
+                    <FormLabel color="whiteAlpha.900">End At (Philippine Time)</FormLabel>
                     <Input
                       color="white"
                       type="datetime-local"
@@ -487,7 +487,7 @@ export default function AdminQuizEditor() {
                     <HStack flexWrap="wrap">
                       <Input
                         type="file"
-                        accept="image/*"
+                        accept="image/*,video/*,.gif"
                         display="none"
                         ref={(element) => {
                           questionFileRefs.current[question.id] = element;
@@ -610,7 +610,7 @@ export default function AdminQuizEditor() {
                           <HStack flexWrap="wrap">
                             <Input
                               type="file"
-                              accept="image/*"
+                              accept="image/*,video/*,.gif"
                               display="none"
                               ref={(element) => {
                                 optionFileRefs.current[option.id] = element;
@@ -674,7 +674,7 @@ export default function AdminQuizEditor() {
                       <HStack>
                         <Input
                           type="file"
-                          accept="image/*"
+                          accept="image/*,video/*,.gif"
                           onChange={(event) => {
                             const file = event.target.files?.[0];
                             if (file) {

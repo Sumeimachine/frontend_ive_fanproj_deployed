@@ -122,11 +122,11 @@ export default function AdminQuizManager() {
               <Switch isChecked={form.isActive} onChange={(e) => setForm((p) => ({ ...p, isActive: e.target.checked }))} />
             </FormControl>
             <FormControl>
-              <FormLabel color="whiteAlpha.900">Start At (UTC)</FormLabel>
+              <FormLabel color="whiteAlpha.900">Start At (Philippine Time)</FormLabel>
               <Input color="white" type="datetime-local" value={form.startAt} onChange={(e) => setForm((p) => ({ ...p, startAt: e.target.value }))} />
             </FormControl>
             <FormControl>
-              <FormLabel color="whiteAlpha.900">End At (UTC)</FormLabel>
+              <FormLabel color="whiteAlpha.900">End At (Philippine Time)</FormLabel>
               <Input color="white" type="datetime-local" value={form.endAt} onChange={(e) => setForm((p) => ({ ...p, endAt: e.target.value }))} />
             </FormControl>
           </Grid>

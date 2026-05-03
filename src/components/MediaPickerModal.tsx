@@ -67,7 +67,7 @@ export default function MediaPickerModal({ buttonLabel, folder, size = "sm", onS
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
         <ModalOverlay />
         <ModalContent bg="#0e0a1d" color="white" border="1px solid" borderColor="whiteAlpha.300">
-          <ModalHeader>Select Existing Image</ModalHeader>
+          <ModalHeader>Select Existing Media</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <Input
@@ -80,7 +80,7 @@ export default function MediaPickerModal({ buttonLabel, folder, size = "sm", onS
             {isLoading && <Text color="whiteAlpha.700">Loading media library...</Text>}
             {!!error && <Text color="red.300">{error}</Text>}
             {!isLoading && !error && filteredFiles.length === 0 && (
-              <Text color="whiteAlpha.700">No images found for your filter.</Text>
+              <Text color="whiteAlpha.700">No media found for your filter.</Text>
             )}
 
             <Grid templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(4, 1fr)", xl: "repeat(5, 1fr)" }} gap={4}>
@@ -93,7 +93,11 @@ export default function MediaPickerModal({ buttonLabel, folder, size = "sm", onS
                   p={2}
                   bg="whiteAlpha.100"
                 >
-                  <Image src={file.url} alt={file.fileName} h="110px" w="100%" objectFit="cover" borderRadius="md" mb={2} />
+                  {file.fileName.match(/\.(mp4|webm|mov|m4v)$/i) ? (
+                    <Box as="video" src={file.url} controls h="110px" w="100%" borderRadius="md" mb={2} />
+                  ) : (
+                    <Image src={file.url} alt={file.fileName} h="110px" w="100%" objectFit="cover" borderRadius="md" mb={2} />
+                  )}
                   <Box mb={2}>
                     <Text fontSize="xs" noOfLines={1} title={file.fileName}>
                       {file.fileName}
@@ -111,7 +115,7 @@ export default function MediaPickerModal({ buttonLabel, folder, size = "sm", onS
                       onClose();
                     }}
                   >
-                    Use this image
+                    Use this media
                   </Button>
                 </GridItem>
               ))}

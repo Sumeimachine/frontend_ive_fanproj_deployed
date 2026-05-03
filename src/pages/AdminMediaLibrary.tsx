@@ -63,7 +63,7 @@ export default function AdminMediaLibrary() {
   const handleDelete = async (url: string) => {
     try {
       setBusyUrl(url);
-      await mediaApi.deleteImageByUrl(url);
+      await mediaApi.deleteMediaByUrl(url);
       setFiles((prev) => prev.filter((file) => file.url !== url));
       setTotalFiles((prev) => Math.max(0, prev - 1));
       const deleted = files.find((file) => file.url === url);
@@ -86,7 +86,7 @@ export default function AdminMediaLibrary() {
 
     try {
       setBusyUrl(file.url);
-      const renamed = await mediaApi.renameImage(file.url, nextName);
+      const renamed = await mediaApi.renameMedia(file.url, nextName);
       setFiles((prev) =>
         prev.map((entry) =>
           entry.url === file.url
@@ -143,7 +143,7 @@ export default function AdminMediaLibrary() {
         {!loading && filteredFiles.length === 0 && (
           <Alert status="info" borderRadius="md">
             <AlertIcon />
-            No uploaded images found for your current search.
+            No uploaded media found for your current search.
           </Alert>
         )}
 
@@ -151,13 +151,17 @@ export default function AdminMediaLibrary() {
           {filteredFiles.map((file) => (
             <Box key={file.url} border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" p={4}>
               <HStack align="start" spacing={4} flexWrap="wrap">
-                <Image src={file.url} alt={file.fileName} maxW="180px" borderRadius="md" objectFit="cover" />
+                {file.fileName.match(/\.(mp4|webm|mov|m4v)$/i) ? (
+                  <Box as="video" src={file.url} controls maxW="180px" borderRadius="md" />
+                ) : (
+                  <Image src={file.url} alt={file.fileName} maxW="180px" borderRadius="md" objectFit="cover" />
+                )}
                 <VStack align="start" spacing={1}>
                   <Text color="white" fontWeight="bold">{file.fileName}</Text>
                   <Text color="purple.200" fontSize="sm">Folder: {file.folder || "root"}</Text>
                   <Text color="whiteAlpha.800" fontSize="sm">{file.relativePath}</Text>
                   <Text color="whiteAlpha.700" fontSize="sm">Size: {formatBytes(file.sizeBytes)}</Text>
-                  <Text color="whiteAlpha.700" fontSize="sm">Updated: {new Date(file.updatedAtUtc).toLocaleString()}</Text>
+                  <Text color="whiteAlpha.700" fontSize="sm">Updated: {new Date(file.updatedAtUtc).toLocaleString("en-PH", { timeZone: "Asia/Manila" })}</Text>
                   <HStack flexWrap="wrap">
                     <Button
                       size="sm"
@@ -168,7 +172,7 @@ export default function AdminMediaLibrary() {
                       target="_blank"
                       rel="noreferrer noopener"
                     >
-                      Open Image
+                      Open Media
                     </Button>
                       <Button
                         size="sm"

@@ -111,11 +111,11 @@ export default function SuperAdminEvents() {
                 </NumberInput>
               </FormControl>
               <FormControl>
-                <FormLabel color="whiteAlpha.900">Start At (UTC)</FormLabel>
+                <FormLabel color="whiteAlpha.900">Start At (Philippine Time)</FormLabel>
                 <Input type="datetime-local" color="white" value={form.startAtUtc} onChange={(event) => setForm((prev) => ({ ...prev, startAtUtc: event.target.value }))} />
               </FormControl>
               <FormControl>
-                <FormLabel color="whiteAlpha.900">End At (UTC)</FormLabel>
+                <FormLabel color="whiteAlpha.900">End At (Philippine Time)</FormLabel>
                 <Input type="datetime-local" color="white" value={form.endAtUtc} onChange={(event) => setForm((prev) => ({ ...prev, endAtUtc: event.target.value }))} />
               </FormControl>
               <FormControl>
