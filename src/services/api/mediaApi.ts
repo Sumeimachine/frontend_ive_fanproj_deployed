@@ -20,8 +20,13 @@ export interface MediaLibraryResponse {
   files: MediaLibraryFile[];
 }
 
+export const MAX_MEDIA_UPLOAD_SIZE_BYTES = 1024 * 1024 * 1024; // 1 GB
+
 export const mediaApi = {
   uploadMedia: async (file: File, folder = "quiz") => {
+    if (file.size > MAX_MEDIA_UPLOAD_SIZE_BYTES) {
+      throw new Error("File is over the 1 GB upload limit.");
+    }
     const formData = new FormData();
     formData.append("file", file);
     formData.append("folder", folder);

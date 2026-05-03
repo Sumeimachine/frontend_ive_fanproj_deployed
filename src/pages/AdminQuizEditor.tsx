@@ -47,6 +47,10 @@ const getApiErrorMessage = (error: unknown, fallback: string) => {
     return (responseData as { message: string }).message;
   }
 
+  if ((error as { message?: unknown })?.message && typeof (error as { message?: unknown }).message === "string") {
+    return (error as { message: string }).message;
+  }
+
   return fallback;
 };
 

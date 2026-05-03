@@ -118,7 +118,7 @@ const MemberInfo: React.FC = () => {
     } catch {
       toast({
         title: "Upload failed",
-        description: "Could not upload member image.",
+        description: "Could not upload member media. If your file is over 1 GB, please choose a smaller file.",
         status: "error",
         duration: 2800,
         isClosable: true,
