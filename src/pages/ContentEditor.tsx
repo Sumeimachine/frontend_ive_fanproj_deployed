@@ -96,7 +96,7 @@ export default function ContentEditor() {
           <Button onClick={handleSave} colorScheme="purple">
             Save Changes
           </Button>
-          <Button variant="outline" onClick={handleReset}>
+          <Button variant="outline" colorScheme="orange" onClick={handleReset}>
             Reset Defaults
           </Button>
         </Box>

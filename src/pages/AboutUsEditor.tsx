@@ -52,7 +52,7 @@ export default function AboutUsEditor() {
           <Button onClick={handleSave} colorScheme="purple">
             Save Changes
           </Button>
-          <Button variant="outline" onClick={handleReset}>
+          <Button variant="outline" colorScheme="orange" onClick={handleReset}>
             Reset Defaults
           </Button>
           <Button variant="ghost" onClick={() => navigate("/about")}>Go to About Us</Button>

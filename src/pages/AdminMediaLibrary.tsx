@@ -159,26 +159,34 @@ export default function AdminMediaLibrary() {
                   <Text color="whiteAlpha.700" fontSize="sm">Size: {formatBytes(file.sizeBytes)}</Text>
                   <Text color="whiteAlpha.700" fontSize="sm">Updated: {new Date(file.updatedAtUtc).toLocaleString()}</Text>
                   <HStack flexWrap="wrap">
-                    <Button size="sm" variant="outline" as="a" href={file.url} target="_blank" rel="noreferrer noopener">
-                      Open Image
-                    </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      colorScheme="yellow"
-                      onClick={() => {
-                        setRenamingUrl(file.url);
+                      colorScheme="cyan"
+                      as="a"
+                      href={file.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                    >
+                      Open Image
+                    </Button>
+                      <Button
+                        size="sm"
+                        variant="solid"
+                        colorScheme="yellow"
+                        onClick={() => {
+                          setRenamingUrl(file.url);
                         setNewNameDraft((prev) => ({ ...prev, [file.url]: file.fileName.replace(/\.[^/.]+$/, "") }));
                       }}
                     >
                       Rename
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      colorScheme="red"
-                      onClick={() => void handleDelete(file.url)}
-                      isLoading={busyUrl === file.url}
+                      <Button
+                        size="sm"
+                        variant="solid"
+                        colorScheme="red"
+                        onClick={() => void handleDelete(file.url)}
+                        isLoading={busyUrl === file.url}
                     >
                       Delete
                     </Button>
