@@ -38,6 +38,7 @@ export default function MainLayout() {
     { label: "Dashboard", to: "/dashboard" },
     { label: "Daily Quiz", to: "/quiz/daily" },
     { label: "Quiz Leaderboards", to: "/quiz/leaderboards" },
+    { label: "Fan Events", to: "/fan-events" },
     ...((role === "Admin" || role === "Super-Admin")
       ? [
           { label: "Pages", to: "/pages" },
@@ -50,7 +51,7 @@ export default function MainLayout() {
       ? [
           { label: "Account Ops", to: "/super-admin/users" },
           { label: "Point Rewards", to: "/super-admin/events" },
-          { label: "Fan Events", to: "/super-admin/fan-events" },
+          { label: "Fan Event Ops", to: "/super-admin/fan-events" },
         ]
       : []),
   ];

@@ -44,6 +44,9 @@ export default function DynamicContentPage() {
 }
 
 export function ContentPageView({ page }: { page: ContentPage }) {
+  const heroPosition = `${page.heroImagePositionX ?? 50}% ${page.heroImagePositionY ?? 50}%`;
+  const accentPosition = `${page.accentImagePositionX ?? 50}% ${page.accentImagePositionY ?? 50}%`;
+
   return (
     <Box color="white" minH="100vh" bg="#080612">
       <Box
@@ -58,7 +61,7 @@ export function ContentPageView({ page }: { page: ContentPage }) {
             : "linear-gradient(135deg, #080612, #201236 70%, #3a1742)"
         }
         bgSize="cover"
-        bgPos="center"
+        bgPos={page.heroImageUrl ? heroPosition : "center"}
       >
         <VStack align="start" spacing={4} maxW="920px">
           <Text color="pink.200" fontSize="xs" textTransform="uppercase" letterSpacing="0.14em">
@@ -72,6 +75,19 @@ export function ContentPageView({ page }: { page: ContentPage }) {
             <Button as={RouterLink} to={page.ctaUrl} colorScheme="purple">
               {page.ctaLabel}
             </Button>
+          )}
+          {page.accentImageUrl && (
+            <Image
+              src={page.accentImageUrl}
+              alt={`${page.title} accent`}
+              w={{ base: "150px", md: "210px" }}
+              h={{ base: "96px", md: "132px" }}
+              objectFit="cover"
+              objectPosition={accentPosition}
+              borderRadius="lg"
+              border="1px solid"
+              borderColor="whiteAlpha.400"
+            />
           )}
         </VStack>
       </Box>
@@ -90,8 +106,17 @@ export function ContentPageView({ page }: { page: ContentPage }) {
 
 function ContentSection({ section }: { section: PageSection }) {
   const hasImage = !!section.imageUrl;
+  const imagePosition = `${section.imagePositionX ?? 50}% ${section.imagePositionY ?? 50}%`;
   const image = hasImage ? (
-    <Image src={section.imageUrl ?? ""} alt={section.title} w="100%" h={{ base: "220px", md: "280px" }} objectFit="cover" borderRadius="lg" />
+    <Image
+      src={section.imageUrl ?? ""}
+      alt={section.title}
+      w="100%"
+      h={{ base: "220px", md: "280px" }}
+      objectFit="cover"
+      objectPosition={imagePosition}
+      borderRadius="lg"
+    />
   ) : null;
 
   const text = (

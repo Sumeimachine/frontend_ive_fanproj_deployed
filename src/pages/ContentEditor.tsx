@@ -36,13 +36,18 @@ import { ContentPageView } from "./DynamicContentPage";
 import type { MemberProfile } from "../types/member";
 
 type EditableLayout = PageSection["layout"];
+type EditorWorkspace = "pages" | "community";
 
 const emptyPage = (): ContentPage => ({
   slug: "new-page",
   title: "New Page",
   description: "",
   heroImageUrl: null,
+  heroImagePositionX: 50,
+  heroImagePositionY: 50,
   accentImageUrl: null,
+  accentImagePositionX: 50,
+  accentImagePositionY: 50,
   ctaLabel: "",
   ctaUrl: "",
   isPublished: false,
@@ -52,6 +57,8 @@ const emptyPage = (): ContentPage => ({
       title: "Opening Section",
       body: "",
       imageUrl: null,
+      imagePositionX: 50,
+      imagePositionY: 50,
       layout: "feature",
       sortOrder: 1,
     },
@@ -89,6 +96,9 @@ export default function ContentEditor() {
   const toast = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [pages, setPages] = useState<ContentPage[]>([]);
+  const [workspace, setWorkspace] = useState<EditorWorkspace>(
+    searchParams.get("workspace") === "community" ? "community" : "pages",
+  );
   const [selectedSlug, setSelectedSlug] = useState(searchParams.get("slug") ?? "");
   const [draft, setDraft] = useState<ContentPage | null>(null);
   const [loading, setLoading] = useState(true);
@@ -159,6 +169,8 @@ export default function ContentEditor() {
             title: `Section ${nextSort}`,
             body: "",
             imageUrl: null,
+            imagePositionX: 50,
+            imagePositionY: 50,
             layout: "text",
             sortOrder: nextSort,
           },
@@ -186,6 +198,7 @@ export default function ContentEditor() {
 
   const createNewPage = () => {
     const next = emptyPage();
+    setWorkspace("pages");
     setDraft(next);
     setSelectedSlug("");
     setSearchParams({});
@@ -249,9 +262,9 @@ export default function ContentEditor() {
     }
   };
 
-  const updateMemberDraft = <K extends keyof MemberProfile>(memberId: string, key: K, value: MemberProfile[K]) => {
+  const patchMemberDraft = (memberId: string, patch: Partial<MemberProfile>) => {
     setMemberDrafts((current) =>
-      current.map((member) => (member.id === memberId ? { ...member, [key]: value } : member)),
+      current.map((member) => (member.id === memberId ? { ...member, ...patch } : member)),
     );
   };
 
@@ -302,14 +315,28 @@ export default function ContentEditor() {
                 </Button>
               </HStack>
               <VStack align="stretch" spacing={2}>
+                <Button
+                  justifyContent="space-between"
+                  variant={workspace === "community" ? "solid" : "ghost"}
+                  colorScheme={workspace === "community" ? "pink" : undefined}
+                  color={workspace === "community" ? "white" : "whiteAlpha.900"}
+                  onClick={() => {
+                    setWorkspace("community");
+                    setSearchParams({ workspace: "community" });
+                  }}
+                >
+                  <Text noOfLines={1}>Community Hub</Text>
+                  <Badge colorScheme="pink">Members</Badge>
+                </Button>
                 {pages.map((page) => (
                   <Button
                     key={page.slug}
                     justifyContent="space-between"
-                    variant={page.slug === selectedSlug ? "solid" : "ghost"}
-                    colorScheme={page.slug === selectedSlug ? "purple" : undefined}
-                    color={page.slug === selectedSlug ? "white" : "whiteAlpha.900"}
+                    variant={workspace === "pages" && page.slug === selectedSlug ? "solid" : "ghost"}
+                    colorScheme={workspace === "pages" && page.slug === selectedSlug ? "purple" : undefined}
+                    color={workspace === "pages" && page.slug === selectedSlug ? "white" : "whiteAlpha.900"}
                     onClick={() => {
+                      setWorkspace("pages");
                       setSelectedSlug(page.slug);
                       setSearchParams({ slug: page.slug });
                     }}
@@ -321,7 +348,16 @@ export default function ContentEditor() {
               </VStack>
             </Box>
 
-            {draft && (
+            {workspace === "community" ? (
+              <MemberProfileContentPanel
+                memberDrafts={memberDrafts}
+                savingMemberId={savingMemberId}
+                uploadingKey={uploadingKey}
+                onPatchMember={patchMemberDraft}
+                onSaveMember={(member) => void saveMemberDraft(member)}
+                onUploadMedia={uploadMedia}
+              />
+            ) : draft && (
               <VStack align="stretch" spacing={5}>
                 <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(9, 8, 20, 0.78)" p={{ base: 4, md: 5 }}>
                   <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
@@ -355,18 +391,24 @@ export default function ContentEditor() {
                     <MediaField
                       label="Hero Image"
                       value={draft.heroImageUrl}
+                      positionX={draft.heroImagePositionX ?? 50}
+                      positionY={draft.heroImagePositionY ?? 50}
                       isUploading={uploadingKey === "hero"}
                       onSelect={(url) => updateDraft({ heroImageUrl: url })}
                       onClear={() => updateDraft({ heroImageUrl: null })}
                       onUpload={(file) => void uploadMedia(file, "hero", (url) => updateDraft({ heroImageUrl: url }))}
+                      onPositionChange={(x, y) => updateDraft({ heroImagePositionX: x, heroImagePositionY: y })}
                     />
                     <MediaField
                       label="Accent Image"
                       value={draft.accentImageUrl}
+                      positionX={draft.accentImagePositionX ?? 50}
+                      positionY={draft.accentImagePositionY ?? 50}
                       isUploading={uploadingKey === "accent"}
                       onSelect={(url) => updateDraft({ accentImageUrl: url })}
                       onClear={() => updateDraft({ accentImageUrl: null })}
                       onUpload={(file) => void uploadMedia(file, "accent", (url) => updateDraft({ accentImageUrl: url }))}
+                      onPositionChange={(x, y) => updateDraft({ accentImagePositionX: x, accentImagePositionY: y })}
                     />
                   </SimpleGrid>
                 </Box>
@@ -410,10 +452,13 @@ export default function ContentEditor() {
                         <MediaField
                           label="Section Image"
                           value={section.imageUrl}
+                          positionX={section.imagePositionX ?? 50}
+                          positionY={section.imagePositionY ?? 50}
                           isUploading={uploadingKey === section.id}
                           onSelect={(url) => updateSection(section.id, { imageUrl: url })}
                           onClear={() => updateSection(section.id, { imageUrl: null })}
                           onUpload={(file) => void uploadMedia(file, section.id, (url) => updateSection(section.id, { imageUrl: url }))}
+                          onPositionChange={(x, y) => updateSection(section.id, { imagePositionX: x, imagePositionY: y })}
                         />
 
                         <Button mt={4} size="sm" variant="outline" colorScheme="red" onClick={() => removeSection(section.id)} isDisabled={draft.sections.length <= 1}>
@@ -446,103 +491,123 @@ export default function ContentEditor() {
           </Grid>
         )}
 
-        {!loading && (
-          <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(9, 8, 20, 0.78)" p={{ base: 4, md: 5 }}>
-            <Box mb={4}>
-              <Heading size="md">Member Profile Content</Heading>
-              <Text color="whiteAlpha.750" fontSize="sm">
-                Edit member profile text, profile image, accent color, and crop position from the content manager.
-              </Text>
-            </Box>
-
-            <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={4}>
-              {memberDrafts.map((member) => {
-                const uploadId = `member-content-upload-${member.id}`;
-                const objectPosition = `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%`;
-
-                return (
-                  <Box key={member.id} border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(255,255,255,0.06)" p={4}>
-                    <Grid templateColumns={{ base: "1fr", md: "190px 1fr" }} gap={4}>
-                      <Box>
-                        <Image src={member.photoUrl} alt={member.name} w="100%" h="230px" objectFit="cover" objectPosition={objectPosition} borderRadius="md" />
-                        <Text color="whiteAlpha.700" fontSize="xs" mt={2}>
-                          Crop: {member.photoObjectPositionX ?? 50}% / {member.photoObjectPositionY ?? 50}%
-                        </Text>
-                      </Box>
-
-                      <VStack align="stretch" spacing={3}>
-                        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
-                          <FormControl>
-                            <FormLabel>Name</FormLabel>
-                            <Input value={member.name} onChange={(event) => updateMemberDraft(member.id, "name", event.target.value)} {...fieldStyles} />
-                          </FormControl>
-                          <FormControl>
-                            <FormLabel>Accent</FormLabel>
-                            <Input type="color" value={member.accent} onChange={(event) => updateMemberDraft(member.id, "accent", event.target.value)} h="40px" p={1} bg="#151126" borderColor="whiteAlpha.400" />
-                          </FormControl>
-                        </SimpleGrid>
-
-                        <FormControl>
-                          <FormLabel>Tagline</FormLabel>
-                          <Input value={member.tagline} onChange={(event) => updateMemberDraft(member.id, "tagline", event.target.value)} {...fieldStyles} />
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Photo URL</FormLabel>
-                          <Input value={member.photoUrl} onChange={(event) => updateMemberDraft(member.id, "photoUrl", event.target.value)} {...fieldStyles} />
-                        </FormControl>
-
-                        <HStack flexWrap="wrap">
-                          <Input
-                            id={uploadId}
-                            type="file"
-                            accept="image/*"
-                            display="none"
-                            onChange={(event) => {
-                              const file = event.target.files?.[0];
-                              if (file) {
-                                void uploadMedia(file, `member-${member.id}`, (url) => updateMemberDraft(member.id, "photoUrl", url));
-                              }
-                              event.target.value = "";
-                            }}
-                          />
-                          <Button as="label" htmlFor={uploadId} size="sm" colorScheme="purple" isLoading={uploadingKey === `member-${member.id}`}>
-                            Upload
-                          </Button>
-                          <MediaPickerModal buttonLabel="Choose Existing" folder="members" onSelect={(url) => updateMemberDraft(member.id, "photoUrl", url)} />
-                        </HStack>
-
-                        <FormControl>
-                          <FormLabel>Horizontal crop: {member.photoObjectPositionX ?? 50}%</FormLabel>
-                          <Slider min={0} max={100} value={member.photoObjectPositionX ?? 50} onChange={(value) => updateMemberDraft(member.id, "photoObjectPositionX", value)}>
-                            <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="pink.300" /></SliderTrack>
-                            <SliderThumb />
-                          </Slider>
-                        </FormControl>
-                        <FormControl>
-                          <FormLabel>Vertical crop: {member.photoObjectPositionY ?? 50}%</FormLabel>
-                          <Slider min={0} max={100} value={member.photoObjectPositionY ?? 50} onChange={(value) => updateMemberDraft(member.id, "photoObjectPositionY", value)}>
-                            <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="purple.300" /></SliderTrack>
-                            <SliderThumb />
-                          </Slider>
-                        </FormControl>
-
-                        <FormControl>
-                          <FormLabel>Bio</FormLabel>
-                          <Textarea minH="120px" value={member.bio} onChange={(event) => updateMemberDraft(member.id, "bio", event.target.value)} {...fieldStyles} />
-                        </FormControl>
-
-                        <Button alignSelf="flex-start" colorScheme="pink" onClick={() => void saveMemberDraft(member)} isLoading={savingMemberId === member.id}>
-                          Save Member
-                        </Button>
-                      </VStack>
-                    </Grid>
-                  </Box>
-                );
-              })}
-            </SimpleGrid>
-          </Box>
-        )}
       </VStack>
+    </Box>
+  );
+}
+
+function MemberProfileContentPanel({
+  memberDrafts,
+  savingMemberId,
+  uploadingKey,
+  onPatchMember,
+  onSaveMember,
+  onUploadMedia,
+}: {
+  memberDrafts: MemberProfile[];
+  savingMemberId: string | null;
+  uploadingKey: string | null;
+  onPatchMember: (memberId: string, patch: Partial<MemberProfile>) => void;
+  onSaveMember: (member: MemberProfile) => void;
+  onUploadMedia: (file: File, key: string, onUrl: (url: string) => void) => void;
+}) {
+  return (
+    <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(9, 8, 20, 0.78)" p={{ base: 4, md: 5 }}>
+      <Box mb={4}>
+        <Text color="pink.200" fontSize="xs" textTransform="uppercase" letterSpacing="0.14em">
+          Community Hub
+        </Text>
+        <Heading size="md" mt={1}>Member Profile Content</Heading>
+        <Text color="whiteAlpha.750" fontSize="sm" mt={1}>
+          Edit member profile text, profile image, accent color, and crop position from one dedicated content workspace.
+        </Text>
+      </Box>
+
+      <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={4}>
+        {memberDrafts.map((member) => {
+          const uploadId = `member-content-upload-${member.id}`;
+          const objectPosition = `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%`;
+
+          return (
+            <Box key={member.id} border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(255,255,255,0.06)" p={4}>
+              <Grid templateColumns={{ base: "1fr", md: "190px 1fr" }} gap={4}>
+                <Box>
+                  <Image src={member.photoUrl} alt={member.name} w="100%" h="230px" objectFit="cover" objectPosition={objectPosition} borderRadius="md" />
+                  <Text color="whiteAlpha.700" fontSize="xs" mt={2}>
+                    Preview crop: {member.photoObjectPositionX ?? 50}% / {member.photoObjectPositionY ?? 50}%
+                  </Text>
+                </Box>
+
+                <VStack align="stretch" spacing={3}>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+                    <FormControl>
+                      <FormLabel>Name</FormLabel>
+                      <Input value={member.name} onChange={(event) => onPatchMember(member.id, { name: event.target.value })} {...fieldStyles} />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Accent</FormLabel>
+                      <Input type="color" value={member.accent} onChange={(event) => onPatchMember(member.id, { accent: event.target.value })} h="40px" p={1} bg="#151126" borderColor="whiteAlpha.400" />
+                    </FormControl>
+                  </SimpleGrid>
+
+                  <FormControl>
+                    <FormLabel>Tagline</FormLabel>
+                    <Input value={member.tagline} onChange={(event) => onPatchMember(member.id, { tagline: event.target.value })} {...fieldStyles} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Photo URL</FormLabel>
+                    <Input value={member.photoUrl} onChange={(event) => onPatchMember(member.id, { photoUrl: event.target.value })} {...fieldStyles} />
+                  </FormControl>
+
+                  <HStack flexWrap="wrap">
+                    <Input
+                      id={uploadId}
+                      type="file"
+                      accept="image/*"
+                      display="none"
+                      onChange={(event) => {
+                        const file = event.target.files?.[0];
+                        if (file) {
+                          onUploadMedia(file, `member-${member.id}`, (url) => onPatchMember(member.id, { photoUrl: url }));
+                        }
+                        event.target.value = "";
+                      }}
+                    />
+                    <Button as="label" htmlFor={uploadId} size="sm" colorScheme="purple" isLoading={uploadingKey === `member-${member.id}`}>
+                      Upload
+                    </Button>
+                    <MediaPickerModal buttonLabel="Choose Existing" folder="members" onSelect={(url) => onPatchMember(member.id, { photoUrl: url })} />
+                  </HStack>
+
+                  <FormControl>
+                    <FormLabel>Horizontal crop: {member.photoObjectPositionX ?? 50}%</FormLabel>
+                    <Slider min={0} max={100} value={member.photoObjectPositionX ?? 50} onChange={(value) => onPatchMember(member.id, { photoObjectPositionX: value })}>
+                      <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="pink.300" /></SliderTrack>
+                      <SliderThumb />
+                    </Slider>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Vertical crop: {member.photoObjectPositionY ?? 50}%</FormLabel>
+                    <Slider min={0} max={100} value={member.photoObjectPositionY ?? 50} onChange={(value) => onPatchMember(member.id, { photoObjectPositionY: value })}>
+                      <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="purple.300" /></SliderTrack>
+                      <SliderThumb />
+                    </Slider>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel>Bio</FormLabel>
+                    <Textarea minH="120px" value={member.bio} onChange={(event) => onPatchMember(member.id, { bio: event.target.value })} {...fieldStyles} />
+                  </FormControl>
+
+                  <Button alignSelf="flex-start" colorScheme="pink" onClick={() => onSaveMember(member)} isLoading={savingMemberId === member.id}>
+                    Save Member
+                  </Button>
+                </VStack>
+              </Grid>
+            </Box>
+          );
+        })}
+      </SimpleGrid>
     </Box>
   );
 }
@@ -550,24 +615,56 @@ export default function ContentEditor() {
 function MediaField({
   label,
   value,
+  positionX = 50,
+  positionY = 50,
   isUploading,
   onSelect,
   onClear,
   onUpload,
+  onPositionChange,
 }: {
   label: string;
   value?: string | null;
+  positionX?: number;
+  positionY?: number;
   isUploading: boolean;
   onSelect: (url: string) => void;
   onClear: () => void;
   onUpload: (file: File) => void;
+  onPositionChange?: (x: number, y: number) => void;
 }) {
   const inputId = useId();
+  const objectPosition = `${positionX}% ${positionY}%`;
 
   return (
     <Box mt={4}>
       <Text fontWeight="semibold" mb={2}>{label}</Text>
-      {value && <Image src={value} alt={label} maxH="180px" borderRadius="md" objectFit="cover" mb={3} />}
+      {value && (
+        <Box mb={3}>
+          <Image src={value} alt={label} w="100%" h="180px" borderRadius="md" objectFit="cover" objectPosition={objectPosition} />
+          <Text color="whiteAlpha.700" fontSize="xs" mt={2}>
+            Preview crop: {positionX}% / {positionY}%
+          </Text>
+          {onPositionChange && (
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} mt={3}>
+              <FormControl>
+                <FormLabel fontSize="xs">Horizontal crop</FormLabel>
+                <Slider min={0} max={100} value={positionX} onChange={(value) => onPositionChange(value, positionY)}>
+                  <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="pink.300" /></SliderTrack>
+                  <SliderThumb />
+                </Slider>
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize="xs">Vertical crop</FormLabel>
+                <Slider min={0} max={100} value={positionY} onChange={(value) => onPositionChange(positionX, value)}>
+                  <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="purple.300" /></SliderTrack>
+                  <SliderThumb />
+                </Slider>
+              </FormControl>
+            </SimpleGrid>
+          )}
+        </Box>
+      )}
       <HStack flexWrap="wrap">
         <Input
           type="file"

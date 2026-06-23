@@ -43,7 +43,14 @@ export default function ContentPages() {
             {pages.map((page) => (
               <Box key={page.slug} overflow="hidden" borderRadius="lg" bg="rgba(255,255,255,0.08)" border="1px solid" borderColor="whiteAlpha.300">
                 {page.heroImageUrl && (
-                  <Image src={page.heroImageUrl} alt={page.title} h="190px" w="100%" objectFit="cover" />
+                  <Image
+                    src={page.heroImageUrl}
+                    alt={page.title}
+                    h="190px"
+                    w="100%"
+                    objectFit="cover"
+                    objectPosition={`${page.heroImagePositionX ?? 50}% ${page.heroImagePositionY ?? 50}%`}
+                  />
                 )}
                 <Box p={5}>
                   <Badge colorScheme="purple" mb={3}>{page.slug}</Badge>

@@ -17,6 +17,7 @@ const EmailVerification = lazy(() => import("./pages/EmailVerification"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const QuizGame = lazy(() => import("./pages/QuizGame"));
 const QuizLeaderboards = lazy(() => import("./pages/QuizLeaderboards"));
+const FanEvents = lazy(() => import("./pages/FanEvents"));
 const AdminQuizManager = lazy(() => import("./pages/AdminQuizManager"));
 const AdminQuizEditor = lazy(() => import("./pages/AdminQuizEditor"));
 const SuperAdminUsers = lazy(() => import("./pages/SuperAdminUsers"));
@@ -54,6 +55,7 @@ function AppRoutes() {
             <Route path="/about" element={<AboutUs />} />
             <Route path="/quiz/daily" element={<QuizGame />} />
             <Route path="/quiz/leaderboards" element={<QuizLeaderboards />} />
+            <Route path="/fan-events" element={<FanEvents />} />
             <Route path="/member/:id" element={<MemberInfo />} />
             <Route element={<AdminRoute />}>
               <Route path="/about/edit" element={<AboutUsEditor />} />
