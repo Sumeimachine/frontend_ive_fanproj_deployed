@@ -88,6 +88,17 @@ export default function SuperAdminUsers() {
                         bg="#1A1630"
                         color="white"
                         borderColor="whiteAlpha.500"
+                        _hover={{ borderColor: "purple.300" }}
+                        _focusVisible={{
+                          borderColor: "purple.300",
+                          boxShadow: "0 0 0 1px rgba(196, 146, 255, 0.75)",
+                        }}
+                        sx={{
+                          option: {
+                            bg: "#1A1630",
+                            color: "white",
+                          },
+                        }}
                         value={draftRoles[user.id] ?? (user.role === "Admin" ? "Admin" : "User")}
                         onChange={(event) =>
                           setDraftRoles((previous) => ({

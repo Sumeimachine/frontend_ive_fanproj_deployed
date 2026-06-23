@@ -1,13 +1,34 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Badge, Box, Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useAuth } from "../context/AuthContext";
 import { eventApi } from "../services/api/eventApi";
 import type { EventReward } from "../types/api";
 
 export default function MainLayout() {
   const navigate = useNavigate();
-  const { logout, username, role, currencyBalance, dailyRewardClaimedToday, bootstrapProfile } = useAuth();
+  const {
+    logout,
+    username,
+    role,
+    currencyBalance,
+    dailyRewardClaimedToday,
+    bootstrapProfile,
+  } = useAuth();
   const [activeEventReward, setActiveEventReward] = useState<EventReward | null>(null);
   const [claimingEventReward, setClaimingEventReward] = useState(false);
 
@@ -25,20 +46,19 @@ export default function MainLayout() {
           { label: "Media Library", to: "/admin/media" },
         ]
       : []),
-    ...(role === "Super-Admin" ? [{ label: "Super Admin", to: "/super-admin/users" }] : []),
-    ...(role === "Super-Admin" ? [{ label: "Event Rewards", to: "/super-admin/events" }] : []),
+    ...(role === "Super-Admin"
+      ? [
+          { label: "Super Admin", to: "/super-admin/users" },
+          { label: "Event Rewards", to: "/super-admin/events" },
+        ]
+      : []),
   ];
 
   useEffect(() => {
     void (async () => {
       try {
-
-const activeEvent = await eventApi.getActiveEventReward();
-if ("id" in activeEvent) {
-  setActiveEventReward(activeEvent);
-} else {
-  setActiveEventReward(null);
-}
+        const activeEvent = await eventApi.getActiveEventReward();
+        setActiveEventReward("id" in activeEvent ? activeEvent : null);
       } catch {
         setActiveEventReward(null);
       }
@@ -64,9 +84,16 @@ if ("id" in activeEvent) {
   };
 
   return (
-    <Box className="dark-shell" display="flex" minH="100vh" bg="#080612">
+    <Box
+      className="dark-shell"
+      display="flex"
+      flexDirection={{ base: "column", md: "row" }}
+      minH="100vh"
+      bg="#080612"
+    >
       <Box
-        width="260px"
+        width={{ base: "100%", md: "260px" }}
+        minW={{ md: "260px" }}
         bg="#151126"
         color="white"
         p={5}
@@ -104,7 +131,7 @@ if ("id" in activeEvent) {
             IVE Fan Points
           </Text>
           <Text fontSize="2xl" fontWeight="bold" color="white">
-            💖 {currencyBalance}
+            {currencyBalance} points
           </Text>
           <Badge
             alignSelf="flex-start"
@@ -141,7 +168,7 @@ if ("id" in activeEvent) {
         </Button>
       </Box>
 
-      <Box flex="1">
+      <Box flex="1" minW={0}>
         <Outlet />
       </Box>
 
@@ -151,7 +178,9 @@ if ("id" in activeEvent) {
           <ModalHeader>{activeEventReward?.title ?? "Event Reward"}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb={3} color="whiteAlpha.900">{activeEventReward?.message}</Text>
+            <Text mb={3} color="whiteAlpha.900">
+              {activeEventReward?.message}
+            </Text>
             <Text color="purple.200">Claim reward: +{activeEventReward?.points ?? 0} points</Text>
           </ModalBody>
           <ModalFooter>

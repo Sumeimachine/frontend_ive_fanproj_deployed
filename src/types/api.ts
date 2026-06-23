@@ -44,6 +44,14 @@ export interface EventReward {
   claimsCount?: number;
 }
 
+export interface CardCatalogItem {
+  id: string;
+  name: string;
+  youtubeId: string;
+  thumbnailUrl: string;
+  displayOrder: number;
+}
+
 export interface YoutubeTrend {
   Song?: string;
   Views?: number | string;

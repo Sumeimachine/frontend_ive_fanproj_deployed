@@ -118,9 +118,20 @@ export default function QuizGame() {
               bg="whiteAlpha.100"
               color="white"
               borderColor="whiteAlpha.300"
+              _hover={{ borderColor: "purple.300" }}
+              _focusVisible={{
+                borderColor: "purple.300",
+                boxShadow: "0 0 0 1px rgba(196, 146, 255, 0.75)",
+              }}
+              sx={{
+                option: {
+                  bg: "#1A1630",
+                  color: "white",
+                },
+              }}
             >
               {quizzes.map((quiz) => (
-                <option key={quiz.id} value={quiz.id} style={{ color: "black" }}>
+                <option key={quiz.id} value={quiz.id}>
                   {quiz.title} ({quiz.type})
                 </option>
               ))}

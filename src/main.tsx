@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import App from "./App";
 import "./index.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
-import { Analytics } from "@vercel/analytics/react"
-// Readability-first theme adjustments for dark UI shells.
+
 const theme = extendTheme({
   styles: {
     global: {
@@ -113,7 +113,6 @@ const theme = extendTheme({
   },
 });
 
-// 2️⃣ Wrap your app with ChakraProvider and pass the theme
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>

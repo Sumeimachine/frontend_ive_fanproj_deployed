@@ -1,20 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import MemberUniverseSection from "../components/MemberUniverseSection";
+import { Box, Button, Container, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import { getMemberProfiles, loadMemberProfiles } from "../services/memberProfileStore";
 import type { MemberProfile } from "../types/member";
 
+const MemberUniverseSection = lazy(() => import("../components/MemberUniverseSection"));
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const universeRef = useRef<HTMLDivElement | null>(null);
   const [membersData, setMembersData] = useState<MemberProfile[]>(() => loadMemberProfiles());
   const [scrollY, setScrollY] = useState(0);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
@@ -48,6 +42,12 @@ const Home: React.FC = () => {
     return `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${translateY}px)`;
   }, [pointer, scrollY]);
 
+  const featuredMembers = useMemo(() => membersData.slice(0, 6), [membersData]);
+
+  const scrollToUniverse = () => {
+    universeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <Box className="home-page" minH="100vh" color="white">
       <Box className="parallax-layer layer-back" style={{ transform: `translateY(${scrollY * 0.14}px)` }} />
@@ -55,85 +55,99 @@ const Home: React.FC = () => {
       <Box className="parallax-layer layer-front" style={{ transform: `translateY(${scrollY * 0.32}px)` }} />
 
       <Container maxW="1200px" py={{ base: 12, md: 20 }} position="relative" zIndex={2}>
-        {/* <VStack spacing={6} textAlign="center" mb={{ base: 12, md: 16 }}>
-          <Text className="eyebrow">Level 1 — Modern interactive site</Text>
-          <Heading fontSize={{ base: "3xl", md: "6xl" }} lineHeight="1.1">
-            IVE Neon Dimension
-          </Heading>
-          <Text maxW="740px" color="whiteAlpha.800" fontSize={{ base: "md", md: "lg" }}>
-            Parallax depth, smooth motion, and 3D-like cards are now built into the homepage. Move your pointer and
-            scroll to feel each layer react.
+        <Box className="home-hero">
+          <VStack className="home-hero-copy" align="start" spacing={6}>
+            <Text className="eyebrow">Non-commercial IVE fan-support space</Text>
+            <Heading as="h1" className="home-hero-title">
+              IVE PH Fan Universe
+            </Heading>
+            <Text className="home-hero-body">
+              A polished fan-built hub for exploring IVE member profiles, YouTube momentum,
+              daily quizzes, and immersive 3D-inspired fan moments.
+            </Text>
+
+            <HStack className="home-hero-actions" spacing={3}>
+              <Button size="lg" colorScheme="purple" onClick={scrollToUniverse}>
+                Enter Universe
+              </Button>
+              <Button size="lg" variant="outline" onClick={() => navigate("/dashboard")}>
+                View Metrics
+              </Button>
+            </HStack>
+
+            <HStack className="fan-signal-row" spacing={3}>
+              <Box className="fan-signal">
+                <Text>Members</Text>
+                <strong>{membersData.length}</strong>
+              </Box>
+              <Box className="fan-signal">
+                <Text>Mode</Text>
+                <strong>Fan-built</strong>
+              </Box>
+              <Box className="fan-signal">
+                <Text>Experience</Text>
+                <strong>Interactive</strong>
+              </Box>
+            </HStack>
+          </VStack>
+
+          <Box className="hero-stage" aria-label="IVE member spotlight">
+            {featuredMembers.map((member, index) => (
+              <button
+                key={member.id}
+                className={`hero-polaroid hero-polaroid-${index}`}
+                type="button"
+                onClick={() => navigate(`/member/${member.id}`)}
+              >
+                <img src={member.backupPhotoUrl || member.photoUrl} alt={member.name} />
+                <span>{member.name}</span>
+              </button>
+            ))}
+          </Box>
+        </Box>
+
+        <Box className="fan-disclaimer">
+          <Text>
+            This is a fan-support website. It is not affiliated with IVE, Starship Entertainment, or any official merch project.
           </Text>
-        </VStack>
+        </Box>
 
-        <Grid templateColumns={{ base: "1fr", sm: "repeat(2,1fr)", md: "repeat(3,1fr)" }} gap={{ base: 5, md: 8 }}>
-          {membersData.map((member, index) => (
-            <Box
-              key={member.id}
-              className="member-card"
-              style={{
-                animationDelay: `${index * 80}ms`,
-                transform: `translateZ(${(index % 3) * 12 + 6}px) rotateX(${pointer.y * -2.8}deg) rotateY(${pointer.x * 3.2}deg)`,
-              }}
-            >
-              <Image src={member.photoUrl} alt={member.name} w="100%" h="340px" objectFit="cover" />
-              <VStack py={4} px={4} bg="rgba(12,11,24,0.86)" spacing={3}>
-                <Text fontWeight="bold" fontSize="lg">
-                  {member.name}
-                </Text>
-                <Text color="purple.200" fontSize="sm" textAlign="center">
-                  {member.tagline}
-                </Text>
-                <HStack spacing={3}>
-                  <Button
-                    size="sm"
-                    colorScheme="purple"
-                    onClick={() => navigate(`/member/${member.id}`)}
-                  >
-                    View Profile
-                  </Button>
-                  {role === "Admin" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      colorScheme="pink"
-                      onClick={() => navigate(`/member/${member.id}?edit=1`)}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                </HStack>
-              </VStack>
+        <Box ref={universeRef}>
+        <Suspense
+          fallback={
+            <Box minH="460px" display="grid" placeItems="center">
+              <Text color="whiteAlpha.800">Loading members...</Text>
             </Box>
-          ))}
-        </Grid> */}
-
-        <MemberUniverseSection
-          members={membersData}
-          onSelectMember={(memberId) => navigate(`/member/${memberId}`)}
-        />
+          }
+        >
+          <MemberUniverseSection
+            members={membersData}
+            onSelectMember={(memberId) => navigate(`/member/${memberId}`)}
+          />
+        </Suspense>
+        </Box>
       </Container>
 
       <Box className="world-section" style={{ transform: cameraTransform }}>
         <Container maxW="1200px" py={{ base: 12, md: 20 }}>
           <VStack spacing={5} align="start" mb={10}>
-            <Text className="eyebrow">IVE PH EXPERIENCE</Text> 
+            <Text className="eyebrow">IVE PH EXPERIENCE</Text>
             <Heading fontSize={{ base: "2xl", md: "4xl" }}>
-              Dive into IVE’s world
+              Dive into IVE's world
             </Heading>
             <Text color="whiteAlpha.800" maxW="760px">
-              A fan-built interactive space inspired by IVE — blending motion, visuals, and creativity. 
+              A fan-built interactive space inspired by IVE - blending motion, visuals, and creativity.
               This evolving experience will soon feature real 3D environments and deeper immersion for fans.
             </Text>
           </VStack>
 
-        <HStack className="world-track" spacing={6} align="stretch">
+          <HStack className="world-track" spacing={6} align="stretch">
             <Box className="world-node">
               <Heading size="md" mb={2}>
                 Dynamic Motion
               </Heading>
               <Text color="whiteAlpha.800">
-                The environment responds fluidly to your movement — shifting perspective as you scroll and explore.
+                The environment responds fluidly to your movement - shifting perspective as you scroll and explore.
               </Text>
             </Box>
 
@@ -156,7 +170,12 @@ const Home: React.FC = () => {
             </Box>
           </HStack>
 
-          <Button mt={10} colorScheme="purple" size="lg" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <Button
+            mt={10}
+            colorScheme="purple"
+            size="lg"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
             Back to top
           </Button>
         </Container>

@@ -224,7 +224,7 @@ export default function MemberUniverseSection({ members, onSelectMember }: Membe
     >
       <VStack spacing={3} textAlign="center" pt={{ base: 8, md: 10 }} px={6}>
         <Text className="eyebrow">DIVE INTO IVE!</Text>
-        <Heading fontSize={{ base: "2xl", md: "4xl" }}>IVE Universe — Neon Card Orbit</Heading>
+        <Heading fontSize={{ base: "2xl", md: "4xl" }}>IVE Universe - Neon Card Orbit</Heading>
         <Text maxW="740px" color="whiteAlpha.800">
           Hover a card to highlight, then click to open
           profile.

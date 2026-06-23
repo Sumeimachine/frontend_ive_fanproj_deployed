@@ -1,26 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Box,
-  Grid,
-  Image,
-  Heading,
-  Text,
-  VStack,
-  Button,
-  Stack,
-} from "@chakra-ui/react";
-import ReactSelect from "react-select";
-import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
+import { Box, Button, Grid, Heading, Image, Stack, Text, VStack } from "@chakra-ui/react";
+import ReactSelect from "react-select";
 import songsData from "../assets/songs.json";
+import { cardApi } from "../services/api/cardApi";
 import { youtubeApi } from "../services/api/youtubeApi";
 
 interface SongMetrics {
@@ -33,60 +25,71 @@ interface SongMetrics {
 interface Song {
   name: string;
   youtubeId: string;
+  thumbnailUrl?: string;
 }
 
+const fallbackSongs = songsData as Song[];
+const chunkSize = 20;
+const requestDelayMs = 250;
+const rateLimitDelayMs = 500;
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const selectStyles = {
+  control: (base: Record<string, unknown>) => ({
+    ...base,
+    background: "#2C2440",
+    borderRadius: "12px",
+  }),
+  singleValue: (base: Record<string, unknown>) => ({ ...base, color: "#fff" }),
+  input: (base: Record<string, unknown>) => ({ ...base, color: "#fff" }),
+  placeholder: (base: Record<string, unknown>) => ({ ...base, color: "#fff" }),
+  menu: (base: Record<string, unknown>) => ({ ...base, background: "#2C2440" }),
+  option: (base: Record<string, unknown>, state: { isFocused: boolean }) => ({
+    ...base,
+    background: state.isFocused ? "#40365E" : "#2C2440",
+    color: "#fff",
+  }),
+};
+
 const Dashboard: React.FC = () => {
-  const IVE_SONGS: Song[] = songsData;
+  const [songs, setSongs] = useState<Song[]>(fallbackSongs);
   const [metrics, setMetrics] = useState<SongMetrics[]>([]);
-  const [songA, setSongA] = useState<string>("");
-  const [songB, setSongB] = useState<string>("");
+  const [songA, setSongA] = useState("");
+  const [songB, setSongB] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const fetchTrendChunks = async (videoIdChunks: string[][]) => {
+  const fetchTrendChunks = useCallback(async (videoIdChunks: string[][]) => {
     const results: Awaited<ReturnType<typeof youtubeApi.getTrends>>[] = [];
     let hadRateLimit = false;
 
     for (const chunk of videoIdChunks) {
       try {
-        const chunkData = await youtubeApi.getTrends(chunk);
-        results.push(chunkData);
+        results.push(await youtubeApi.getTrends(chunk));
       } catch (requestError: unknown) {
         const status = (requestError as { response?: { status?: number } })?.response?.status;
-        if (status === 429) {
-          hadRateLimit = true;
-          results.push([]);
-          await delay(500);
-          continue;
+        if (status !== 429) {
+          throw requestError;
         }
 
-        throw requestError;
+        hadRateLimit = true;
+        results.push([]);
+        await delay(rateLimitDelayMs);
+        continue;
       }
 
-      await delay(250);
+      await delay(requestDelayMs);
     }
 
     return { results, hadRateLimit };
-  };
+  }, []);
 
-  const fetchInitialMetrics = async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const chunkSize = 20;
-      const videoIdChunks: string[][] = [];
-
-      for (let i = 0; i < IVE_SONGS.length; i += chunkSize) {
-        videoIdChunks.push(
-          IVE_SONGS.slice(i, i + chunkSize).map((song) => song.youtubeId),
-        );
-      }
-
-      const { results: responses, hadRateLimit } = await fetchTrendChunks(videoIdChunks);
-
+  const buildMetrics = useCallback(
+    (
+      selectedSongs: Song[],
+      responses: Awaited<ReturnType<typeof youtubeApi.getTrends>>[],
+    ): SongMetrics[] => {
       const trendsByVideoId = new Map(
         responses
           .flat()
@@ -94,7 +97,7 @@ const Dashboard: React.FC = () => {
           .filter(([videoId]) => Boolean(videoId)),
       );
 
-      const initialMetrics: SongMetrics[] = IVE_SONGS.map((song) => {
+      return selectedSongs.map((song) => {
         const trend = trendsByVideoId.get(song.youtubeId);
 
         return {
@@ -104,8 +107,26 @@ const Dashboard: React.FC = () => {
           youtubeId: song.youtubeId,
         };
       });
+    },
+    [],
+  );
 
-      setMetrics(initialMetrics);
+  const fetchInitialMetrics = useCallback(async () => {
+    if (songs.length === 0) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const videoIdChunks: string[][] = [];
+
+      for (let i = 0; i < songs.length; i += chunkSize) {
+        videoIdChunks.push(songs.slice(i, i + chunkSize).map((song) => song.youtubeId));
+      }
+
+      const { results, hadRateLimit } = await fetchTrendChunks(videoIdChunks);
+
+      setMetrics(buildMetrics(songs, results));
       if (hadRateLimit) {
         setError("Some trend requests were rate-limited (429). Showing partial data.");
       }
@@ -115,51 +136,69 @@ const Dashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [buildMetrics, fetchTrendChunks, songs]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchCards = async () => {
+      try {
+        const cards = await cardApi.getAll();
+        if (!isMounted) return;
+
+        const nextSongs = cards
+          .slice()
+          .sort((a, b) => a.displayOrder - b.displayOrder)
+          .map((card) => ({
+            name: card.name,
+            youtubeId: card.youtubeId,
+            thumbnailUrl: card.thumbnailUrl,
+          }));
+
+        if (nextSongs.length > 0) {
+          setSongs(nextSongs);
+        }
+      } catch (err) {
+        console.error(err);
+        if (isMounted) {
+          setError("Using local card catalog because the backend card API is unavailable.");
+        }
+      }
+    };
+
+    void fetchCards();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     void fetchInitialMetrics();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchInitialMetrics]);
 
   const fetchMetrics = async () => {
-    const selectedSongs = [songA, songB].filter(Boolean);
-    if (selectedSongs.length === 0) return;
+    const selectedSongNames = [songA, songB].filter(Boolean);
+    if (selectedSongNames.length === 0) return;
 
     setLoading(true);
     setError("");
 
     try {
-      const selectedSongModels = selectedSongs
-        .map((songName) => IVE_SONGS.find((song) => song.name === songName))
+      const selectedSongs = selectedSongNames
+        .map((songName) => songs.find((song) => song.name === songName))
         .filter((song): song is Song => Boolean(song));
 
       const { results, hadRateLimit } = await fetchTrendChunks([
-        selectedSongModels.map((song) => song.youtubeId),
+        selectedSongs.map((song) => song.youtubeId),
       ]);
-      const response = results[0] ?? [];
-
-      const trendsByVideoId = new Map(
-        response
-          .map((item) => [item.Song ?? item.song, item] as const)
-          .filter(([videoId]) => Boolean(videoId)),
-      );
-
-      const updatedMetrics: SongMetrics[] = selectedSongModels.map((song) => {
-        const trend = trendsByVideoId.get(song.youtubeId);
-
-        return {
-          song: song.name,
-          youtubeViews: Number(trend?.Views ?? trend?.views ?? 0),
-          youtubeLikes: Number(trend?.Likes ?? trend?.likes ?? 0),
-          youtubeId: song.youtubeId,
-        };
-      });
+      const updatedMetrics = buildMetrics(selectedSongs, results);
 
       setMetrics((prev) => {
-        const otherMetrics = prev.filter((m) => !selectedSongs.includes(m.song));
+        const otherMetrics = prev.filter((m) => !selectedSongNames.includes(m.song));
         return [...otherMetrics, ...updatedMetrics];
       });
+
       if (hadRateLimit) {
         setError("YouTube API rate-limited this refresh (429).");
       }
@@ -171,28 +210,42 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const getThumbnail = (id: string) =>
-    `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+  const thumbnailByVideoId = useMemo(
+    () => new Map(songs.map((song) => [song.youtubeId, song.thumbnailUrl])),
+    [songs],
+  );
 
-  // react-select options
-  const songOptions = IVE_SONGS.map((s) => ({ value: s.name, label: s.name }));
+  const songOptions = useMemo(
+    () => songs.map((song) => ({ value: song.name, label: song.name })),
+    [songs],
+  );
 
-  const songsToShow =
-    songA || songB
-      ? metrics.filter((m) => [songA, songB].includes(m.song))
-      : metrics.length > 0
-        ? metrics
-        : IVE_SONGS.map((song) => ({
-            song: song.name,
-            youtubeViews: 0,
-            youtubeLikes: 0,
-            youtubeId: song.youtubeId,
-          }));
+  const songsToShow = useMemo(
+    () =>
+      songA || songB
+        ? metrics.filter((m) => [songA, songB].includes(m.song))
+        : metrics.length > 0
+          ? metrics
+          : songs.map((song) => ({
+              song: song.name,
+              youtubeViews: 0,
+              youtubeLikes: 0,
+              youtubeId: song.youtubeId,
+            })),
+    [metrics, songA, songB, songs],
+  );
 
-  const comparisonData =
-    songA && songB
-      ? songsToShow.filter((m) => [songA, songB].includes(m.song))
-      : [];
+  const comparisonData = useMemo(
+    () =>
+      songA && songB
+        ? songsToShow.filter((m) => [songA, songB].includes(m.song))
+        : [],
+    [songA, songB, songsToShow],
+  );
+
+  const getThumbnail = (song: SongMetrics) =>
+    thumbnailByVideoId.get(song.youtubeId)
+    ?? `https://img.youtube.com/vi/${song.youtubeId}/hqdefault.jpg`;
 
   return (
     <Box
@@ -219,13 +272,7 @@ const Dashboard: React.FC = () => {
           </Text>
         )}
 
-        {/* Searchable Dropdowns */}
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={4}
-          justify="center"
-          mb={8}
-        >
+        <Stack direction={{ base: "column", md: "row" }} spacing={4} justify="center" mb={8}>
           <Box maxW="300px">
             <ReactSelect
               options={songOptions}
@@ -233,48 +280,18 @@ const Dashboard: React.FC = () => {
               onChange={(selected) => setSongA(selected?.value || "")}
               placeholder="Type/Select Song A"
               isClearable
-              styles={{
-                control: (base) => ({
-                  ...base,
-                  background: "#2C2440",
-                  borderRadius: "12px",
-                }),
-                singleValue: (base) => ({ ...base, color: "#fff" }), // selected text
-                input: (base) => ({ ...base, color: "#fff" }), // typing/search text
-                placeholder: (base) => ({ ...base, color: "#fff" }), // placeholder text
-                menu: (base) => ({ ...base, background: "#2C2440" }),
-                option: (base, state) => ({
-                  ...base,
-                  background: state.isFocused ? "#40365E" : "#2C2440",
-                  color: "#fff",
-                }),
-              }}
+              styles={selectStyles}
             />
           </Box>
 
           <Box maxW="300px">
             <ReactSelect
               options={songOptions}
-              value={songOptions.find((opt) => opt.value === songB)} // <-- uses songB state
-              onChange={(selected) => setSongB(selected?.value || "")} // <-- updates songB state
+              value={songOptions.find((opt) => opt.value === songB)}
+              onChange={(selected) => setSongB(selected?.value || "")}
               placeholder="Type/Select Song B"
               isClearable
-              styles={{
-                control: (base) => ({
-                  ...base,
-                  background: "#2C2440",
-                  borderRadius: "12px",
-                }),
-                singleValue: (base) => ({ ...base, color: "#fff" }),
-                input: (base) => ({ ...base, color: "#fff" }),
-                placeholder: (base) => ({ ...base, color: "#fff" }),
-                menu: (base) => ({ ...base, background: "#2C2440" }),
-                option: (base, state) => ({
-                  ...base,
-                  background: state.isFocused ? "#40365E" : "#2C2440",
-                  color: "#fff",
-                }),
-              }}
+              styles={selectStyles}
             />
           </Box>
 
@@ -291,7 +308,6 @@ const Dashboard: React.FC = () => {
           </Button>
         </Stack>
 
-        {/* Song Cards */}
         <Grid
           templateColumns={{
             base: "1fr",
@@ -316,7 +332,7 @@ const Dashboard: React.FC = () => {
               }}
             >
               <Image
-                src={getThumbnail(song.youtubeId)}
+                src={getThumbnail(song)}
                 alt={song.song}
                 w="100%"
                 h="200px"
@@ -327,7 +343,7 @@ const Dashboard: React.FC = () => {
                   {song.song}
                 </Heading>
                 <Text fontSize="md" color="#CDB4DB">
-                  {song.youtubeViews.toLocaleString()} views •{" "}
+                  {song.youtubeViews.toLocaleString()} views |{" "}
                   {song.youtubeLikes.toLocaleString()} likes
                 </Text>
                 <Button
@@ -341,37 +357,27 @@ const Dashboard: React.FC = () => {
                   borderRadius="12px"
                   mt={2}
                 >
-                  ▶ Watch on YouTube
+                  Watch on YouTube
                 </Button>
               </VStack>
             </Box>
           ))}
         </Grid>
 
-        {/* Comparison Chart */}
         {comparisonData.length === 2 && (
-          <Box
-            bg="rgba(255,255,255,0.08)"
-            borderRadius="20px"
-            p={6}
-            backdropFilter="blur(8px)"
-          >
+          <Box bg="rgba(255,255,255,0.08)" borderRadius="20px" p={6} backdropFilter="blur(8px)">
             <Heading fontSize="xl" mb={6} color="#E6E0F8">
               Compare Two Songs
             </Heading>
             <ResponsiveContainer width="100%" height={350}>
-              <BarChart
-                data={comparisonData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="rgba(255,255,255,0.1)"
-                />
+              <BarChart data={comparisonData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
                 <XAxis dataKey="song" tick={{ fill: "#E6E0F8" }} />
                 <YAxis tick={{ fill: "#E6E0F8" }} />
                 <Tooltip
-                  formatter={(value: any) => value.toLocaleString()}
+                  formatter={(value: unknown) =>
+                    typeof value === "number" ? value.toLocaleString() : String(value)
+                  }
                   contentStyle={{
                     backgroundColor: "rgba(40,40,60,0.9)",
                     borderRadius: 10,
@@ -379,22 +385,9 @@ const Dashboard: React.FC = () => {
                     color: "#fff",
                   }}
                 />
-                <Legend
-                  verticalAlign="top"
-                  wrapperStyle={{ color: "#E6E0F8" }}
-                />
-                <Bar
-                  dataKey="youtubeViews"
-                  fill="#B8C0FF"
-                  name="Views"
-                  radius={[10, 10, 0, 0]}
-                />
-                <Bar
-                  dataKey="youtubeLikes"
-                  fill="#FFAFCC"
-                  name="Likes"
-                  radius={[10, 10, 0, 0]}
-                />
+                <Legend verticalAlign="top" wrapperStyle={{ color: "#E6E0F8" }} />
+                <Bar dataKey="youtubeViews" fill="#B8C0FF" name="Views" radius={[10, 10, 0, 0]} />
+                <Bar dataKey="youtubeLikes" fill="#FFAFCC" name="Likes" radius={[10, 10, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </Box>

@@ -6,32 +6,32 @@ const STORAGE_KEY = "ive-member-profiles";
 
 const defaultsById: Record<string, Omit<MemberProfile, "id" | "name" | "photoUrl">> = {
   yujin: {
-    tagline: "Leader • Charisma Core",
+    tagline: "Leader | Charisma Core",
     bio: "Yujin brings confidence, sharp stage control, and warm leadership energy to IVE.",
     accent: "#9F7AEA",
   },
   wonyoung: {
-    tagline: "Center • Elegance Icon",
+    tagline: "Center | Elegance Icon",
     bio: "Wonyoung is known for polished visuals, graceful delivery, and standout center presence.",
     accent: "#F687B3",
   },
   liz: {
-    tagline: "Main Vocal • Honey Tone",
+    tagline: "Main Vocal | Honey Tone",
     bio: "Liz delivers rich vocal color and emotional tone that shapes IVE's sound identity.",
     accent: "#63B3ED",
   },
   gaeul: {
-    tagline: "Main Dancer • Chic Flow",
+    tagline: "Main Dancer | Chic Flow",
     bio: "Gaeul balances precision and calm confidence with clean, stylish performance details.",
     accent: "#B794F4",
   },
   rei: {
-    tagline: "Rapper • Creative Spark",
+    tagline: "Rapper | Creative Spark",
     bio: "Rei adds playful personality and unique rap color that energizes every stage.",
     accent: "#ED64A6",
   },
   leeseo: {
-    tagline: "Maknae • Bright Power",
+    tagline: "Maknae | Bright Power",
     bio: "Leeseo brings youthful brightness and dynamic momentum to IVE's team chemistry.",
     accent: "#38B2AC",
   },
