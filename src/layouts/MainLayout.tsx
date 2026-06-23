@@ -48,7 +48,7 @@ export default function MainLayout() {
       : []),
     ...(role === "Super-Admin"
       ? [
-          { label: "Super Admin", to: "/super-admin/users" },
+          { label: "Account Ops", to: "/super-admin/users" },
           { label: "Event Rewards", to: "/super-admin/events" },
         ]
       : []),

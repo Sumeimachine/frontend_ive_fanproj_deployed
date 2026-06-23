@@ -72,6 +72,10 @@ export default function SuperAdminEvents() {
   };
 
   const deleteEvent = async (eventRewardId: number) => {
+    if (!window.confirm("Delete this event reward?")) {
+      return;
+    }
+
     try {
       await eventApi.superAdminDelete(eventRewardId);
       await loadEvents();
@@ -83,7 +87,7 @@ export default function SuperAdminEvents() {
   return (
     <Box p={{ base: 4, md: 8 }}>
       <VStack align="stretch" spacing={6}>
-        <Heading size="lg" color="white">Super Admin • Event Rewards</Heading>
+        <Heading size="lg" color="white">Super Admin | Event Rewards</Heading>
         <Text color="whiteAlpha.800">Create reusable claim events (message + points + time window).</Text>
 
         {error && (
@@ -150,7 +154,7 @@ export default function SuperAdminEvents() {
                 <Tr key={eventReward.id}>
                   <Td color="white">{eventReward.title}</Td>
                   <Td color="white">{eventReward.points}</Td>
-                  <Td color="whiteAlpha.900">{eventReward.startAtUtc} → {eventReward.endAtUtc}</Td>
+                  <Td color="whiteAlpha.900">{eventReward.startAtUtc} to {eventReward.endAtUtc}</Td>
                   <Td color="whiteAlpha.900">{eventReward.claimsCount ?? 0}</Td>
                   <Td>
                     <HStack>

@@ -1,42 +1,54 @@
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Heading, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Heading, Spinner } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
+import type { ContentPage } from "../content/pageTemplates";
+import { defaultPages } from "../content/pageTemplates";
 import { useAuth } from "../context/AuthContext";
-
-const ABOUT_US_STORAGE_KEY = "about-us-content";
-const DEFAULT_ABOUT_CONTENT = `made and managed by @Sumeimachan|@jk_anyj|
-
-Dive Into IVE is a fan-powered space where members can explore profiles, play quizzes, track points, and join special community events.
-
-This project is built by fans for fans and is designed to be reusable for seasonal events, promotions, and engagement campaigns.
-
-Dev is in a midlife crisis and adding features at 3AM
-we need content mods before things get out of hand 💀
-apply by sending a message/reply to @Sumeimachan|@jk_anyj|`;
+import { contentApi } from "../services/api/contentApi";
+import { ContentPageView } from "./DynamicContentPage";
 
 export default function AboutUs() {
   const { role } = useAuth();
-  const [aboutContent, setAboutContent] = useState(DEFAULT_ABOUT_CONTENT);
+  const [page, setPage] = useState<ContentPage | null>(null);
+  const [loading, setLoading] = useState(true);
   const canEdit = useMemo(() => role === "Admin" || role === "Super-Admin", [role]);
 
   useEffect(() => {
-    const savedContent = localStorage.getItem(ABOUT_US_STORAGE_KEY);
-    if (savedContent) {
-      setAboutContent(savedContent);
-    }
+    void (async () => {
+      try {
+        setPage(await contentApi.getPublishedPage("about"));
+      } catch {
+        setPage(defaultPages.find((item) => item.slug === "about") ?? null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
+  if (loading) {
+    return (
+      <Box p={10} color="white" bg="#0e0a1e" minH="100vh">
+        <Spinner color="purple.300" />
+      </Box>
+    );
+  }
+
+  if (!page) {
+    return (
+      <Box p={10} color="white" bg="#0e0a1e" minH="100vh">
+        <Heading size="md">About content is not published.</Heading>
+      </Box>
+    );
+  }
+
   return (
-    <Box p={{ base: 4, md: 8 }}>
-      <VStack align="stretch" spacing={4} maxW="900px">
-        <Heading size="lg" color="white">About Us</Heading>
-        <Textarea value={aboutContent} isReadOnly minH="300px" color="whiteAlpha.900" resize="vertical" />
-        {canEdit && (
-          <Button as={RouterLink} to="/about/edit" colorScheme="purple" w="fit-content">
-            Edit About Us
-          </Button>
-        )}
-      </VStack>
+    <Box position="relative">
+      {canEdit && (
+        <Button as={RouterLink} to="/pages/editor?slug=about" colorScheme="purple" position="absolute" top={5} right={5} zIndex={2}>
+          Edit About
+        </Button>
+      )}
+      <ContentPageView page={page} />
     </Box>
   );
 }

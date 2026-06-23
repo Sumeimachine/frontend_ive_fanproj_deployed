@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, AlertIcon, Box, Button, Heading, HStack, Image, Input, Spinner, Text, VStack } from "@chakra-ui/react";
-import { mediaApi, type MediaLibraryFile } from "../services/api/mediaApi";
+import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, HStack, Image, Input, Spinner, Text, VStack } from "@chakra-ui/react";
+import { MAX_MEDIA_UPLOAD_SIZE_BYTES, mediaApi, type MediaLibraryFile } from "../services/api/mediaApi";
 
 const formatBytes = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -26,6 +26,8 @@ export default function AdminMediaLibrary() {
   const [renamingUrl, setRenamingUrl] = useState<string | null>(null);
   const [newNameDraft, setNewNameDraft] = useState<Record<string, string>>({});
   const [busyUrl, setBusyUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadFolder, setUploadFolder] = useState("content");
 
   const loadLibrary = async () => {
     try {
@@ -46,7 +48,7 @@ export default function AdminMediaLibrary() {
     void loadLibrary();
   }, []);
 
-  const usageText = useMemo(() => `Total files: ${totalFiles} • Space used: ${formatBytes(totalBytes)}`, [totalBytes, totalFiles]);
+  const usageText = useMemo(() => `Total files: ${totalFiles} | Space used: ${formatBytes(totalBytes)}`, [totalBytes, totalFiles]);
   const filteredFiles = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
     if (!normalizedSearch) {
@@ -61,6 +63,10 @@ export default function AdminMediaLibrary() {
   }, [files, search]);
 
   const handleDelete = async (url: string) => {
+    if (!window.confirm("Delete this media file? Existing pages using this URL may stop displaying it.")) {
+      return;
+    }
+
     try {
       setBusyUrl(url);
       await mediaApi.deleteMediaByUrl(url);
@@ -108,6 +114,26 @@ export default function AdminMediaLibrary() {
     }
   };
 
+  const handleUpload = async (file?: File) => {
+    if (!file) return;
+
+    if (file.size > MAX_MEDIA_UPLOAD_SIZE_BYTES) {
+      setError("File is over the 1 GB upload limit.");
+      return;
+    }
+
+    try {
+      setUploading(true);
+      setError(null);
+      await mediaApi.uploadMedia(file, uploadFolder || "content");
+      await loadLibrary();
+    } catch {
+      setError("Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <Box p={{ base: 4, md: 8 }}>
       <VStack align="stretch" spacing={5}>
@@ -119,6 +145,37 @@ export default function AdminMediaLibrary() {
         </HStack>
 
         <Text color="whiteAlpha.800">{usageText}</Text>
+        <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" p={4} bg="rgba(255,255,255,0.06)">
+          <Heading size="sm" color="white" mb={3}>Upload Media</Heading>
+          <HStack align={{ base: "stretch", md: "end" }} flexDirection={{ base: "column", md: "row" }} spacing={3}>
+            <FormControl maxW={{ md: "220px" }}>
+              <FormLabel color="whiteAlpha.900">Folder</FormLabel>
+              <Input
+                value={uploadFolder}
+                onChange={(event) => setUploadFolder(event.target.value)}
+                placeholder="content"
+                color="white"
+                bg="#151126"
+                borderColor="whiteAlpha.400"
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel color="whiteAlpha.900">Image or Video</FormLabel>
+              <Input
+                type="file"
+                accept="image/*,video/mp4,video/webm,video/quicktime"
+                color="white"
+                onChange={(event) => {
+                  void handleUpload(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
+              />
+            </FormControl>
+            <Text color={uploading ? "purple.200" : "whiteAlpha.700"} fontSize="sm" minW="88px">
+              {uploading ? "Uploading..." : "1 GB max"}
+            </Text>
+          </HStack>
+        </Box>
         <Input
           placeholder="Search by file name or folder..."
           value={search}

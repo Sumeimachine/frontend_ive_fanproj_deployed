@@ -69,7 +69,7 @@ const MemberInfo: React.FC = () => {
       <Box p={10} color="white" bgGradient="radial(circle at top, #1A152A, #0A0812 80%)" minH="100vh">
         <Text>Member not found.</Text>
         <Button mt={4} onClick={() => navigate(-1)}>
-          ← Back
+          Back
         </Button>
       </Box>
     );
@@ -165,7 +165,7 @@ const MemberInfo: React.FC = () => {
     <Box minH="100vh" bgGradient="linear(to-b, #0a0717, #120b24 45%, #090512)" color="white" py={{ base: 8, md: 12 }}>
       <Container maxW="980px">
         <Button mb={6} variant="ghost" colorScheme="whiteAlpha" onClick={() => navigate("/")}>
-          ← Back to members
+          Back to members
         </Button>
 
         <Box
@@ -193,7 +193,7 @@ const MemberInfo: React.FC = () => {
               <VStack align="stretch" spacing={4}>
                 <Heading size="md">Admin Edit Mode</Heading>
                 <Text color="whiteAlpha.700" fontSize="sm">
-                  Changes are currently stored in browser local storage. Wire this save action to backend later.
+                  Changes save to the backend for deployed visitors. Local fallback is only used if the API is unavailable.
                 </Text>
                 <FormControl>
                   <FormLabel>Name</FormLabel>

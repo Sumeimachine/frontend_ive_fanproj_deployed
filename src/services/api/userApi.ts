@@ -16,4 +16,19 @@ export const userApi = {
     const { data } = await httpClient.patch<UserRoleSummary>(`/super-admin/users/${userId}/role`, { role });
     return data;
   },
+
+  unlockAccount: async (userId: number) => {
+    const { data } = await httpClient.patch<UserRoleSummary>(`/super-admin/users/${userId}/unlock`);
+    return data;
+  },
+
+  verifyEmail: async (userId: number) => {
+    const { data } = await httpClient.patch<UserRoleSummary>(`/super-admin/users/${userId}/verify-email`);
+    return data;
+  },
+
+  revokeSessions: async (userId: number) => {
+    const { data } = await httpClient.post<UserRoleSummary>(`/super-admin/users/${userId}/revoke-sessions`);
+    return data;
+  },
 };

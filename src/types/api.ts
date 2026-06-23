@@ -31,6 +31,10 @@ export interface UserRoleSummary {
   email: string;
   role: string;
   isEmailVerified: boolean;
+  failedLoginAttempts: number;
+  lockoutEnd?: string | null;
+  currencyBalance: number;
+  activeRefreshSessions: number;
 }
 
 export interface EventReward {
