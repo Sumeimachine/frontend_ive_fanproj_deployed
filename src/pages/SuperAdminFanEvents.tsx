@@ -92,6 +92,16 @@ export default function SuperAdminFanEvents() {
       return;
     }
 
+    if (!form.startAtUtc || !form.endAtUtc) {
+      setError("Start and end date are required.");
+      return;
+    }
+
+    if (new Date(form.endAtUtc).getTime() <= new Date(form.startAtUtc).getTime()) {
+      setError("End date must be after start date.");
+      return;
+    }
+
     try {
       setSaving(true);
       setError(null);
