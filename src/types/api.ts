@@ -48,6 +48,22 @@ export interface EventReward {
   claimsCount?: number;
 }
 
+export interface FanEvent {
+  id: number;
+  title: string;
+  summary: string;
+  description: string;
+  eventType: string;
+  location: string;
+  venue: string;
+  bannerImageUrl?: string | null;
+  ticketUrl?: string | null;
+  status: string;
+  isPublished: boolean;
+  startAtUtc: string;
+  endAtUtc: string;
+}
+
 export interface CardCatalogItem {
   id: string;
   name: string;

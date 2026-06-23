@@ -99,7 +99,11 @@ const Home: React.FC = () => {
                 type="button"
                 onClick={() => navigate(`/member/${member.id}`)}
               >
-                <img src={member.backupPhotoUrl || member.photoUrl} alt={member.name} />
+                <img
+                  src={member.photoUrl || member.backupPhotoUrl}
+                  alt={member.name}
+                  style={{ objectPosition: `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%` }}
+                />
                 <span>{member.name}</span>
               </button>
             ))}

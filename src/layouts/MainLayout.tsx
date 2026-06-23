@@ -49,7 +49,8 @@ export default function MainLayout() {
     ...(role === "Super-Admin"
       ? [
           { label: "Account Ops", to: "/super-admin/users" },
-          { label: "Event Rewards", to: "/super-admin/events" },
+          { label: "Point Rewards", to: "/super-admin/events" },
+          { label: "Fan Events", to: "/super-admin/fan-events" },
         ]
       : []),
   ];

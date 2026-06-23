@@ -14,6 +14,10 @@ import {
   Input,
   Select,
   SimpleGrid,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
   Spinner,
   Switch,
   Text,
@@ -25,9 +29,11 @@ import { useSearchParams } from "react-router-dom";
 import MediaPickerModal from "../components/MediaPickerModal";
 import type { ContentPage, PageSection } from "../content/pageTemplates";
 import { defaultPages } from "../content/pageTemplates";
+import { getMemberProfiles, saveMemberProfile } from "../services/memberProfileStore";
 import { contentApi } from "../services/api/contentApi";
 import { mediaApi } from "../services/api/mediaApi";
 import { ContentPageView } from "./DynamicContentPage";
+import type { MemberProfile } from "../types/member";
 
 type EditableLayout = PageSection["layout"];
 
@@ -89,6 +95,8 @@ export default function ContentEditor() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadingKey, setUploadingKey] = useState<string | null>(null);
+  const [memberDrafts, setMemberDrafts] = useState<MemberProfile[]>([]);
+  const [savingMemberId, setSavingMemberId] = useState<string | null>(null);
 
   const selectedPage = useMemo(() => pages.find((page) => page.slug === selectedSlug) ?? null, [pages, selectedSlug]);
 
@@ -112,6 +120,9 @@ export default function ContentEditor() {
 
   useEffect(() => {
     void loadPages(searchParams.get("slug") ?? undefined);
+    void (async () => {
+      setMemberDrafts(await getMemberProfiles());
+    })();
   }, []);
 
   useEffect(() => {
@@ -235,6 +246,25 @@ export default function ContentEditor() {
       setError("Media upload failed.");
     } finally {
       setUploadingKey(null);
+    }
+  };
+
+  const updateMemberDraft = <K extends keyof MemberProfile>(memberId: string, key: K, value: MemberProfile[K]) => {
+    setMemberDrafts((current) =>
+      current.map((member) => (member.id === memberId ? { ...member, [key]: value } : member)),
+    );
+  };
+
+  const saveMemberDraft = async (member: MemberProfile) => {
+    try {
+      setSavingMemberId(member.id);
+      const saved = await saveMemberProfile(member);
+      setMemberDrafts((current) => current.map((item) => (item.id === saved.id ? saved : item)));
+      toast({ title: "Member content saved", description: `${saved.name} profile updated.`, status: "success", duration: 2200, isClosable: true });
+    } catch {
+      setError("Member profile save failed.");
+    } finally {
+      setSavingMemberId(null);
     }
   };
 
@@ -414,6 +444,103 @@ export default function ContentEditor() {
               </VStack>
             )}
           </Grid>
+        )}
+
+        {!loading && (
+          <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(9, 8, 20, 0.78)" p={{ base: 4, md: 5 }}>
+            <Box mb={4}>
+              <Heading size="md">Member Profile Content</Heading>
+              <Text color="whiteAlpha.750" fontSize="sm">
+                Edit member profile text, profile image, accent color, and crop position from the content manager.
+              </Text>
+            </Box>
+
+            <SimpleGrid columns={{ base: 1, xl: 2 }} spacing={4}>
+              {memberDrafts.map((member) => {
+                const uploadId = `member-content-upload-${member.id}`;
+                const objectPosition = `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%`;
+
+                return (
+                  <Box key={member.id} border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(255,255,255,0.06)" p={4}>
+                    <Grid templateColumns={{ base: "1fr", md: "190px 1fr" }} gap={4}>
+                      <Box>
+                        <Image src={member.photoUrl} alt={member.name} w="100%" h="230px" objectFit="cover" objectPosition={objectPosition} borderRadius="md" />
+                        <Text color="whiteAlpha.700" fontSize="xs" mt={2}>
+                          Crop: {member.photoObjectPositionX ?? 50}% / {member.photoObjectPositionY ?? 50}%
+                        </Text>
+                      </Box>
+
+                      <VStack align="stretch" spacing={3}>
+                        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+                          <FormControl>
+                            <FormLabel>Name</FormLabel>
+                            <Input value={member.name} onChange={(event) => updateMemberDraft(member.id, "name", event.target.value)} {...fieldStyles} />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Accent</FormLabel>
+                            <Input type="color" value={member.accent} onChange={(event) => updateMemberDraft(member.id, "accent", event.target.value)} h="40px" p={1} bg="#151126" borderColor="whiteAlpha.400" />
+                          </FormControl>
+                        </SimpleGrid>
+
+                        <FormControl>
+                          <FormLabel>Tagline</FormLabel>
+                          <Input value={member.tagline} onChange={(event) => updateMemberDraft(member.id, "tagline", event.target.value)} {...fieldStyles} />
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Photo URL</FormLabel>
+                          <Input value={member.photoUrl} onChange={(event) => updateMemberDraft(member.id, "photoUrl", event.target.value)} {...fieldStyles} />
+                        </FormControl>
+
+                        <HStack flexWrap="wrap">
+                          <Input
+                            id={uploadId}
+                            type="file"
+                            accept="image/*"
+                            display="none"
+                            onChange={(event) => {
+                              const file = event.target.files?.[0];
+                              if (file) {
+                                void uploadMedia(file, `member-${member.id}`, (url) => updateMemberDraft(member.id, "photoUrl", url));
+                              }
+                              event.target.value = "";
+                            }}
+                          />
+                          <Button as="label" htmlFor={uploadId} size="sm" colorScheme="purple" isLoading={uploadingKey === `member-${member.id}`}>
+                            Upload
+                          </Button>
+                          <MediaPickerModal buttonLabel="Choose Existing" folder="members" onSelect={(url) => updateMemberDraft(member.id, "photoUrl", url)} />
+                        </HStack>
+
+                        <FormControl>
+                          <FormLabel>Horizontal crop: {member.photoObjectPositionX ?? 50}%</FormLabel>
+                          <Slider min={0} max={100} value={member.photoObjectPositionX ?? 50} onChange={(value) => updateMemberDraft(member.id, "photoObjectPositionX", value)}>
+                            <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="pink.300" /></SliderTrack>
+                            <SliderThumb />
+                          </Slider>
+                        </FormControl>
+                        <FormControl>
+                          <FormLabel>Vertical crop: {member.photoObjectPositionY ?? 50}%</FormLabel>
+                          <Slider min={0} max={100} value={member.photoObjectPositionY ?? 50} onChange={(value) => updateMemberDraft(member.id, "photoObjectPositionY", value)}>
+                            <SliderTrack bg="whiteAlpha.300"><SliderFilledTrack bg="purple.300" /></SliderTrack>
+                            <SliderThumb />
+                          </Slider>
+                        </FormControl>
+
+                        <FormControl>
+                          <FormLabel>Bio</FormLabel>
+                          <Textarea minH="120px" value={member.bio} onChange={(event) => updateMemberDraft(member.id, "bio", event.target.value)} {...fieldStyles} />
+                        </FormControl>
+
+                        <Button alignSelf="flex-start" colorScheme="pink" onClick={() => void saveMemberDraft(member)} isLoading={savingMemberId === member.id}>
+                          Save Member
+                        </Button>
+                      </VStack>
+                    </Grid>
+                  </Box>
+                );
+              })}
+            </SimpleGrid>
+          </Box>
         )}
       </VStack>
     </Box>

@@ -19,6 +19,8 @@ export const memberApi = {
       tagline: payload.tagline,
       bio: payload.bio,
       accent: payload.accent,
+      photoObjectPositionX: payload.photoObjectPositionX ?? 50,
+      photoObjectPositionY: payload.photoObjectPositionY ?? 50,
     });
     return data;
   },

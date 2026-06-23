@@ -21,6 +21,7 @@ const AdminQuizManager = lazy(() => import("./pages/AdminQuizManager"));
 const AdminQuizEditor = lazy(() => import("./pages/AdminQuizEditor"));
 const SuperAdminUsers = lazy(() => import("./pages/SuperAdminUsers"));
 const SuperAdminEvents = lazy(() => import("./pages/SuperAdminEvents"));
+const SuperAdminFanEvents = lazy(() => import("./pages/SuperAdminFanEvents"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const AboutUsEditor = lazy(() => import("./pages/AboutUsEditor"));
 const AdminMediaLibrary = lazy(() => import("./pages/AdminMediaLibrary"));
@@ -66,6 +67,7 @@ function AppRoutes() {
             <Route element={<SuperAdminRoute />}>
               <Route path="/super-admin/users" element={<SuperAdminUsers />} />
               <Route path="/super-admin/events" element={<SuperAdminEvents />} />
+              <Route path="/super-admin/fan-events" element={<SuperAdminFanEvents />} />
             </Route>
           </Route>
         </Route>

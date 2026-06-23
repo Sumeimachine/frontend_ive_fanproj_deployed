@@ -11,6 +11,10 @@ import {
   HStack,
   Image,
   Input,
+  Slider,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderTrack,
   Text,
   Textarea,
   VStack,
@@ -78,6 +82,8 @@ const MemberInfo: React.FC = () => {
   const updateDraft = <K extends keyof MemberProfile>(key: K, value: MemberProfile[K]) => {
     setDraft((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
+
+  const photoPosition = `${draft.photoObjectPositionX ?? 50}% ${draft.photoObjectPositionY ?? 50}%`;
 
   const handleSave = async () => {
     try {
@@ -177,7 +183,7 @@ const MemberInfo: React.FC = () => {
           boxShadow="0 24px 80px rgba(140, 93, 255, 0.22)"
         >
           <Box position="relative" minH={{ base: "300px", md: "380px" }}>
-            <Image src={draft.photoUrl} alt={draft.name} w="100%" h="100%" objectFit="cover" />
+            <Image src={draft.photoUrl} alt={draft.name} w="100%" h="100%" objectFit="cover" objectPosition={photoPosition} />
             <Box position="absolute" inset={0} bg="linear-gradient(180deg, rgba(10,7,23,0.1) 40%, rgba(10,7,23,0.92) 92%)" />
             <VStack position="absolute" left={{ base: 6, md: 10 }} bottom={{ base: 6, md: 10 }} align="start" spacing={2}>
               <Badge colorScheme="purple" px={3} py={1} borderRadius="full">
@@ -242,6 +248,34 @@ const MemberInfo: React.FC = () => {
                     Delete Uploaded Photo
                   </Button>
                 </HStack>
+                <FormControl>
+                  <FormLabel>Image horizontal position: {draft.photoObjectPositionX ?? 50}%</FormLabel>
+                  <Slider
+                    min={0}
+                    max={100}
+                    value={draft.photoObjectPositionX ?? 50}
+                    onChange={(value) => updateDraft("photoObjectPositionX", value)}
+                  >
+                    <SliderTrack bg="whiteAlpha.300">
+                      <SliderFilledTrack bg="pink.300" />
+                    </SliderTrack>
+                    <SliderThumb />
+                  </Slider>
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Image vertical position: {draft.photoObjectPositionY ?? 50}%</FormLabel>
+                  <Slider
+                    min={0}
+                    max={100}
+                    value={draft.photoObjectPositionY ?? 50}
+                    onChange={(value) => updateDraft("photoObjectPositionY", value)}
+                  >
+                    <SliderTrack bg="whiteAlpha.300">
+                      <SliderFilledTrack bg="purple.300" />
+                    </SliderTrack>
+                    <SliderThumb />
+                  </Slider>
+                </FormControl>
                 <FormControl>
                   <FormLabel>Bio</FormLabel>
                   <Textarea

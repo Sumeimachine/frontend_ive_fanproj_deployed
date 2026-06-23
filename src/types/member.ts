@@ -6,5 +6,7 @@ export interface MemberProfile {
   tagline: string;
   bio: string;
   accent: string;
+  photoObjectPositionX?: number;
+  photoObjectPositionY?: number;
   updatedAtUtc?: string;
 }

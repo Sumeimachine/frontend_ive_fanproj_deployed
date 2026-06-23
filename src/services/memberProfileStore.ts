@@ -44,6 +44,8 @@ const buildDefaults = (): MemberProfile[] =>
   baseMembers.map((member) => ({
     ...member,
     backupPhotoUrl: member.photoUrl,
+    photoObjectPositionX: 50,
+    photoObjectPositionY: 50,
     ...(defaultsById[member.id] ?? {
       tagline: "IVE Member",
       bio: "Official profile details will be added soon.",
@@ -67,6 +69,8 @@ export const loadMemberProfiles = (): MemberProfile[] => {
       ...member,
       ...(parsedById.get(member.id) ?? {}),
       backupPhotoUrl: basePhotoById.get(member.id) ?? member.backupPhotoUrl,
+      photoObjectPositionX: parsedById.get(member.id)?.photoObjectPositionX ?? member.photoObjectPositionX ?? 50,
+      photoObjectPositionY: parsedById.get(member.id)?.photoObjectPositionY ?? member.photoObjectPositionY ?? 50,
     }));
   } catch {
     return fallback;
@@ -79,6 +83,8 @@ export const getMemberProfiles = async (): Promise<MemberProfile[]> => {
     const normalized = data.map((member) => ({
       ...member,
       backupPhotoUrl: basePhotoById.get(member.id) ?? member.photoUrl,
+      photoObjectPositionX: member.photoObjectPositionX ?? 50,
+      photoObjectPositionY: member.photoObjectPositionY ?? 50,
     }));
     localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
     return normalized;
@@ -93,6 +99,8 @@ export const getMemberProfileById = async (memberId: string): Promise<MemberProf
     return {
       ...data,
       backupPhotoUrl: basePhotoById.get(data.id) ?? data.photoUrl,
+      photoObjectPositionX: data.photoObjectPositionX ?? 50,
+      photoObjectPositionY: data.photoObjectPositionY ?? 50,
     };
   } catch {
     const localProfile = loadMemberProfiles().find((member) => member.id === memberId);
@@ -106,6 +114,8 @@ export const saveMemberProfile = async (updatedMember: MemberProfile): Promise<M
     const normalized = {
       ...data,
       backupPhotoUrl: basePhotoById.get(data.id) ?? data.photoUrl,
+      photoObjectPositionX: data.photoObjectPositionX ?? 50,
+      photoObjectPositionY: data.photoObjectPositionY ?? 50,
     };
     const merged = loadMemberProfiles().map((member) =>
       member.id === normalized.id ? normalized : member,

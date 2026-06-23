@@ -1,5 +1,27 @@
-import { useEffect, useState } from "react";
-import { Alert, AlertIcon, Box, Button, FormControl, FormLabel, Heading, HStack, Input, NumberInput, NumberInputField, Switch, Table, Tbody, Td, Text, Textarea, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Alert,
+  AlertIcon,
+  Badge,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  Heading,
+  HStack,
+  Input,
+  NumberInput,
+  NumberInputField,
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
+  Switch,
+  Text,
+  Textarea,
+  VStack,
+} from "@chakra-ui/react";
 import { eventApi } from "../services/api/eventApi";
 import type { EventReward } from "../types/api";
 
@@ -12,11 +34,32 @@ const defaultForm = {
   endAtUtc: "",
 };
 
+const fieldStyles = {
+  bg: "#151126",
+  color: "white",
+  borderColor: "whiteAlpha.400",
+  _placeholder: { color: "whiteAlpha.500" },
+};
+
+function isLive(eventReward: EventReward) {
+  const now = Date.now();
+  return eventReward.isActive && new Date(eventReward.startAtUtc).getTime() <= now && new Date(eventReward.endAtUtc).getTime() >= now;
+}
+
+function formatDate(value: string) {
+  return new Date(value).toLocaleString("en-PH", { timeZone: "Asia/Manila", dateStyle: "medium", timeStyle: "short" });
+}
+
 export default function SuperAdminEvents() {
   const [events, setEvents] = useState<EventReward[]>([]);
   const [form, setForm] = useState(defaultForm);
   const [editingEventId, setEditingEventId] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const liveCount = useMemo(() => events.filter(isLive).length, [events]);
+  const totalClaims = useMemo(() => events.reduce((sum, eventReward) => sum + (eventReward.claimsCount ?? 0), 0), [events]);
+  const totalPoints = useMemo(() => events.reduce((sum, eventReward) => sum + Math.max(0, eventReward.points), 0), [events]);
 
   const loadEvents = async () => {
     try {
@@ -38,13 +81,15 @@ export default function SuperAdminEvents() {
       return;
     }
 
-    const payload = {
-      ...form,
-      title: form.title.trim(),
-      message: form.message.trim(),
-    };
-
     try {
+      setSaving(true);
+      setError(null);
+      const payload = {
+        ...form,
+        title: form.title.trim(),
+        message: form.message.trim(),
+      };
+
       if (editingEventId) {
         await eventApi.superAdminUpdate(editingEventId, payload);
       } else {
@@ -56,6 +101,8 @@ export default function SuperAdminEvents() {
       await loadEvents();
     } catch {
       setError("Failed to save event reward.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -72,7 +119,7 @@ export default function SuperAdminEvents() {
   };
 
   const deleteEvent = async (eventRewardId: number) => {
-    if (!window.confirm("Delete this event reward?")) {
+    if (!window.confirm("Delete this point reward event?")) {
       return;
     }
 
@@ -85,10 +132,23 @@ export default function SuperAdminEvents() {
   };
 
   return (
-    <Box p={{ base: 4, md: 8 }}>
+    <Box p={{ base: 4, md: 8 }} minH="100vh" color="white" bg="linear-gradient(135deg, #080612, #151126 55%, #26143b)">
       <VStack align="stretch" spacing={6}>
-        <Heading size="lg" color="white">Super Admin | Event Rewards</Heading>
-        <Text color="whiteAlpha.800">Create reusable claim events (message + points + time window).</Text>
+        <Box>
+          <Text color="pink.200" fontSize="xs" textTransform="uppercase" letterSpacing="0.14em">
+            Super Admin
+          </Text>
+          <Heading size="lg" mt={2}>Point Reward Events</Heading>
+          <Text color="whiteAlpha.800" mt={2}>
+            Claimable campaigns for giving fan points during launches, milestones, and community moments.
+          </Text>
+        </Box>
+
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+          <MetricCard label="Reward Events" value={events.length.toString()} />
+          <MetricCard label="Live Now" value={liveCount.toString()} />
+          <MetricCard label="Claims / Point Pool" value={`${totalClaims} / ${totalPoints}`} />
+        </SimpleGrid>
 
         {error && (
           <Alert status="error" borderRadius="md">
@@ -97,77 +157,87 @@ export default function SuperAdminEvents() {
           </Alert>
         )}
 
-        <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" p={4}>
-          <VStack align="stretch" spacing={3}>
-            <FormControl>
-              <FormLabel color="whiteAlpha.900">Title</FormLabel>
-              <Input color="white" value={form.title} onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))} />
-            </FormControl>
-            <FormControl>
-              <FormLabel color="whiteAlpha.900">Message</FormLabel>
-              <Textarea color="white" value={form.message} onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))} />
-            </FormControl>
-            <HStack>
+        <Grid templateColumns={{ base: "1fr", xl: "430px 1fr" }} gap={5} alignItems="start">
+          <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(9, 8, 20, 0.78)" p={5}>
+            <Heading size="md" mb={4}>{editingEventId ? "Edit Reward" : "Create Reward"}</Heading>
+            <VStack align="stretch" spacing={4}>
               <FormControl>
-                <FormLabel color="whiteAlpha.900">Points</FormLabel>
-                <NumberInput min={0} value={form.points} onChange={(_, value) => setForm((prev) => ({ ...prev, points: Number.isNaN(value) ? 0 : value }))}>
-                  <NumberInputField color="white" />
-                </NumberInput>
+                <FormLabel>Title</FormLabel>
+                <Input value={form.title} onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))} {...fieldStyles} />
               </FormControl>
               <FormControl>
-                <FormLabel color="whiteAlpha.900">Start At (Philippine Time)</FormLabel>
-                <Input type="datetime-local" color="white" value={form.startAtUtc} onChange={(event) => setForm((prev) => ({ ...prev, startAtUtc: event.target.value }))} />
+                <FormLabel>Message</FormLabel>
+                <Textarea value={form.message} onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))} minH="120px" {...fieldStyles} />
+              </FormControl>
+              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3}>
+                <FormControl>
+                  <FormLabel>Points</FormLabel>
+                  <NumberInput min={0} value={form.points} onChange={(_, value) => setForm((prev) => ({ ...prev, points: Number.isNaN(value) ? 0 : value }))}>
+                    <NumberInputField {...fieldStyles} />
+                  </NumberInput>
+                </FormControl>
+                <FormControl display="flex" alignItems="center" gap={3} pt={{ md: 8 }}>
+                  <Switch colorScheme="purple" isChecked={form.isActive} onChange={(event) => setForm((prev) => ({ ...prev, isActive: event.target.checked }))} />
+                  <FormLabel mb={0}>Active</FormLabel>
+                </FormControl>
+              </SimpleGrid>
+              <FormControl>
+                <FormLabel>Start At</FormLabel>
+                <Input type="datetime-local" value={form.startAtUtc} onChange={(event) => setForm((prev) => ({ ...prev, startAtUtc: event.target.value }))} {...fieldStyles} />
               </FormControl>
               <FormControl>
-                <FormLabel color="whiteAlpha.900">End At (Philippine Time)</FormLabel>
-                <Input type="datetime-local" color="white" value={form.endAtUtc} onChange={(event) => setForm((prev) => ({ ...prev, endAtUtc: event.target.value }))} />
+                <FormLabel>End At</FormLabel>
+                <Input type="datetime-local" value={form.endAtUtc} onChange={(event) => setForm((prev) => ({ ...prev, endAtUtc: event.target.value }))} {...fieldStyles} />
               </FormControl>
-              <FormControl>
-                <FormLabel color="whiteAlpha.900">Is Active</FormLabel>
-                <Switch isChecked={form.isActive} onChange={(event) => setForm((prev) => ({ ...prev, isActive: event.target.checked }))} />
-              </FormControl>
-            </HStack>
-            <HStack>
-              <Button colorScheme="purple" onClick={() => void submitEvent()}>{editingEventId ? "Update Event" : "Create Event"}</Button>
-              {editingEventId && (
-                <Button variant="outline" onClick={() => { setEditingEventId(null); setForm(defaultForm); }}>
-                  Cancel Edit
+              <HStack>
+                <Button colorScheme="purple" onClick={() => void submitEvent()} isLoading={saving}>
+                  {editingEventId ? "Update Reward" : "Create Reward"}
                 </Button>
-              )}
-            </HStack>
-          </VStack>
-        </Box>
+                {editingEventId && (
+                  <Button variant="outline" onClick={() => { setEditingEventId(null); setForm(defaultForm); }}>
+                    Cancel
+                  </Button>
+                )}
+              </HStack>
+            </VStack>
+          </Box>
 
-        <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" p={4}>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th color="whiteAlpha.900">Title</Th>
-                <Th color="whiteAlpha.900">Points</Th>
-                <Th color="whiteAlpha.900">Window</Th>
-                <Th color="whiteAlpha.900">Claims</Th>
-                <Th color="whiteAlpha.900">Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {events.map((eventReward) => (
-                <Tr key={eventReward.id}>
-                  <Td color="white">{eventReward.title}</Td>
-                  <Td color="white">{eventReward.points}</Td>
-                  <Td color="whiteAlpha.900">{eventReward.startAtUtc} to {eventReward.endAtUtc}</Td>
-                  <Td color="whiteAlpha.900">{eventReward.claimsCount ?? 0}</Td>
-                  <Td>
-                    <HStack>
-                      <Button size="sm" onClick={() => startEdit(eventReward)}>Edit</Button>
-                      <Button size="sm" colorScheme="red" onClick={() => void deleteEvent(eventReward.id)}>Delete</Button>
-                    </HStack>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
+          <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={4}>
+            {events.map((eventReward) => (
+              <Box key={eventReward.id} border="1px solid" borderColor={isLive(eventReward) ? "pink.300" : "whiteAlpha.300"} borderRadius="lg" bg="rgba(255,255,255,0.07)" p={4}>
+                <HStack justify="space-between" align="start">
+                  <Box>
+                    <Badge colorScheme={isLive(eventReward) ? "pink" : eventReward.isActive ? "purple" : "gray"} mb={2}>
+                      {isLive(eventReward) ? "Live" : eventReward.isActive ? "Scheduled" : "Inactive"}
+                    </Badge>
+                    <Heading size="md">{eventReward.title}</Heading>
+                  </Box>
+                  <Text color="purple.200" fontWeight="bold">+{eventReward.points}</Text>
+                </HStack>
+                <Text color="whiteAlpha.800" mt={3} whiteSpace="pre-wrap">{eventReward.message}</Text>
+                <Box mt={4} color="whiteAlpha.700" fontSize="sm">
+                  <Text>{formatDate(eventReward.startAtUtc)}</Text>
+                  <Text>to {formatDate(eventReward.endAtUtc)}</Text>
+                  <Text mt={2}>Claims: {eventReward.claimsCount ?? 0}</Text>
+                </Box>
+                <HStack mt={4}>
+                  <Button size="sm" onClick={() => startEdit(eventReward)}>Edit</Button>
+                  <Button size="sm" colorScheme="red" onClick={() => void deleteEvent(eventReward.id)}>Delete</Button>
+                </HStack>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Grid>
       </VStack>
     </Box>
+  );
+}
+
+function MetricCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Stat border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(255,255,255,0.07)" p={4}>
+      <StatLabel color="whiteAlpha.700">{label}</StatLabel>
+      <StatNumber color="white" fontSize="2xl">{value}</StatNumber>
+    </Stat>
   );
 }
