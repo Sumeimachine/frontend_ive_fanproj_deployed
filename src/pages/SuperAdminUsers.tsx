@@ -241,31 +241,35 @@ export default function SuperAdminUsers() {
                         </VStack>
                       </Td>
                       <Td>
-                        <HStack align="center">
-                          <Select
-                            size="sm"
-                            width="128px"
-                            {...selectStyles}
-                            value={draftRoles[user.id] ?? (user.role === "Admin" ? "Admin" : "User")}
-                            onChange={(event) =>
-                              setDraftRoles((previous) => ({
-                                ...previous,
-                                [user.id]: event.target.value === "Admin" ? "Admin" : "User",
-                              }))
-                            }
-                          >
-                            <option value="User">User</option>
-                            <option value="Admin">Admin</option>
-                          </Select>
-                          <Button
-                            size="sm"
-                            colorScheme="purple"
-                            onClick={() => void runOperation(user, "role")}
-                            isLoading={isBusy(user.id, "role")}
-                          >
-                            Save
-                          </Button>
-                        </HStack>
+                        {user.role === "Super-Admin" ? (
+                          <Badge colorScheme="pink">Super-Admin protected</Badge>
+                        ) : (
+                          <HStack align="center">
+                            <Select
+                              size="sm"
+                              width="128px"
+                              {...selectStyles}
+                              value={draftRoles[user.id] ?? (user.role === "Admin" ? "Admin" : "User")}
+                              onChange={(event) =>
+                                setDraftRoles((previous) => ({
+                                  ...previous,
+                                  [user.id]: event.target.value === "Admin" ? "Admin" : "User",
+                                }))
+                              }
+                            >
+                              <option value="User">User</option>
+                              <option value="Admin">Admin</option>
+                            </Select>
+                            <Button
+                              size="sm"
+                              colorScheme="purple"
+                              onClick={() => void runOperation(user, "role")}
+                              isLoading={isBusy(user.id, "role")}
+                            >
+                              Save
+                            </Button>
+                          </HStack>
+                        )}
                       </Td>
                       <Td color="white" isNumeric>{user.currencyBalance}</Td>
                       <Td>

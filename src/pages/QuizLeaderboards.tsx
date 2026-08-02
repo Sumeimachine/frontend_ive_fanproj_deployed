@@ -85,10 +85,10 @@ export default function QuizLeaderboards() {
         {!loading && !error && (
           <Tabs variant="unstyled">
             <TabList gap={3} flexWrap="wrap">
-              <Tab color="whiteAlpha.850" border="1px solid" borderColor="whiteAlpha.300" borderRadius="md" _selected={{ color: "white", bg: "purple.600", borderColor: "purple.300" }}>
+              <Tab color="whiteAlpha.900" border="1px solid" borderColor="whiteAlpha.300" borderRadius="md" _selected={{ color: "white", bg: "purple.600", borderColor: "purple.300" }}>
                 Graded
               </Tab>
-              <Tab color="whiteAlpha.850" border="1px solid" borderColor="whiteAlpha.300" borderRadius="md" _selected={{ color: "white", bg: "purple.600", borderColor: "purple.300" }}>
+              <Tab color="whiteAlpha.900" border="1px solid" borderColor="whiteAlpha.300" borderRadius="md" _selected={{ color: "white", bg: "purple.600", borderColor: "purple.300" }}>
                 Practice
               </Tab>
             </TabList>
@@ -185,7 +185,7 @@ function PodiumCard({ entry }: { entry: QuizLeaderboardEntry }) {
 function MiniStat({ label, value }: { label: string; value: string }) {
   return (
     <Box border="1px solid" borderColor="whiteAlpha.200" borderRadius="md" p={3}>
-      <Text color="whiteAlpha.650" fontSize="xs" textTransform="uppercase" letterSpacing="0.1em">
+      <Text color="whiteAlpha.700" fontSize="xs" textTransform="uppercase" letterSpacing="0.1em">
         {label}
       </Text>
       <Text color="white" fontWeight="bold">

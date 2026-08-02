@@ -1,10 +1,11 @@
 /// <reference types="node" />
 import fs from "fs";
 import axios from "axios";
-import "./Dashboard.css";
 
-// Replace with your YouTube Data API key
-const YOUTUBE_API_KEY = "AIzaSyAerYqGIIm4AD-kv595jSs5Vpz0Nanscbs";
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+if (!YOUTUBE_API_KEY) {
+  throw new Error("YOUTUBE_API_KEY must be provided through the environment.");
+}
 // The official IVE playlist ID (you can get it from the playlist URL)
 const IVE_PLAYLIST_ID = "PLq97QVSGzGPyevF2UoJ-x6cU_8q6IvhkA";
 

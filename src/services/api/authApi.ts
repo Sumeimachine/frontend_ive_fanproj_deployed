@@ -41,17 +41,13 @@ export const authApi = {
     return data;
   },
 
-  refreshToken: async (refreshToken: string) => {
-    const { data } = await httpClient.post<LoginResponse>("/Auth/refresh-token", {
-      refreshToken,
-    });
+  refreshToken: async () => {
+    const { data } = await httpClient.post<LoginResponse>("/Auth/refresh-token", {});
     return data;
   },
 
-  logout: async (refreshToken?: string) => {
-    const { data } = await httpClient.post<string>("/Auth/logout", {
-      refreshToken,
-    });
+  logout: async () => {
+    const { data } = await httpClient.post<string>("/Auth/logout", {});
     return data;
   },
 };

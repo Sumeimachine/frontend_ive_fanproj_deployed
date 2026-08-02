@@ -5,6 +5,8 @@ import { Stars, useTexture } from "@react-three/drei";
 import type { Group, Mesh, Texture } from "three";
 import { Color, SRGBColorSpace, Vector3 } from "three";
 import type { MemberProfile } from "../types/member";
+import { getOptimizedMemberImageUrl } from "./ResponsiveMemberImage";
+import { usePerformancePreferences } from "../hooks/usePerformancePreferences";
 
 interface MemberUniverseSectionProps {
   members: MemberProfile[];
@@ -16,6 +18,7 @@ interface MemberCard3DProps {
   baseAngle: number;
   radius: number;
   height: number;
+  animate: boolean;
   onSelectMember: (memberId: string) => void;
 }
 
@@ -29,7 +32,7 @@ function getFallbackTextureUrl(): string {
 
 function resolveTextureUrl(photoUrl: string): string {
   if (!photoUrl) return getFallbackTextureUrl();
-  if (!photoUrl.startsWith("/uploads/")) return photoUrl;
+  if (!photoUrl.startsWith("/uploads/")) return getOptimizedMemberImageUrl(photoUrl);
 
   const apiBase = import.meta.env.VITE_API_URL;
   if (!apiBase) return photoUrl;
@@ -95,7 +98,7 @@ function useSafeMemberTexture(photoUrl: string, backupPhotoUrl?: string): Textur
 }
 
 
-function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: MemberCard3DProps) {
+function MemberCard3D({ member, baseAngle, radius, height, animate, onSelectMember }: MemberCard3DProps) {
   const groupRef = useRef<Group>(null);
   const cardRef = useRef<Mesh>(null);
   const haloRef = useRef<Mesh>(null);
@@ -103,8 +106,14 @@ function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: Mem
   const [hovered, setHovered] = useState(false);
   const { camera } = useThree();
 
+  useEffect(() => {
+    groupRef.current?.lookAt(camera.position.x, height, camera.position.z);
+  }, [camera, height]);
+
   useFrame(({ clock }) => {
     if (!groupRef.current || !cardRef.current || !haloRef.current) return;
+
+    if (!animate) return;
 
     const t = clock.getElapsedTime();
     const spinProgress = t * 0.32;
@@ -124,8 +133,12 @@ function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: Mem
   const glowColor = new Color(member.accent || "#a855f7");
 
   return (
-    <group ref={groupRef}>
-      <mesh ref={haloRef} position={[0, 0, -0.02]}>
+    <group ref={groupRef} position={[Math.cos(baseAngle) * radius, height, Math.sin(baseAngle) * radius]}>
+      <mesh
+        ref={haloRef}
+        position={[0, 0, -0.02]}
+        scale={!animate ? (hovered ? 1.12 : 1) : undefined}
+      >
         <planeGeometry args={[1.88, 2.46]} />
         <meshBasicMaterial color={glowColor} transparent opacity={hovered ? 0.2 : 0.13} />
       </mesh>
@@ -135,6 +148,7 @@ function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: Mem
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
         onClick={() => onSelectMember(member.id)}
+        scale={!animate ? (hovered ? 1.06 : 0.92) : 0.92}
       >
         <planeGeometry args={[1.75, 2.38]} />
         <meshStandardMaterial
@@ -170,7 +184,7 @@ function MemberCard3D({ member, baseAngle, radius, height, onSelectMember }: Mem
   );
 }
 
-function UniverseScene({ members, onSelectMember }: MemberUniverseSectionProps) {
+function UniverseScene({ members, onSelectMember, animate }: MemberUniverseSectionProps & { animate: boolean }) {
   const slots = useMemo(() => {
     const radius = 4.6;
     return members.map((_, index) => {
@@ -181,6 +195,8 @@ function UniverseScene({ members, onSelectMember }: MemberUniverseSectionProps) 
   }, [members]);
 
   useFrame((state) => {
+    if (!animate) return;
+
     const t = state.clock.getElapsedTime();
     const targetZ = 8.8 + Math.sin(t * 0.55) * 0.2;
     const targetY = Math.sin(t * 0.4) * 0.08;
@@ -195,7 +211,7 @@ function UniverseScene({ members, onSelectMember }: MemberUniverseSectionProps) 
       <pointLight position={[3, 5, 6]} intensity={9} color="#f2c4ff" />
       <pointLight position={[-5, 1, 3]} intensity={5} color="#89cbff" />
       <pointLight position={[0, -4, 6]} intensity={2.5} color="#9e7cff" />
-      <Stars radius={120} depth={86} count={3200} factor={4.8} saturation={0.5} fade speed={0.45} />
+      <Stars radius={120} depth={86} count={animate ? 3200 : 1200} factor={4.8} saturation={0.5} fade speed={animate ? 0.45 : 0} />
 
       {members.map((member, index) => (
         <MemberCard3D
@@ -204,6 +220,7 @@ function UniverseScene({ members, onSelectMember }: MemberUniverseSectionProps) 
           baseAngle={slots[index].baseAngle}
           radius={slots[index].radius}
           height={slots[index].height}
+          animate={animate}
           onSelectMember={onSelectMember}
         />
       ))}
@@ -212,6 +229,9 @@ function UniverseScene({ members, onSelectMember }: MemberUniverseSectionProps) 
 }
 
 export default function MemberUniverseSection({ members, onSelectMember }: MemberUniverseSectionProps) {
+  const { prefersReducedMotion, prefersReducedData } = usePerformancePreferences();
+  const animate = !prefersReducedMotion && !prefersReducedData;
+
   return (
     <Box
       mt={{ base: 14, md: 20 }}
@@ -232,11 +252,11 @@ export default function MemberUniverseSection({ members, onSelectMember }: Membe
       </VStack>
 
       <Box h={{ base: "70vh", md: "86vh" }}>
-        <Canvas camera={{ position: [0, 0, 8.8], fov: 48 }}>
+        <Canvas camera={{ position: [0, 0, 8.8], fov: 48 }} frameloop={animate ? "always" : "demand"}>
           <color attach="background" args={["#050216"]} />
           <fog attach="fog" args={["#06021a", 7, 45]} />
           <Suspense fallback={null}>
-            <UniverseScene members={members} onSelectMember={onSelectMember} />
+            <UniverseScene members={members} onSelectMember={onSelectMember} animate={animate} />
           </Suspense>
         </Canvas>
       </Box>

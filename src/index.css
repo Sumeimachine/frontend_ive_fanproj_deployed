@@ -205,6 +205,10 @@ body,
   filter: saturate(1.08) contrast(1.04);
 }
 
+.hero-polaroid picture {
+  display: block;
+}
+
 .hero-polaroid span {
   display: block;
   padding: 0.58rem 0.25rem 0.22rem;

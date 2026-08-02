@@ -326,8 +326,8 @@ export default function SuperAdminFanEvents() {
                     <Text color="pink.200" fontSize="xs" textTransform="uppercase">{eventItem.eventType}</Text>
                   </HStack>
                   <Text color="whiteAlpha.800" mt={3}>{eventItem.summary}</Text>
-                  <Text color="whiteAlpha.650" fontSize="sm" mt={3}>{eventItem.venue} {eventItem.location ? `| ${eventItem.location}` : ""}</Text>
-                  <Text color="whiteAlpha.750" fontSize="sm" mt={3}>{formatDate(eventItem.startAtUtc)} to {formatDate(eventItem.endAtUtc)}</Text>
+                  <Text color="whiteAlpha.700" fontSize="sm" mt={3}>{eventItem.venue} {eventItem.location ? `| ${eventItem.location}` : ""}</Text>
+                  <Text color="whiteAlpha.800" fontSize="sm" mt={3}>{formatDate(eventItem.startAtUtc)} to {formatDate(eventItem.endAtUtc)}</Text>
                   <HStack mt={4} flexWrap="wrap">
                     <Button size="sm" onClick={() => startEdit(eventItem)}>Edit</Button>
                     {eventItem.ticketUrl && (

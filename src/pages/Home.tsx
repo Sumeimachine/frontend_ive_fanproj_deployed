@@ -1,8 +1,10 @@
 import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Container, Heading, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
 import { getMemberProfiles, loadMemberProfiles } from "../services/memberProfileStore";
 import type { MemberProfile } from "../types/member";
+import ResponsiveMemberImage from "../components/ResponsiveMemberImage";
+import { usePerformancePreferences } from "../hooks/usePerformancePreferences";
 
 const MemberUniverseSection = lazy(() => import("../components/MemberUniverseSection"));
 
@@ -12,12 +14,24 @@ const Home: React.FC = () => {
   const [membersData, setMembersData] = useState<MemberProfile[]>(() => loadMemberProfiles());
   const [scrollY, setScrollY] = useState(0);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const [loadUniverse, setLoadUniverse] = useState(false);
+  const { prefersReducedMotion, prefersReducedData } = usePerformancePreferences();
+  const allowImmersiveMotion = !prefersReducedMotion && !prefersReducedData;
 
   useEffect(() => {
     void (async () => {
       const profiles = await getMemberProfiles();
       setMembersData(profiles);
     })();
+
+  }, []);
+
+  useEffect(() => {
+    if (!allowImmersiveMotion) {
+      setScrollY(0);
+      setPointer({ x: 0, y: 0 });
+      return;
+    }
 
     const handleScroll = () => setScrollY(window.scrollY);
     const handlePointerMove = (event: PointerEvent) => {
@@ -33,19 +47,42 @@ const Home: React.FC = () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("pointermove", handlePointerMove);
     };
-  }, []);
+  }, [allowImmersiveMotion]);
+
+  useEffect(() => {
+    const target = universeRef.current;
+    if (!target || loadUniverse || !allowImmersiveMotion) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLoadUniverse(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [allowImmersiveMotion, loadUniverse]);
 
   const cameraTransform = useMemo(() => {
+    if (!allowImmersiveMotion) return "none";
+
     const rotateX = pointer.y * -6;
     const rotateY = pointer.x * 9;
     const translateY = scrollY * -0.08;
     return `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${translateY}px)`;
-  }, [pointer, scrollY]);
+  }, [allowImmersiveMotion, pointer, scrollY]);
 
   const featuredMembers = useMemo(() => membersData.slice(0, 6), [membersData]);
 
   const scrollToUniverse = () => {
-    universeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    universeRef.current?.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -99,9 +136,10 @@ const Home: React.FC = () => {
                 type="button"
                 onClick={() => navigate(`/member/${member.id}`)}
               >
-                <img
+                <ResponsiveMemberImage
                   src={member.photoUrl || member.backupPhotoUrl}
                   alt={member.name}
+                  sizes="(max-width: 560px) 118px, 178px"
                   style={{ objectPosition: `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%` }}
                 />
                 <span>{member.name}</span>
@@ -117,18 +155,66 @@ const Home: React.FC = () => {
         </Box>
 
         <Box ref={universeRef}>
-        <Suspense
-          fallback={
-            <Box minH="460px" display="grid" placeItems="center">
-              <Text color="whiteAlpha.800">Loading members...</Text>
+          {!allowImmersiveMotion ? (
+            <Box
+              mt={{ base: 14, md: 20 }}
+              borderRadius="2xl"
+              border="1px solid"
+              borderColor="whiteAlpha.300"
+              bg="rgba(11, 6, 24, 0.92)"
+              p={{ base: 6, md: 10 }}
+            >
+              <VStack spacing={3} textAlign="center" mb={8}>
+                <Text className="eyebrow">IVE MEMBER GALLERY</Text>
+                <Heading fontSize={{ base: "2xl", md: "4xl" }}>A lighter way to explore</Heading>
+                <Text maxW="680px" color="whiteAlpha.800">
+                  Your motion or data-saving preference is active, so the full 3D orbit stays paused.
+                </Text>
+              </VStack>
+              <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing={4}>
+                {featuredMembers.map((member) => (
+                  <Box
+                    as="button"
+                    type="button"
+                    key={member.id}
+                    textAlign="left"
+                    borderRadius="xl"
+                    overflow="hidden"
+                    border="1px solid"
+                    borderColor="whiteAlpha.300"
+                    bg="whiteAlpha.100"
+                    onClick={() => navigate(`/member/${member.id}`)}
+                    _focusVisible={{ outline: "3px solid", outlineColor: "purple.300" }}
+                  >
+                    <ResponsiveMemberImage
+                      src={member.photoUrl || member.backupPhotoUrl}
+                      alt={member.name}
+                      sizes="(max-width: 768px) 50vw, 180px"
+                      style={{ width: "100%", aspectRatio: "3 / 4", objectFit: "cover" }}
+                    />
+                    <Text px={3} py={2} fontWeight="bold">{member.name}</Text>
+                  </Box>
+                ))}
+              </SimpleGrid>
             </Box>
-          }
-        >
-          <MemberUniverseSection
-            members={membersData}
-            onSelectMember={(memberId) => navigate(`/member/${memberId}`)}
-          />
-        </Suspense>
+          ) : loadUniverse ? (
+            <Suspense
+              fallback={
+                <Box minH="460px" display="grid" placeItems="center">
+                  <Text color="whiteAlpha.800">Loading 3D universe...</Text>
+                </Box>
+              }
+            >
+              <MemberUniverseSection
+                members={membersData}
+                onSelectMember={(memberId) => navigate(`/member/${memberId}`)}
+              />
+            </Suspense>
+          ) : (
+            <Box minH="460px" display="grid" placeItems="center">
+              <Text color="whiteAlpha.800">3D universe loads when it enters view.</Text>
+            </Box>
+          )}
         </Box>
       </Container>
 
@@ -178,7 +264,7 @@ const Home: React.FC = () => {
             mt={10}
             colorScheme="purple"
             size="lg"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" })}
           >
             Back to top
           </Button>

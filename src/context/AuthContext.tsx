@@ -3,15 +3,19 @@ import {
   useCallback,
   useContext,
   useMemo,
+  useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { authApi } from "../services/api/authApi";
 import { userApi } from "../services/api/userApi";
 import type { LoginDto } from "../types/api";
+import { clearAccessToken, getAccessToken, setAccessToken } from "../services/accessTokenStore";
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isAuthReady: boolean;
   username: string;
   role: string;
   currencyBalance: number;
@@ -28,51 +32,57 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    Boolean(localStorage.getItem("token")),
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthReady, setIsAuthReady] = useState(false);
   const [username, setUsername] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [currencyBalance, setCurrencyBalance] = useState<number>(0);
   const [dailyRewardClaimedToday, setDailyRewardClaimedToday] =
     useState<boolean>(false);
+  const bootstrapRequestRef = useRef<Promise<void> | null>(null);
 
-  const bootstrapProfile = useCallback(async () => {
-    if (!localStorage.getItem("token")) {
-      setUsername("");
-      setRole("");
-      setCurrencyBalance(0);
-      setDailyRewardClaimedToday(false);
-      return;
+  const bootstrapProfile = useCallback(() => {
+    if (bootstrapRequestRef.current) {
+      return bootstrapRequestRef.current;
     }
 
-    try {
-      const profile = await userApi.getProfile();
-      setUsername(profile.username ?? "");
-      setRole(profile.role ?? "");
-      setCurrencyBalance(profile.currencyBalance ?? 0);
-      setDailyRewardClaimedToday(profile.dailyRewardClaimedToday ?? false);
-      setIsAuthenticated(true);
-    } catch {
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
-      setIsAuthenticated(false);
-      setUsername("");
-      setRole("");
-      setCurrencyBalance(0);
-      setDailyRewardClaimedToday(false);
-    }
+    const request = (async () => {
+      try {
+        setIsAuthReady(false);
+        if (!getAccessToken()) {
+          const session = await authApi.refreshToken();
+          setAccessToken(session.token);
+        }
+        const profile = await userApi.getProfile();
+        setUsername(profile.username ?? "");
+        setRole(profile.role ?? "");
+        setCurrencyBalance(profile.currencyBalance ?? 0);
+        setDailyRewardClaimedToday(profile.dailyRewardClaimedToday ?? false);
+        setIsAuthenticated(true);
+      } catch {
+        clearAccessToken();
+        setIsAuthenticated(false);
+        setUsername("");
+        setRole("");
+        setCurrencyBalance(0);
+        setDailyRewardClaimedToday(false);
+      } finally {
+        bootstrapRequestRef.current = null;
+        setIsAuthReady(true);
+      }
+    })();
+
+    bootstrapRequestRef.current = request;
+    return request;
   }, []);
 
   const login = useCallback(async (dto: LoginDto) => {
     const data = await authApi.login(dto);
 
-    localStorage.setItem("token", data.token);
-    if (data.refreshToken) {
-      localStorage.setItem("refreshToken", data.refreshToken);
-    }
+    setAccessToken(data.token);
 
     setIsAuthenticated(true);
+    setIsAuthReady(true);
     setUsername(data.username ?? "");
     setRole(data.role ?? "");
     setCurrencyBalance(data.currencyBalance ?? 0);
@@ -85,24 +95,39 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = useCallback(async () => {
     try {
-      const refreshToken = localStorage.getItem("refreshToken") ?? undefined;
-      await authApi.logout(refreshToken);
+      await authApi.logout();
     } catch {
       // no-op: local cleanup still proceeds
     }
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
+    clearAccessToken();
     setIsAuthenticated(false);
+    setIsAuthReady(true);
     setUsername("");
     setRole("");
     setCurrencyBalance(0);
     setDailyRewardClaimedToday(false);
   }, []);
 
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      clearAccessToken();
+      setIsAuthenticated(false);
+      setIsAuthReady(true);
+      setUsername("");
+      setRole("");
+      setCurrencyBalance(0);
+      setDailyRewardClaimedToday(false);
+    };
+
+    window.addEventListener("auth-session-expired", handleSessionExpired);
+    return () => window.removeEventListener("auth-session-expired", handleSessionExpired);
+  }, []);
+
   const value = useMemo(
     () => ({
       isAuthenticated,
+      isAuthReady,
       login,
       logout,
       username,
@@ -113,6 +138,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }),
     [
       isAuthenticated,
+      isAuthReady,
       login,
       logout,
       username,

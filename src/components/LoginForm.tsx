@@ -92,7 +92,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
   const inputStyles = {
     bg: "rgba(9, 10, 22, 0.9)",
     color: "#FFFFFF",
-    caretcolor: "#FFFFFF",
+    caretColor: "#FFFFFF",
     borderColor: "whiteAlpha.300",
     _placeholder: { color: "whiteAlpha.600" },
     _hover: { borderColor: "purple.300" },
@@ -121,7 +121,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
       p={{ base: 6, md: 8 }}
       borderRadius="2xl"
       border="1px solid"
-      borderColor="whiteAlpha.280"
+      borderColor="rgba(255, 255, 255, 0.18)"
       bg="linear-gradient(160deg, rgba(255,255,255,0.11), rgba(255,255,255,0.03))"
       backdropFilter="blur(12px)"
       boxShadow="0 20px 45px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.18)"
@@ -136,17 +136,17 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
           </Text>
         </VStack>
 
-        <HStack className="login-mode-row" spacing={2} overflowX="auto" pb={1}>
-          <Button size="sm" onClick={() => switchMode("login")} variant={mode === "login" ? "solid" : "outline"} colorScheme="purple">
+        <HStack className="login-mode-row" spacing={2} flexWrap="wrap" pb={1}>
+          <Button type="button" flexShrink={0} aria-pressed={mode === "login"} size="sm" onClick={() => switchMode("login")} variant={mode === "login" ? "solid" : "outline"} colorScheme="purple">
             Login
           </Button>
-          <Button size="sm" onClick={() => switchMode("register")} variant={mode === "register" ? "solid" : "outline"} colorScheme="purple">
+          <Button type="button" flexShrink={0} aria-pressed={mode === "register"} size="sm" onClick={() => switchMode("register")} variant={mode === "register" ? "solid" : "outline"} colorScheme="purple">
             Register
           </Button>
-          <Button size="sm" onClick={() => switchMode("forgot")} variant={mode === "forgot" ? "solid" : "outline"} colorScheme="purple">
+          <Button type="button" flexShrink={0} aria-pressed={mode === "forgot"} size="sm" onClick={() => switchMode("forgot")} variant={mode === "forgot" ? "solid" : "outline"} colorScheme="purple">
             Forgot
           </Button>
-          <Button size="sm" onClick={() => switchMode("verify")} variant={mode === "verify" ? "solid" : "outline"} colorScheme="purple">
+          <Button type="button" flexShrink={0} aria-pressed={mode === "verify"} size="sm" onClick={() => switchMode("verify")} variant={mode === "verify" ? "solid" : "outline"} colorScheme="purple">
             Resend Verify
           </Button>
         </HStack>
@@ -182,19 +182,40 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="on">
           <VStack spacing={4} align="stretch">
             {(mode === "login" || mode === "register") && (
               <FormControl isRequired>
                 <FormLabel color="whiteAlpha.900">Username</FormLabel>
-                <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter username" {...inputStyles} />
+                <Input
+                  name="username"
+                  autoComplete="username"
+                  minLength={mode === "register" ? 3 : 1}
+                  maxLength={320}
+                  spellCheck={false}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder={mode === "login" ? "Username or email" : "Enter username"}
+                  {...inputStyles}
+                />
               </FormControl>
             )}
 
             {(mode === "register" || mode === "forgot" || mode === "verify") && (
               <FormControl isRequired>
                 <FormLabel color="whiteAlpha.900">Email</FormLabel>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email" {...inputStyles} />
+                <Input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  maxLength={320}
+                  inputMode="email"
+                  spellCheck={false}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter email"
+                  {...inputStyles}
+                />
               </FormControl>
             )}
 
@@ -203,6 +224,10 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
                 <FormLabel color="whiteAlpha.900">Password</FormLabel>
                 <Input
                   type="password"
+                  name="password"
+                  autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  minLength={6}
+                  maxLength={128}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"

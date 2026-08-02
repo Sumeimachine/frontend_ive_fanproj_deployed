@@ -20,12 +20,19 @@ export interface MediaLibraryResponse {
   files: MediaLibraryFile[];
 }
 
-export const MAX_MEDIA_UPLOAD_SIZE_BYTES = 1024 * 1024 * 1024; // 1 GB
+export const MAX_IMAGE_UPLOAD_SIZE_BYTES = 1024 * 1024 * 1024;
+export const MAX_VIDEO_UPLOAD_SIZE_BYTES = 1024 * 1024 * 1024;
+
+export const getMediaUploadLimit = (file: File) =>
+  file.type.startsWith("image/") ? MAX_IMAGE_UPLOAD_SIZE_BYTES : MAX_VIDEO_UPLOAD_SIZE_BYTES;
+
+export const getMediaUploadLimitLabel = (file: File) =>
+  file.type.startsWith("image/") ? "1 GB image limit" : "1 GB video limit";
 
 export const mediaApi = {
   uploadMedia: async (file: File, folder = "quiz") => {
-    if (file.size > MAX_MEDIA_UPLOAD_SIZE_BYTES) {
-      throw new Error("File is over the 1 GB upload limit.");
+    if (file.size > getMediaUploadLimit(file)) {
+      throw new Error(`File exceeds the ${getMediaUploadLimitLabel(file)}.`);
     }
     const formData = new FormData();
     formData.append("file", file);

@@ -169,7 +169,7 @@ export default function QuizGame() {
               {selectedQuiz.title}
             </Heading>
             {selectedQuiz.description && (
-              <Text color="whiteAlpha.850" mt={3} maxW="760px" lineHeight="1.7">
+              <Text color="whiteAlpha.900" mt={3} maxW="760px" lineHeight="1.7">
                 {selectedQuiz.description}
               </Text>
             )}
@@ -190,7 +190,7 @@ export default function QuizGame() {
             <VStack align="stretch" spacing={4}>
               {quizzes.length > 1 && (
                 <Box>
-                  <Text color="whiteAlpha.850" fontWeight="semibold" mb={2}>
+                  <Text color="whiteAlpha.900" fontWeight="semibold" mb={2}>
                     Select quiz
                   </Text>
                   <Select value={selectedQuiz.id} onChange={(event) => handleQuizChange(Number(event.target.value))} {...fieldStyles}>
@@ -205,7 +205,7 @@ export default function QuizGame() {
 
               <Box>
                 <HStack justify="space-between" mb={2}>
-                  <Text color="whiteAlpha.850" fontWeight="semibold">Progress</Text>
+                  <Text color="whiteAlpha.900" fontWeight="semibold">Progress</Text>
                   <Text color="pink.200">{answeredCount}/{totalQuestions}</Text>
                 </HStack>
                 <Progress value={completionPercent} colorScheme="pink" bg="whiteAlpha.200" borderRadius="full" />
@@ -347,7 +347,7 @@ function QuestionPanel({
 function StatBox({ label, value }: { label: string; value: string }) {
   return (
     <Box border="1px solid" borderColor="whiteAlpha.200" bg="rgba(255,255,255,0.07)" borderRadius="md" p={3}>
-      <Text color="whiteAlpha.650" fontSize="xs" textTransform="uppercase" letterSpacing="0.1em">
+      <Text color="whiteAlpha.700" fontSize="xs" textTransform="uppercase" letterSpacing="0.1em">
         {label}
       </Text>
       <Text color="white" fontSize="xl" fontWeight="bold">

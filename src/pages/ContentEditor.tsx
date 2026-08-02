@@ -518,7 +518,7 @@ function MemberProfileContentPanel({
           Community Hub
         </Text>
         <Heading size="md" mt={1}>Member Profile Content</Heading>
-        <Text color="whiteAlpha.750" fontSize="sm" mt={1}>
+        <Text color="whiteAlpha.800" fontSize="sm" mt={1}>
           Edit member profile text, profile image, accent color, and crop position from one dedicated content workspace.
         </Text>
       </Box>

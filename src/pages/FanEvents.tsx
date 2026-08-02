@@ -120,7 +120,7 @@ export default function FanEvents() {
                   <Badge colorScheme="pink" px={3} py={1} borderRadius="md">
                     {eventTypeLabel(nextEvent.eventType)}
                   </Badge>
-                  <Text color="whiteAlpha.850" fontWeight="semibold">
+                  <Text color="whiteAlpha.900" fontWeight="semibold">
                     {formatDate(nextEvent.startAtUtc)}
                   </Text>
                 </HStack>
@@ -133,7 +133,7 @@ export default function FanEvents() {
               Browse
             </Text>
             <Heading size="md" mt={2}>Published Schedules</Heading>
-            <Text color="whiteAlpha.760" fontSize="sm" mt={2}>
+            <Text color="whiteAlpha.800" fontSize="sm" mt={2}>
               This page uses the public published-events feed. Drafts and hidden records stay inside Super Admin.
             </Text>
 
@@ -169,7 +169,7 @@ export default function FanEvents() {
         ) : filteredEvents.length === 0 ? (
           <Box border="1px solid" borderColor="whiteAlpha.300" borderRadius="lg" bg="rgba(255,255,255,0.07)" p={8} textAlign="center">
             <Heading size="md">No published fan events yet</Heading>
-            <Text color="whiteAlpha.750" mt={2}>
+            <Text color="whiteAlpha.800" mt={2}>
               When a super admin publishes an event, normal users will see it here.
             </Text>
           </Box>
@@ -199,7 +199,7 @@ function FanEventCard({ eventItem }: { eventItem: FanEvent }) {
         </HStack>
 
         <Heading size="md">{eventItem.title}</Heading>
-        <Text color="whiteAlpha.850" mt={2} lineHeight="1.65">
+        <Text color="whiteAlpha.900" mt={2} lineHeight="1.65">
           {eventItem.summary}
         </Text>
 
@@ -207,12 +207,12 @@ function FanEventCard({ eventItem }: { eventItem: FanEvent }) {
           <Box>
             <Text color="pink.200" fontSize="xs" textTransform="uppercase" letterSpacing="0.12em">When</Text>
             <Text color="whiteAlpha.900" mt={1}>{formatDate(eventItem.startAtUtc)}</Text>
-            <Text color="whiteAlpha.650" fontSize="sm">until {formatDate(eventItem.endAtUtc)}</Text>
+            <Text color="whiteAlpha.700" fontSize="sm">until {formatDate(eventItem.endAtUtc)}</Text>
           </Box>
           <Box>
             <Text color="pink.200" fontSize="xs" textTransform="uppercase" letterSpacing="0.12em">Where</Text>
             <Text color="whiteAlpha.900" mt={1}>{eventItem.venue || "Venue TBA"}</Text>
-            <Text color="whiteAlpha.650" fontSize="sm">{eventItem.location || "Location TBA"}</Text>
+            <Text color="whiteAlpha.700" fontSize="sm">{eventItem.location || "Location TBA"}</Text>
           </Box>
         </Grid>
 

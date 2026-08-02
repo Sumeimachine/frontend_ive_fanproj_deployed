@@ -1,12 +1,15 @@
 import { useRef, useState } from "react";
 import { Box, Container } from "@chakra-ui/react";
 import LoginForm from "../components/LoginForm";
+import { usePerformancePreferences } from "../hooks/usePerformancePreferences";
 
 export default function Login() {
   const [videoFailed, setVideoFailed] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [soundEnabled, setSoundEnabled] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const { prefersReducedMotion, prefersReducedData } = usePerformancePreferences();
+  const useStaticBackground = videoFailed || prefersReducedMotion || prefersReducedData;
 
   const toggleSound = () => {
     const nextSoundEnabled = !soundEnabled;
@@ -33,20 +36,25 @@ export default function Login() {
       px={4}
       py={{ base: 8, md: 12 }}
     >
-      {!videoFailed ? (
+      {!useStaticBackground ? (
         <Box
           as="video"
           ref={videoRef}
           className="login-collage login-video"
           position="absolute"
           inset={0}
-          src="/videos/login-bg.mp4"
+          poster="/images/login/login-tour-bg.jpg"
+          preload="metadata"
           autoPlay
           muted={isMuted}
           loop
           playsInline
+          aria-hidden="true"
           onError={() => setVideoFailed(true)}
-        />
+        >
+          <source src="/videos/login-bg.webm" type="video/webm" />
+          <source src="/videos/login-bg.mp4" type="video/mp4" />
+        </Box>
       ) : (
         <Box
           className="login-collage"
@@ -87,7 +95,7 @@ export default function Login() {
 
       <Container maxW="lg" position="relative" zIndex={1}>
         <LoginForm
-          showSoundToggle={!videoFailed}
+          showSoundToggle={!useStaticBackground}
           soundEnabled={soundEnabled}
           onToggleMute={toggleSound}
         />

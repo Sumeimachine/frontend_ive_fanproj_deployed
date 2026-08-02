@@ -1,16 +1,38 @@
-# React + Vite
+# DiveIntoIVEPH frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React/Vite frontend for a non-commercial IVE fan-support website. It is not an official IVE, Starship Entertainment, or merchandise project.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```powershell
+npm install
+npm run dev
+```
 
-## React Compiler
+The frontend expects the API at `/backend-api` by default. Set `VITE_API_URL` when running the API at a different origin.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Checks
 
-## Expanding the ESLint configuration
+```powershell
+npm test
+npm run lint
+npm run build
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Routing and accounts
+
+Member profiles, About, dashboard metrics, public content pages, fan events, and quiz leaderboards are available to guests. Daily quiz submissions, fan points, content editing, media management, and admin operations require an account with the appropriate role.
+
+## Media optimization
+
+Bundled member images include 480 px and 960 px AVIF/WebP variants. The login background uses WebM first with optimized MP4 fallback, a poster, and metadata-only preload. Rebuild these assets with:
+
+```powershell
+python scripts/optimize_assets.py --ffmpeg C:\path\to\ffmpeg.exe
+```
+
+The UI avoids loading the 3D member universe and autoplay video when reduced-motion or reduced-data preferences are active.
+
+## Deployment
+
+Vercel response headers, including the Content Security Policy and `frame-ancestors`, are configured in `vercel.json`. Keep production API origins synchronized there when domains change.

@@ -23,6 +23,7 @@ export default function MainLayout() {
   const navigate = useNavigate();
   const {
     logout,
+    isAuthenticated,
     username,
     role,
     currencyBalance,
@@ -36,12 +37,12 @@ export default function MainLayout() {
     { label: "Members", to: "/" },
     { label: "About Us", to: "/about" },
     { label: "Dashboard", to: "/dashboard" },
-    { label: "Daily Quiz", to: "/quiz/daily" },
     { label: "Quiz Leaderboards", to: "/quiz/leaderboards" },
     { label: "Fan Events", to: "/fan-events" },
+    { label: "Pages", to: "/pages" },
+    ...(isAuthenticated ? [{ label: "Daily Quiz", to: "/quiz/daily" }] : []),
     ...((role === "Admin" || role === "Super-Admin")
       ? [
-          { label: "Pages", to: "/pages" },
           { label: "Content Editor", to: "/pages/editor" },
           { label: "Quiz Manager", to: "/admin/quizzes" },
           { label: "Media Library", to: "/admin/media" },
@@ -57,6 +58,11 @@ export default function MainLayout() {
   ];
 
   useEffect(() => {
+    if (!isAuthenticated) {
+      setActiveEventReward(null);
+      return;
+    }
+
     void (async () => {
       try {
         const activeEvent = await eventApi.getActiveEventReward();
@@ -65,7 +71,7 @@ export default function MainLayout() {
         setActiveEventReward(null);
       }
     })();
-  }, []);
+  }, [isAuthenticated]);
 
   const claimEventReward = async () => {
     if (!activeEventReward) return;
@@ -108,46 +114,43 @@ export default function MainLayout() {
         </Text>
 
         <Text fontSize="sm" color="gray.400">
-          {username ? `${username} (${role || "User"})` : "Authenticated user"}
+          {username ? `${username} (${role || "User"})` : "Guest visitor"}
         </Text>
-        <Text fontSize="sm" color="purple.200">
-          Currency: {currencyBalance}
-        </Text>
-        <Text fontSize="xs" color={dailyRewardClaimedToday ? "green.300" : "yellow.300"}>
-          {dailyRewardClaimedToday
-            ? "Daily login reward claimed today"
-            : "Daily login reward available"}
-        </Text>
-
-        <VStack
-          align="stretch"
-          spacing={2}
-          p={3}
-          borderRadius="lg"
-          border="1px solid"
-          borderColor="purple.400"
-          bg="linear-gradient(145deg, rgba(104,62,170,0.35), rgba(255,119,197,0.2))"
-          boxShadow="0 0 22px rgba(194, 120, 255, 0.25)"
-        >
-          <Text fontSize="xs" color="pink.100" textTransform="uppercase" letterSpacing="0.08em">
-            IVE Fan Points
-          </Text>
-          <Text fontSize="2xl" fontWeight="bold" color="white">
-            {currencyBalance} points
-          </Text>
-          <Badge
-            alignSelf="flex-start"
-            px={2}
-            py={1}
-            borderRadius="md"
-            colorScheme={dailyRewardClaimedToday ? "green" : "pink"}
+        {isAuthenticated ? (
+          <VStack
+            align="stretch"
+            spacing={2}
+            p={3}
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="purple.400"
+            bg="linear-gradient(145deg, rgba(104,62,170,0.35), rgba(255,119,197,0.2))"
+            boxShadow="0 0 22px rgba(194, 120, 255, 0.25)"
           >
-            {dailyRewardClaimedToday ? "Daily +1 Claimed" : "Daily +1 Ready"}
-          </Badge>
-          <Text fontSize="xs" color="pink.50">
-            Log in once each day to claim +1 fan point.
+            <Text fontSize="xs" color="pink.100" textTransform="uppercase" letterSpacing="0.08em">
+              IVE Fan Points
+            </Text>
+            <Text fontSize="2xl" fontWeight="bold" color="white">
+              {currencyBalance} points
+            </Text>
+            <Badge
+              alignSelf="flex-start"
+              px={2}
+              py={1}
+              borderRadius="md"
+              colorScheme={dailyRewardClaimedToday ? "green" : "pink"}
+            >
+              {dailyRewardClaimedToday ? "Daily +1 Claimed" : "Daily +1 Ready"}
+            </Badge>
+            <Text fontSize="xs" color="pink.50">
+              Log in once each day to claim +1 fan point.
+            </Text>
+          </VStack>
+        ) : (
+          <Text fontSize="xs" color="whiteAlpha.700" lineHeight="1.6">
+            Member profiles, fan pages, events, leaderboards, and music metrics are open to everyone.
           </Text>
-        </VStack>
+        )}
 
         <Stack mt={4} spacing={2}>
           {navItems.map((item) => (
@@ -165,9 +168,15 @@ export default function MainLayout() {
           ))}
         </Stack>
 
-        <Button mt="auto" colorScheme="red" onClick={handleLogout}>
-          Logout
-        </Button>
+        {isAuthenticated ? (
+          <Button mt="auto" colorScheme="red" onClick={handleLogout}>
+            Logout
+          </Button>
+        ) : (
+          <Button mt="auto" colorScheme="purple" onClick={() => navigate("/login")}>
+            Sign in for quizzes
+          </Button>
+        )}
       </Box>
 
       <Box flex="1" minW={0}>

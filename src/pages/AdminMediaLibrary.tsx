@@ -21,7 +21,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { MAX_MEDIA_UPLOAD_SIZE_BYTES, mediaApi, type MediaLibraryFile } from "../services/api/mediaApi";
+import { getMediaUploadLimit, getMediaUploadLimitLabel, mediaApi, type MediaLibraryFile } from "../services/api/mediaApi";
 
 type MediaTypeFilter = "all" | "images" | "videos";
 type SortMode = "newest" | "oldest" | "largest" | "smallest" | "name";
@@ -124,8 +124,8 @@ export default function AdminMediaLibrary() {
   const handleUpload = async (file?: File) => {
     if (!file) return;
 
-    if (file.size > MAX_MEDIA_UPLOAD_SIZE_BYTES) {
-      setError("File is over the 1 GB upload limit.");
+    if (file.size > getMediaUploadLimit(file)) {
+      setError(`File exceeds the ${getMediaUploadLimitLabel(file)}.`);
       return;
     }
 
@@ -247,7 +247,7 @@ export default function AdminMediaLibrary() {
               />
             </FormControl>
             <Text color={uploading ? "purple.200" : "whiteAlpha.700"} fontSize="sm" pb={{ md: 2 }}>
-              {uploading ? "Uploading..." : "1 GB max"}
+              {uploading ? "Uploading..." : "Images and videos up to 1 GB"}
             </Text>
           </Grid>
         </Box>
@@ -424,7 +424,7 @@ function MediaCard({
           <Badge colorScheme={isVideo ? "pink" : "purple"}>{isVideo ? "Video" : "Image"}</Badge>
         </HStack>
 
-        <HStack color="whiteAlpha.750" fontSize="xs" justify="space-between">
+        <HStack color="whiteAlpha.800" fontSize="xs" justify="space-between">
           <Text>{file.folder || "root"}</Text>
           <Text>{formatBytes(file.sizeBytes)}</Text>
         </HStack>

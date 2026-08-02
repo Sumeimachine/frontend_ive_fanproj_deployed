@@ -9,7 +9,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  Image,
   Input,
   Slider,
   SliderFilledTrack,
@@ -29,6 +28,7 @@ import {
   saveMemberProfileLocally,
 } from "../services/memberProfileStore";
 import type { MemberProfile } from "../types/member";
+import ResponsiveMemberImage from "../components/ResponsiveMemberImage";
 
 const MemberInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,6 +43,7 @@ const MemberInfo: React.FC = () => {
   const [draft, setDraft] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [pendingPhotoDeletion, setPendingPhotoDeletion] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -89,6 +90,20 @@ const MemberInfo: React.FC = () => {
     try {
       const savedProfile = await saveMemberProfile(draft);
       setDraft(savedProfile);
+      if (pendingPhotoDeletion) {
+        try {
+          await mediaApi.deleteMediaByUrl(pendingPhotoDeletion);
+          setPendingPhotoDeletion(null);
+        } catch {
+          toast({
+            title: "Profile saved, media cleanup failed",
+            description: "The old upload is no longer referenced but could not be deleted.",
+            status: "warning",
+            duration: 3200,
+            isClosable: true,
+          });
+        }
+      }
       toast({
         title: "Member profile updated",
         description: `${draft.name}'s profile content is now saved in backend for production use.`,
@@ -124,7 +139,7 @@ const MemberInfo: React.FC = () => {
     } catch {
       toast({
         title: "Upload failed",
-        description: "Could not upload member media. If your file is over 1 GB, please choose a smaller file.",
+        description: "Could not upload member media. Images must be 1 GB or smaller and match their file type.",
         status: "error",
         duration: 2800,
         isClosable: true,
@@ -147,23 +162,17 @@ const MemberInfo: React.FC = () => {
     }
 
     try {
-      await mediaApi.deleteMediaByUrl(draft.photoUrl);
+      setPendingPhotoDeletion(draft.photoUrl);
       updateDraft("photoUrl", "");
       toast({
-        title: "Photo deleted",
-        description: "Click Save Profile to keep this change.",
-        status: "success",
+        title: "Photo marked for deletion",
+        description: "The upload will be deleted after Save Profile succeeds.",
+        status: "info",
         duration: 2200,
         isClosable: true,
       });
     } catch {
-      toast({
-        title: "Delete failed",
-        description: "Could not delete member image.",
-        status: "error",
-        duration: 2800,
-        isClosable: true,
-      });
+      // State-only operation; retained for defensive handling.
     }
   };
 
@@ -183,7 +192,13 @@ const MemberInfo: React.FC = () => {
           boxShadow="0 24px 80px rgba(140, 93, 255, 0.22)"
         >
           <Box position="relative" minH={{ base: "300px", md: "380px" }}>
-            <Image src={draft.photoUrl} alt={draft.name} w="100%" h="100%" objectFit="cover" objectPosition={photoPosition} />
+            <ResponsiveMemberImage
+              src={draft.photoUrl || draft.backupPhotoUrl || "/images/members/yujin.jpg"}
+              alt={draft.name}
+              sizes="(max-width: 768px) 100vw, 980px"
+              pictureStyle={{ position: "absolute", inset: 0, display: "block" }}
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: photoPosition }}
+            />
             <Box position="absolute" inset={0} bg="linear-gradient(180deg, rgba(10,7,23,0.1) 40%, rgba(10,7,23,0.92) 92%)" />
             <VStack position="absolute" left={{ base: 6, md: 10 }} bottom={{ base: 6, md: 10 }} align="start" spacing={2}>
               <Badge colorScheme="purple" px={3} py={1} borderRadius="full">

@@ -22,33 +22,33 @@ const theme = extendTheme({
         },
         _disabled: {
           opacity: 0.72,
-          color: "whiteAlpha.900",
-          borderColor: "whiteAlpha.400",
-          bg: "whiteAlpha.200",
+          color: "rgba(255, 255, 255, 0.82)",
+          borderColor: "rgba(255, 255, 255, 0.28)",
+          bg: "rgba(255, 255, 255, 0.12)",
           cursor: "not-allowed",
         },
       },
       variants: {
         outline: {
-          color: "whiteAlpha.950",
+          color: "#FFFFFF",
           borderColor: "whiteAlpha.700",
           bg: "transparent",
           _hover: {
-            bg: "whiteAlpha.180",
+            bg: "rgba(255, 255, 255, 0.12)",
             borderColor: "whiteAlpha.900",
           },
           _active: {
-            bg: "whiteAlpha.220",
+            bg: "rgba(255, 255, 255, 0.16)",
             borderColor: "purple.200",
           },
         },
         ghost: {
           color: "whiteAlpha.900",
           _hover: {
-            bg: "whiteAlpha.180",
+            bg: "rgba(255, 255, 255, 0.12)",
           },
           _active: {
-            bg: "whiteAlpha.240",
+            bg: "rgba(255, 255, 255, 0.18)",
           },
         },
       },

@@ -48,29 +48,30 @@ function AppRoutes() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/auth/reset-password" element={<ResetPassword />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route element={<MainLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/about" element={<AboutUs />} />
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/quiz/leaderboards" element={<QuizLeaderboards />} />
+          <Route path="/fan-events" element={<FanEvents />} />
+          <Route path="/member/:id" element={<MemberInfo />} />
+          <Route path="/pages" element={<ContentPages />} />
+          <Route path="/pages/:slug" element={<DynamicContentPage />} />
+
+          <Route element={<ProtectedRoute />}>
             <Route path="/quiz/daily" element={<QuizGame />} />
-            <Route path="/quiz/leaderboards" element={<QuizLeaderboards />} />
-            <Route path="/fan-events" element={<FanEvents />} />
-            <Route path="/member/:id" element={<MemberInfo />} />
-            <Route element={<AdminRoute />}>
-              <Route path="/about/edit" element={<AboutUsEditor />} />
-              <Route path="/pages" element={<ContentPages />} />
-              <Route path="/pages/editor" element={<ContentEditor />} />
-              <Route path="/pages/:slug" element={<DynamicContentPage />} />
-              <Route path="/admin/quizzes" element={<AdminQuizManager />} />
-              <Route path="/admin/quizzes/:quizId" element={<AdminQuizEditor />} />
-              <Route path="/admin/media" element={<AdminMediaLibrary />} />
-            </Route>
-            <Route element={<SuperAdminRoute />}>
-              <Route path="/super-admin/users" element={<SuperAdminUsers />} />
-              <Route path="/super-admin/events" element={<SuperAdminEvents />} />
-              <Route path="/super-admin/fan-events" element={<SuperAdminFanEvents />} />
-            </Route>
+          </Route>
+          <Route element={<AdminRoute />}>
+            <Route path="/about/edit" element={<AboutUsEditor />} />
+            <Route path="/pages/editor" element={<ContentEditor />} />
+            <Route path="/admin/quizzes" element={<AdminQuizManager />} />
+            <Route path="/admin/quizzes/:quizId" element={<AdminQuizEditor />} />
+            <Route path="/admin/media" element={<AdminMediaLibrary />} />
+          </Route>
+          <Route element={<SuperAdminRoute />}>
+            <Route path="/super-admin/users" element={<SuperAdminUsers />} />
+            <Route path="/super-admin/events" element={<SuperAdminEvents />} />
+            <Route path="/super-admin/fan-events" element={<SuperAdminFanEvents />} />
           </Route>
         </Route>
 
