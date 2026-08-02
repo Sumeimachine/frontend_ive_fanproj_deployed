@@ -28,7 +28,8 @@ import type { QuizLeaderboardEntry } from "../types/quiz";
 
 export default function QuizLeaderboards() {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [gradedLoadFailed, setGradedLoadFailed] = useState(false);
+  const [practiceLoadFailed, setPracticeLoadFailed] = useState(false);
   const [gradedLeaderboard, setGradedLeaderboard] = useState<QuizLeaderboardEntry[]>([]);
   const [practiceLeaderboard, setPracticeLeaderboard] = useState<QuizLeaderboardEntry[]>([]);
 
@@ -42,12 +43,8 @@ export default function QuizLeaderboards() {
 
         setGradedLeaderboard(gradedResult.status === "fulfilled" ? gradedResult.value : []);
         setPracticeLeaderboard(practiceResult.status === "fulfilled" ? practiceResult.value : []);
-
-        setError(
-          gradedResult.status === "rejected" && practiceResult.status === "rejected"
-            ? "Failed to load leaderboards."
-            : null,
-        );
+        setGradedLoadFailed(gradedResult.status === "rejected");
+        setPracticeLoadFailed(practiceResult.status === "rejected");
       } finally {
         setLoading(false);
       }
@@ -75,14 +72,7 @@ export default function QuizLeaderboards() {
           </VStack>
         )}
 
-        {!!error && (
-          <Alert status="error" borderRadius="md">
-            <AlertIcon />
-            {error}
-          </Alert>
-        )}
-
-        {!loading && !error && (
+        {!loading && (
           <Tabs variant="unstyled">
             <TabList gap={3} flexWrap="wrap">
               <Tab color="whiteAlpha.900" border="1px solid" borderColor="whiteAlpha.300" borderRadius="md" _selected={{ color: "white", bg: "purple.600", borderColor: "purple.300" }}>
@@ -94,10 +84,10 @@ export default function QuizLeaderboards() {
             </TabList>
             <TabPanels>
               <TabPanel px={0} pt={5}>
-                <LeaderboardBoard rows={gradedLeaderboard} modeLabel="Graded" />
+                <LeaderboardBoard rows={gradedLeaderboard} modeLabel="Graded" loadFailed={gradedLoadFailed} />
               </TabPanel>
               <TabPanel px={0} pt={5}>
-                <LeaderboardBoard rows={practiceLeaderboard} modeLabel="Practice" />
+                <LeaderboardBoard rows={practiceLeaderboard} modeLabel="Practice" loadFailed={practiceLoadFailed} />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -107,8 +97,25 @@ export default function QuizLeaderboards() {
   );
 }
 
-function LeaderboardBoard({ rows, modeLabel }: { rows: QuizLeaderboardEntry[]; modeLabel: string }) {
+function LeaderboardBoard({
+  rows,
+  modeLabel,
+  loadFailed,
+}: {
+  rows: QuizLeaderboardEntry[];
+  modeLabel: string;
+  loadFailed: boolean;
+}) {
   const podium = useMemo(() => rows.slice(0, 3), [rows]);
+
+  if (loadFailed) {
+    return (
+      <Alert status="error" borderRadius="md">
+        <AlertIcon />
+        Failed to load the {modeLabel.toLowerCase()} leaderboard. Please refresh and try again.
+      </Alert>
+    );
+  }
 
   if (rows.length === 0) {
     return (

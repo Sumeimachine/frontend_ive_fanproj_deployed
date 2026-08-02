@@ -28,22 +28,24 @@ export interface ContentPage {
 export const defaultPages: ContentPage[] = [
   {
     slug: "about",
-    title: "About IVE Fan Project",
-    description: "Overview and mission for your platform.",
+    title: "About the IVE PH Fan Project",
+    description:
+      "IVEPH is an independent, non-commercial fan-support space built by Filipino DIVEs to celebrate IVE through member profiles, quizzes, fan events, and interactive experiences.",
     heroImageUrl: null,
     heroImagePositionX: 50,
     heroImagePositionY: 50,
     accentImageUrl: null,
     accentImagePositionX: 50,
     accentImagePositionY: 50,
-    ctaLabel: "Explore members",
+    ctaLabel: "Meet the members",
     ctaUrl: "/",
     isPublished: true,
     sections: [
       {
         id: "about-intro",
-        title: "Welcome",
-        body: "Use this page to explain your project, audience, and goals.",
+        title: "Built by fans, for fans",
+        body:
+          "IVEPH brings DIVEs together in one fan-built space where visitors can explore member profiles, follow community activities, test their knowledge, and enjoy interactive content inspired by IVE.",
         imageUrl: null,
         imagePositionX: 50,
         imagePositionY: 50,
@@ -52,8 +54,9 @@ export const defaultPages: ContentPage[] = [
       },
       {
         id: "about-story",
-        title: "Story",
-        body: "Share the background of your fan project and your backend-powered roadmap.",
+        title: "An independent fan project",
+        body:
+          "This website is independently created and maintained for fan-support purposes. It is not affiliated with IVE, Starship Entertainment, or any official merchandise project. Artist names, images, and related media belong to their respective owners.",
         imageUrl: null,
         imagePositionX: 50,
         imagePositionY: 50,
@@ -65,21 +68,23 @@ export const defaultPages: ContentPage[] = [
   {
     slug: "community",
     title: "Community Hub",
-    description: "Rules, updates, and contribution notes.",
+    description:
+      "A welcoming space for DIVEs to join quizzes, follow fan updates, share corrections, and help improve the community.",
     heroImageUrl: null,
     heroImagePositionX: 50,
     heroImagePositionY: 50,
     accentImageUrl: null,
     accentImagePositionX: 50,
     accentImagePositionY: 50,
-    ctaLabel: "Open quizzes",
+    ctaLabel: "Start the daily quiz",
     ctaUrl: "/quiz/daily",
     isPublished: true,
     sections: [
       {
         id: "community-rules",
         title: "Community Rules",
-        body: "List behavior guidelines and moderation notes.",
+        body:
+          "Keep discussions respectful and welcoming. Do not post harassment, hate speech, spam, impersonation, private information, or uncredited media. Clearly distinguish opinions and rumors from confirmed information, and provide reliable sources when submitting factual corrections.",
         imageUrl: null,
         imagePositionX: 50,
         imagePositionY: 50,
@@ -89,7 +94,8 @@ export const defaultPages: ContentPage[] = [
       {
         id: "community-contribute",
         title: "How to Contribute",
-        body: "Explain how community members can submit updates, media, or corrections.",
+        body:
+          "Found outdated information or have an idea for an event, correction, or feature? Contact the site administrators with the relevant page link, your proposed change, and a reliable source. Only submit media you own or have permission to share.",
         imageUrl: null,
         imagePositionX: 50,
         imagePositionY: 50,

@@ -152,7 +152,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
         </HStack>
 
         <Text color="whiteAlpha.800" fontSize="sm">
-          Join in on the fun! <b>fan project By PH peeps</b>.
+          Join the fun—an independent fan project made by <b>Filipino DIVEs</b>.
         </Text>
         {showSoundToggle && (
           <Button

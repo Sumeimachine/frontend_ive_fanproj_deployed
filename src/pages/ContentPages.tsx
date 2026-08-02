@@ -28,9 +28,9 @@ export default function ContentPages() {
           <Text color="pink.200" fontSize="xs" textTransform="uppercase" letterSpacing="0.14em">
             Published content
           </Text>
-          <Heading mt={2}>Editable Pages</Heading>
+          <Heading mt={2}>Fan Community Pages</Heading>
           <Text color="whiteAlpha.800" mt={2}>
-            Backend-controlled pages for fan project announcements, rules, guides, and image-rich stories.
+            Explore fan project updates, community guidelines, helpful guides, and stories created for DIVEs.
           </Text>
         </Box>
 
