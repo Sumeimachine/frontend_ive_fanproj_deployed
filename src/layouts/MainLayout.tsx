@@ -40,7 +40,12 @@ export default function MainLayout() {
     { label: "Quiz Leaderboards", to: "/quiz/leaderboards" },
     { label: "Fan Events", to: "/fan-events" },
     { label: "Pages", to: "/pages" },
-    ...(isAuthenticated ? [{ label: "Daily Quiz", to: "/quiz/daily" }] : []),
+    ...(isAuthenticated
+      ? [
+          { label: "Daily Quiz", to: "/quiz/daily" },
+          { label: "Card Game", to: "/card-game" },
+        ]
+      : []),
     ...((role === "Admin" || role === "Super-Admin")
       ? [
           { label: "Content Editor", to: "/pages/editor" },

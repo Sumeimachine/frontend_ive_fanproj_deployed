@@ -12,7 +12,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { authApi } from "../services/api/authApi";
 
@@ -22,6 +22,14 @@ type LoginFormProps = {
   showSoundToggle?: boolean;
   soundEnabled?: boolean;
   onToggleMute?: () => void;
+};
+
+type LoginLocationState = {
+  from?: {
+    pathname?: string;
+    search?: string;
+    hash?: string;
+  };
 };
 
 const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute }: LoginFormProps) => {
@@ -36,6 +44,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const clearMessages = () => {
     setError("");
@@ -49,7 +58,19 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
 
   const handleLogin = async () => {
     await login({ username, password });
-    navigate("/");
+
+    const requestedLocation = (location.state as LoginLocationState | null)?.from;
+    const requestedPathname = requestedLocation?.pathname;
+    const canReturnToRequestedPage =
+      typeof requestedPathname === "string" &&
+      requestedPathname.startsWith("/") &&
+      !requestedPathname.startsWith("//") &&
+      requestedPathname !== "/login";
+    const destination = canReturnToRequestedPage
+      ? `${requestedPathname}${requestedLocation?.search ?? ""}${requestedLocation?.hash ?? ""}`
+      : "/";
+
+    navigate(destination, { replace: true });
   };
 
   const handleRegister = async () => {
@@ -92,7 +113,6 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
   const inputStyles = {
     bg: "rgba(9, 10, 22, 0.9)",
     color: "#FFFFFF",
-    caretColor: "#FFFFFF",
     borderColor: "whiteAlpha.300",
     _placeholder: { color: "whiteAlpha.600" },
     _hover: { borderColor: "purple.300" },
@@ -102,6 +122,7 @@ const LoginForm = ({ showSoundToggle = false, soundEnabled = false, onToggleMute
       bg: "rgba(13, 14, 28, 0.95)",
     },
     sx: {
+      caretColor: "#FFFFFF",
       "&, &::placeholder": {
         WebkitTextFillColor: "#ffffff",
       },
