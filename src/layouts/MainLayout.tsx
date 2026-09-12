@@ -35,6 +35,7 @@ export default function MainLayout() {
 
   const navItems = [
     { label: "Members", to: "/" },
+    { label: "Photo Gallery", to: "/photo-gallery" },
     { label: "About Us", to: "/about" },
     { label: "Dashboard", to: "/dashboard" },
     { label: "Quiz Leaderboards", to: "/quiz/leaderboards" },

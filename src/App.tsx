@@ -8,6 +8,7 @@ import MainLayout from "./layouts/MainLayout";
 
 const Login = lazy(() => import("./pages/Login"));
 const Home = lazy(() => import("./pages/Home"));
+const PhotoGallery = lazy(() => import("./pages/PhotoGallery"));
 const MemberInfo = lazy(() => import("./pages/MemberInfo"));
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const ContentPages = lazy(() => import("./pages/ContentPages"));
@@ -51,6 +52,7 @@ function AppRoutes() {
 
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/photo-gallery" element={<PhotoGallery />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/quiz/leaderboards" element={<QuizLeaderboards />} />
