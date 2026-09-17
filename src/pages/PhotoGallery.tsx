@@ -1,64 +1,93 @@
-import { Box, Container, Heading, Link, Text, VStack } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import FanPhoto from "../components/FanPhoto";
 import PhotoJournal from "../components/PhotoJournal";
 import { heroPhoto, photographer } from "../content/grantsor";
+import { usePerformancePreferences } from "../hooks/usePerformancePreferences";
 
 export default function PhotoGallery() {
-  return (
-    <Box as="main" minH="100vh" bg="#0e0a1e" color="white">
-      <Container maxW="1200px" py={{ base: 8, md: 12 }}>
-        <VStack align="start" spacing={3} mb={8}>
-          <Text className="eyebrow">IVE FAN PHOTOGRAPHY</Text>
-          <Heading as="h1" fontSize={{ base: "3xl", md: "4xl" }}>
-            Fan photo gallery
-          </Heading>
-          <Text color="whiteAlpha.800" maxW="720px">
-            IVE moments through a fellow DIVE’s lens. Photos by{" "}
-            <Link href={photographer.profileUrl} color="purple.200" isExternal>
-              @{photographer.name}
-            </Link>
-            , shared with permission for this non-commercial fan project.
-          </Text>
-        </VStack>
+  const { prefersReducedMotion } = usePerformancePreferences();
+  const reveal = {
+    initial: prefersReducedMotion ? false : { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
+  };
 
-        <Box
-          as="figure"
-          m={0}
-          mb={10}
-          maxW="760px"
-          border="1px solid"
-          borderColor="whiteAlpha.300"
-          borderRadius="xl"
-          overflow="hidden"
-          bg="#1A1630"
+  return (
+    <div className="photo-gallery-page">
+      <div className="photo-gallery-inner">
+        <motion.header className="photo-gallery-heading" {...reveal}>
+          <div>
+            <p className="photo-gallery-eyebrow">
+              The DIVE archive / Photography
+            </p>
+            <h1>
+              Through a<br />
+              <span>DIVE’s lens.</span>
+            </h1>
+          </div>
+          <div className="photo-gallery-intro">
+            <p>
+              The little moments that stay with us. IVE in Manila, as seen by{" "}
+              <a
+                href={photographer.profileUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                @{photographer.name} ↗
+              </a>
+              .
+            </p>
+            <a className="photo-gallery-browse" href="#photo-journal">
+              Explore the photographs <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </motion.header>
+
+        <motion.figure
+          className="photo-gallery-feature"
+          {...reveal}
+          transition={{
+            ...reveal.transition,
+            delay: prefersReducedMotion ? 0 : 0.1,
+          }}
         >
-          <FanPhoto
-            photo={heroPhoto}
-            priority
-            sizes="(max-width: 767px) 95vw, (max-width: 1100px) 70vw, 760px"
-          />
-          <Box as="figcaption" p={{ base: 4, md: 5 }}>
-            <Heading as="h2" fontSize="lg">
-              {heroPhoto.title}
-            </Heading>
-            <Text color="whiteAlpha.700" fontSize="sm" mt={1}>
-              IVE Switch Manila fansign · July 12, 2024
-            </Text>
-            <Link
-              href={heroPhoto.postUrl}
-              isExternal
-              display="inline-block"
-              mt={3}
-              fontSize="sm"
-              color="purple.200"
-            >
-              Photo © {photographer.name} · Original post ↗︎
-            </Link>
-          </Box>
-        </Box>
+          <div className="photo-gallery-feature-image">
+            <FanPhoto
+              photo={heroPhoto}
+              priority
+              sizes="(max-width: 760px) 94vw, (max-width: 1200px) 70vw, 1040px"
+            />
+          </div>
+          <figcaption>
+            <p className="photo-gallery-feature-index">
+              Featured photograph / 01
+            </p>
+            <div>
+              <h2>{heroPhoto.title}</h2>
+              <p className="photo-gallery-feature-context">
+                IVE Switch Manila fansign
+                <br />
+                <time dateTime="2024-07-12">July 12, 2024</time>
+              </p>
+              <a
+                className="photo-gallery-feature-credit"
+                href={heroPhoto.postUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Photo © {photographer.name}
+                <span>View original post ↗</span>
+              </a>
+            </div>
+            <p className="photo-gallery-feature-note">
+              Shared with permission.
+              <br />A non-commercial fan project.
+            </p>
+          </figcaption>
+        </motion.figure>
 
         <PhotoJournal />
-      </Container>
-    </Box>
+      </div>
+    </div>
   );
 }

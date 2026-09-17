@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
-  Badge,
   Box,
   Button,
   Container,
@@ -63,7 +62,7 @@ const MemberInfo: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box p={10} color="white" bgGradient="radial(circle at top, #1A152A, #0A0812 80%)" minH="100vh">
+      <Box p={10} color="white" bg="#0a0a0e" minH="70vh">
         <Text>Loading member profile...</Text>
       </Box>
     );
@@ -71,7 +70,7 @@ const MemberInfo: React.FC = () => {
 
   if (!member || !draft) {
     return (
-      <Box p={10} color="white" bgGradient="radial(circle at top, #1A152A, #0A0812 80%)" minH="100vh">
+      <Box p={10} color="white" bg="#0a0a0e" minH="70vh">
         <Text>Member not found.</Text>
         <Button mt={4} onClick={() => navigate(-1)}>
           Back
@@ -177,39 +176,36 @@ const MemberInfo: React.FC = () => {
   };
 
   return (
-    <Box minH="100vh" bgGradient="linear(to-b, #0a0717, #120b24 45%, #090512)" color="white" py={{ base: 8, md: 12 }}>
-      <Container maxW="980px">
-        <Button mb={6} variant="ghost" colorScheme="whiteAlpha" onClick={() => navigate("/")}>
+    <Box minH="80vh" bg="#0a0a0e" color="#f6f3f5" py={{ base: 8, md: 12 }}>
+      <Container maxW="1200px">
+        <Button mb={8} variant="ghost" colorScheme="whiteAlpha" onClick={() => navigate("/#members")}>
           Back to members
         </Button>
 
         <Box
-          borderRadius="2xl"
+          display="grid"
+          gridTemplateColumns={{ base: "1fr", md: "minmax(0, 0.85fr) minmax(0, 1.15fr)" }}
+          borderRadius="3px"
           overflow="hidden"
           border="1px solid"
-          borderColor="whiteAlpha.300"
-          bg="rgba(17, 11, 31, 0.8)"
-          boxShadow="0 24px 80px rgba(140, 93, 255, 0.22)"
+          borderColor="whiteAlpha.200"
+          bg="#111015"
         >
-          <Box position="relative" minH={{ base: "300px", md: "380px" }}>
+          <Box position="relative" alignSelf="start">
             <ResponsiveMemberImage
               src={draft.photoUrl || draft.backupPhotoUrl || "/images/members/yujin.jpg"}
               alt={draft.name}
-              sizes="(max-width: 768px) 100vw, 980px"
-              pictureStyle={{ position: "absolute", inset: 0, display: "block" }}
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: photoPosition }}
+              sizes="(max-width: 768px) 95vw, 480px"
+              pictureStyle={{ display: "block" }}
+              style={{ display: "block", width: "100%", aspectRatio: "480 / 679", objectFit: "cover", objectPosition: photoPosition }}
             />
-            <Box position="absolute" inset={0} bg="linear-gradient(180deg, rgba(10,7,23,0.1) 40%, rgba(10,7,23,0.92) 92%)" />
-            <VStack position="absolute" left={{ base: 6, md: 10 }} bottom={{ base: 6, md: 10 }} align="start" spacing={2}>
-              <Badge colorScheme="purple" px={3} py={1} borderRadius="full">
-                IVE MEMBER PROFILE
-              </Badge>
-              <Heading size="2xl">{draft.name}</Heading>
-              <Text color="purple.100">{draft.tagline}</Text>
-            </VStack>
           </Box>
 
-          <Box p={{ base: 6, md: 8 }}>
+          <Box p={{ base: 6, md: 10 }} alignSelf="center" minW={0}>
+            <VStack align="start" spacing={4} mb={10}>
+              <Heading as="h1" fontSize={{ base: "5xl", md: "7xl" }} fontWeight={500} textTransform="uppercase" letterSpacing="-0.025em">{draft.name}</Heading>
+              <Text color="#ef9cc2" fontSize="sm">{draft.tagline}</Text>
+            </VStack>
             {isEditMode ? (
               <VStack align="stretch" spacing={4}>
                 <Heading size="md">Admin Edit Mode</Heading>
@@ -228,7 +224,7 @@ const MemberInfo: React.FC = () => {
                   <FormLabel>Photo URL</FormLabel>
                   <Input value={draft.photoUrl} onChange={(event) => updateDraft("photoUrl", event.target.value)} />
                 </FormControl>
-                <HStack>
+                <HStack flexWrap="wrap">
                   <Input
                     type="file"
                     accept="image/*"

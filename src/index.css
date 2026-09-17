@@ -1,15 +1,29 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/manrope-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Oswald";
+  src: url("/fonts/oswald-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
 :root {
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Manrope", system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --ive-bg: #070611;
+  --ive-bg: #0a0a0e;
   --ive-panel: rgba(15, 13, 31, 0.78);
   --ive-border: rgba(255, 255, 255, 0.14);
   --ive-text: #f8f4ff;
   --ive-muted: rgba(248, 244, 255, 0.72);
-  --ive-pink: #ff8bc7;
+  --ive-pink: #ef9cc2;
   --ive-violet: #9f7aea;
   --ive-blue: #73d8ff;
   --ive-lime: #c7ff9b;
@@ -18,6 +32,10 @@
 * {
   box-sizing: border-box;
 }
+
+::selection { background: #ef9cc2; color: #151017; }
+html { position: relative; scroll-padding-top: 90px; scrollbar-color: #6e5965 #0a0a0e; }
+body { caret-color: #ef9cc2; }
 
 html,
 body,

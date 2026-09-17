@@ -11,6 +11,7 @@ import { usePerformancePreferences } from "../hooks/usePerformancePreferences";
 interface MemberUniverseSectionProps {
   members: MemberProfile[];
   onSelectMember: (memberId: string) => void;
+  motionPaused?: boolean;
 }
 
 interface MemberCard3DProps {
@@ -228,33 +229,31 @@ function UniverseScene({ members, onSelectMember, animate }: MemberUniverseSecti
   );
 }
 
-export default function MemberUniverseSection({ members, onSelectMember }: MemberUniverseSectionProps) {
+export default function MemberUniverseSection({ members, onSelectMember, motionPaused = false }: MemberUniverseSectionProps) {
   const { prefersReducedMotion, prefersReducedData } = usePerformancePreferences();
-  const animate = !prefersReducedMotion && !prefersReducedData;
+  const animate = !prefersReducedMotion && !prefersReducedData && !motionPaused;
 
   return (
     <Box
-      mt={{ base: 14, md: 20 }}
-      borderRadius="2xl"
+      mt={8}
+      borderRadius="3px"
       overflow="hidden"
       border="1px solid"
       borderColor="whiteAlpha.300"
-      bgGradient="linear(to-b, rgba(11,6,24,0.95), rgba(4,3,13,0.97))"
-      boxShadow="0 30px 80px rgba(137, 89, 255, 0.35)"
+      bg="#0a0a0e"
     >
       <VStack spacing={3} textAlign="center" pt={{ base: 8, md: 10 }} px={6}>
-        <Text className="eyebrow">DIVE INTO IVE!</Text>
-        <Heading fontSize={{ base: "2xl", md: "4xl" }}>IVE Universe - Neon Card Orbit</Heading>
+        <Heading fontSize={{ base: "2xl", md: "4xl" }}>The IVE universe</Heading>
         <Text maxW="740px" color="whiteAlpha.800">
           Hover a card to highlight, then click to open
           profile.
         </Text>
       </VStack>
 
-      <Box h={{ base: "70vh", md: "86vh" }}>
+      <Box h={{ base: "55dvh", md: "68dvh" }}>
         <Canvas camera={{ position: [0, 0, 8.8], fov: 48 }} frameloop={animate ? "always" : "demand"}>
-          <color attach="background" args={["#050216"]} />
-          <fog attach="fog" args={["#06021a", 7, 45]} />
+          <color attach="background" args={["#0a0a0e"]} />
+          <fog attach="fog" args={["#0a0a0e", 7, 45]} />
           <Suspense fallback={null}>
             <UniverseScene members={members} onSelectMember={onSelectMember} animate={animate} />
           </Suspense>

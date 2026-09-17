@@ -1,277 +1,177 @@
-import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Container, Heading, HStack, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowDownIcon, ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { getMemberProfiles, loadMemberProfiles } from "../services/memberProfileStore";
-import type { MemberProfile } from "../types/member";
 import ResponsiveMemberImage from "../components/ResponsiveMemberImage";
+import FanPhoto from "../components/FanPhoto";
+import { fanPhotos, heroPhoto, photographer } from "../content/grantsor";
 import { usePerformancePreferences } from "../hooks/usePerformancePreferences";
+import "./Home.css";
 
 const MemberUniverseSection = lazy(() => import("../components/MemberUniverseSection"));
 
-const Home: React.FC = () => {
+const experiences = [
+  { title: "Music, in numbers.", detail: "Explore IVE’s YouTube momentum.", to: "/dashboard", action: "View the dashboard" },
+  { title: "Make it a daily thing.", detail: "Put your IVE knowledge to the test.", to: "/quiz/daily", action: "Play the daily quiz" },
+  { title: "Find your fellow DIVEs.", detail: "Discover community fan events.", to: "/fan-events", action: "Explore fan events" },
+  { title: "Your next favorite card.", detail: "Step into the IVE card game.", to: "/card-game", action: "Play the card game" },
+];
+
+export default function Home() {
   const navigate = useNavigate();
-  const universeRef = useRef<HTMLDivElement | null>(null);
-  const [membersData, setMembersData] = useState<MemberProfile[]>(() => loadMemberProfiles());
-  const [scrollY, setScrollY] = useState(0);
-  const [pointer, setPointer] = useState({ x: 0, y: 0 });
-  const [loadUniverse, setLoadUniverse] = useState(false);
+  const { hash, key } = useLocation();
+  const heroRef = useRef<HTMLElement>(null);
+  const [members, setMembers] = useState(loadMemberProfiles);
+  const [orbitOpen, setOrbitOpen] = useState(false);
+  const [motionPaused, setMotionPaused] = useState(false);
   const { prefersReducedMotion, prefersReducedData } = usePerformancePreferences();
-  const allowImmersiveMotion = !prefersReducedMotion && !prefersReducedData;
+  const motionEnabled = !prefersReducedMotion && !prefersReducedData && !motionPaused;
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const photographY = useTransform(scrollYProgress, [0, 1], [0, 55]);
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, -28]);
 
   useEffect(() => {
-    void (async () => {
-      const profiles = await getMemberProfiles();
-      setMembersData(profiles);
-    })();
-
+    let active = true;
+    void getMemberProfiles().then((profiles) => { if (active) setMembers(profiles); });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
-    if (!allowImmersiveMotion) {
-      setScrollY(0);
-      setPointer({ x: 0, y: 0 });
-      return;
-    }
-
-    const handleScroll = () => setScrollY(window.scrollY);
-    const handlePointerMove = (event: PointerEvent) => {
-      const x = (event.clientX / window.innerWidth) * 2 - 1;
-      const y = (event.clientY / window.innerHeight) * 2 - 1;
-      setPointer({ x, y });
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("pointermove", handlePointerMove);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("pointermove", handlePointerMove);
-    };
-  }, [allowImmersiveMotion]);
-
-  useEffect(() => {
-    const target = universeRef.current;
-    if (!target || loadUniverse || !allowImmersiveMotion) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setLoadUniverse(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "300px" },
-    );
-
-    observer.observe(target);
-    return () => observer.disconnect();
-  }, [allowImmersiveMotion, loadUniverse]);
-
-  const cameraTransform = useMemo(() => {
-    if (!allowImmersiveMotion) return "none";
-
-    const rotateX = pointer.y * -6;
-    const rotateY = pointer.x * 9;
-    const translateY = scrollY * -0.08;
-    return `perspective(1400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${translateY}px)`;
-  }, [allowImmersiveMotion, pointer, scrollY]);
-
-  const featuredMembers = useMemo(() => membersData.slice(0, 6), [membersData]);
-
-  const scrollToUniverse = () => {
-    universeRef.current?.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-      block: "start",
-    });
-  };
+    if (hash !== "#members") return;
+    const frame = requestAnimationFrame(() => document.getElementById("members")?.scrollIntoView({ block: "start" }));
+    return () => cancelAnimationFrame(frame);
+  }, [hash, key]);
 
   return (
-    <Box className="home-page" minH="100vh" color="white">
-      <Box className="parallax-layer layer-back" style={{ transform: `translateY(${scrollY * 0.14}px)` }} />
-      <Box className="parallax-layer layer-mid" style={{ transform: `translateY(${scrollY * 0.22}px)` }} />
-      <Box className="parallax-layer layer-front" style={{ transform: `translateY(${scrollY * 0.32}px)` }} />
-
-      <Container maxW="1200px" py={{ base: 12, md: 20 }} position="relative" zIndex={2}>
-        <Box className="home-hero">
-          <VStack className="home-hero-copy" align="start" spacing={6}>
-            <Text className="eyebrow">Non-commercial IVE fan-support space</Text>
-            <Heading as="h1" className="home-hero-title">
-              IVE PH Fan Universe
-            </Heading>
-            <Text className="home-hero-body">
-              A polished fan-built hub for exploring IVE member profiles, YouTube momentum,
-              daily quizzes, and immersive 3D-inspired fan moments.
-            </Text>
-
-            <HStack className="home-hero-actions" spacing={3}>
-              <Button size="lg" colorScheme="purple" onClick={scrollToUniverse}>
-                Enter Universe
-              </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate("/dashboard")}>
-                View Metrics
-              </Button>
-            </HStack>
-
-            <HStack className="fan-signal-row" spacing={3}>
-              <Box className="fan-signal">
-                <Text>Members</Text>
-                <strong>{membersData.length}</strong>
-              </Box>
-              <Box className="fan-signal">
-                <Text>Mode</Text>
-                <strong>Fan-built</strong>
-              </Box>
-              <Box className="fan-signal">
-                <Text>Experience</Text>
-                <strong>Interactive</strong>
-              </Box>
-            </HStack>
-          </VStack>
-
-          <Box className="hero-stage" aria-label="IVE member spotlight">
-            {featuredMembers.map((member, index) => (
-              <button
-                key={member.id}
-                className={`hero-polaroid hero-polaroid-${index}`}
-                type="button"
-                onClick={() => navigate(`/member/${member.id}`)}
-              >
-                <ResponsiveMemberImage
-                  src={member.photoUrl || member.backupPhotoUrl}
-                  alt={member.name}
-                  sizes="(max-width: 560px) 118px, 178px"
-                  style={{ objectPosition: `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%` }}
-                />
-                <span>{member.name}</span>
-              </button>
-            ))}
-          </Box>
-        </Box>
-
-        <Box className="fan-disclaimer">
-          <Text>
-            This is a fan-support website. It is not affiliated with IVE, Starship Entertainment, or any official merch project.
-          </Text>
-        </Box>
-
-        <Box ref={universeRef}>
-          {!allowImmersiveMotion ? (
-            <Box
-              mt={{ base: 14, md: 20 }}
-              borderRadius="2xl"
-              border="1px solid"
-              borderColor="whiteAlpha.300"
-              bg="rgba(11, 6, 24, 0.92)"
-              p={{ base: 6, md: 10 }}
-            >
-              <VStack spacing={3} textAlign="center" mb={8}>
-                <Text className="eyebrow">IVE MEMBER GALLERY</Text>
-                <Heading fontSize={{ base: "2xl", md: "4xl" }}>A lighter way to explore</Heading>
-                <Text maxW="680px" color="whiteAlpha.800">
-                  Your motion or data-saving preference is active, so the full 3D orbit stays paused.
-                </Text>
-              </VStack>
-              <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing={4}>
-                {featuredMembers.map((member) => (
-                  <Box
-                    as="button"
-                    type="button"
-                    key={member.id}
-                    textAlign="left"
-                    borderRadius="xl"
-                    overflow="hidden"
-                    border="1px solid"
-                    borderColor="whiteAlpha.300"
-                    bg="whiteAlpha.100"
-                    onClick={() => navigate(`/member/${member.id}`)}
-                    _focusVisible={{ outline: "3px solid", outlineColor: "purple.300" }}
-                  >
-                    <ResponsiveMemberImage
-                      src={member.photoUrl || member.backupPhotoUrl}
-                      alt={member.name}
-                      sizes="(max-width: 768px) 50vw, 180px"
-                      style={{ width: "100%", aspectRatio: "3 / 4", objectFit: "cover" }}
-                    />
-                    <Text px={3} py={2} fontWeight="bold">{member.name}</Text>
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
-          ) : loadUniverse ? (
-            <Suspense
-              fallback={
-                <Box minH="460px" display="grid" placeItems="center">
-                  <Text color="whiteAlpha.800">Loading 3D universe...</Text>
-                </Box>
-              }
-            >
-              <MemberUniverseSection
-                members={membersData}
-                onSelectMember={(memberId) => navigate(`/member/${memberId}`)}
-              />
-            </Suspense>
-          ) : (
-            <Box minH="460px" display="grid" placeItems="center">
-              <Text color="whiteAlpha.800">3D universe loads when it enters view.</Text>
-            </Box>
-          )}
-        </Box>
-      </Container>
-
-      <Box className="world-section" style={{ transform: cameraTransform }}>
-        <Container maxW="1200px" py={{ base: 12, md: 20 }}>
-          <VStack spacing={5} align="start" mb={10}>
-            <Text className="eyebrow">IVE PH EXPERIENCE</Text>
-            <Heading fontSize={{ base: "2xl", md: "4xl" }}>
-              Dive into IVE's world
-            </Heading>
-            <Text color="whiteAlpha.800" maxW="760px">
-              A fan-built interactive space inspired by IVE - blending motion, visuals, and creativity.
-              This evolving experience will soon feature real 3D environments and deeper immersion for fans.
-            </Text>
-          </VStack>
-
-          <HStack className="world-track" spacing={6} align="stretch">
-            <Box className="world-node">
-              <Heading size="md" mb={2}>
-                Dynamic Motion
-              </Heading>
-              <Text color="whiteAlpha.800">
-                The environment responds fluidly to your movement - shifting perspective as you scroll and explore.
-              </Text>
-            </Box>
-
-            <Box className="world-node">
-              <Heading size="md" mb={2}>
-                Immersive Interaction
-              </Heading>
-              <Text color="whiteAlpha.800">
-                Elements subtly react in 3D space, creating a tactile and engaging browsing experience.
-              </Text>
-            </Box>
-
-            <Box className="world-node">
-              <Heading size="md" mb={2}>
-                Evolving Experience
-              </Heading>
-              <Text color="whiteAlpha.800">
-                Designed to grow into a fully realized 3D world with custom models, visuals, and deeper immersion.
-              </Text>
-            </Box>
-          </HStack>
-
-          <Button
-            mt={10}
-            colorScheme="purple"
-            size="lg"
-            onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" })}
+    <div className={`cinema-home ${motionEnabled ? "cinema-motion" : "cinema-still"}`}>
+      <section className="cinema-hero" ref={heroRef} aria-labelledby="cinema-title">
+        <div className="cinema-beams" aria-hidden="true"><i /><i /></div>
+        <div className="cinema-hero-topline">
+          <span>A home for Philippine DIVEs</span>
+          <button
+            type="button"
+            className="cinema-motion-toggle"
+            aria-pressed={!motionEnabled}
+            disabled={prefersReducedMotion || prefersReducedData}
+            onClick={() => setMotionPaused((paused) => !paused)}
           >
-            Back to top
-          </Button>
-        </Container>
-      </Box>
-    </Box>
-  );
-};
+            <span className="cinema-motion-bars" aria-hidden="true"><i /><i /><i /></span>
+            {prefersReducedMotion || prefersReducedData ? "Reduced motion" : motionPaused ? "Resume motion" : "Pause motion"}
+          </button>
+        </div>
 
-export default Home;
+        <div className="cinema-hero-grid">
+          <motion.div className="cinema-hero-copy" style={{ y: motionEnabled ? titleY : 0 }}>
+            <h1 id="cinema-title">ALL IN.<br /><span>ALL IVE.</span></h1>
+            <p>For the songs on repeat.<br />The moments we keep.<br />And the six who bring us together.</p>
+            <div className="cinema-hero-actions">
+              <Link className="cinema-button" to="/#members">Meet IVE <ArrowDownIcon aria-hidden="true" /></Link>
+              <Link className="cinema-text-link" to="/photo-gallery">Explore the gallery <ArrowForwardIcon aria-hidden="true" /></Link>
+            </div>
+          </motion.div>
+
+          <motion.figure className="cinema-hero-photograph" style={{ y: motionEnabled ? photographY : 0 }}>
+            <div className="cinema-photo-frame">
+              <FanPhoto photo={heroPhoto} priority sizes="(max-width: 800px) 100vw, 62vw" />
+            </div>
+            <figcaption className="cinema-photo-caption">
+              <div><strong>Yujin &amp; Gaeul</strong><span>IVE Switch Manila Fansign · July 12, 2024</span></div>
+              <a href={heroPhoto.postUrl} target="_blank" rel="noopener noreferrer">Photo © GrantSor · Original post <ExternalLinkIcon aria-hidden="true" /></a>
+              <span className="cinema-permission">Used with permission</span>
+            </figcaption>
+          </motion.figure>
+        </div>
+        <div className="cinema-hero-bottom">
+          <span>Music. Moments. Community.</span>
+          <a href="#members">Keep diving <ArrowDownIcon aria-hidden="true" /></a>
+        </div>
+      </section>
+
+      <section className="cinema-members cinema-section" id="members" aria-labelledby="members-title">
+        <div className="cinema-section-heading">
+          <h2 id="members-title">SIX STARS.<br /><span>ONE IVE.</span></h2>
+          <p>Get to know the members.<br />Find the details behind your favorite moments.</p>
+        </div>
+        <div className="cinema-member-grid">
+          {members.map((member, index) => (
+            <motion.article
+              className="cinema-member"
+              key={member.id}
+              initial={false}
+              whileInView={motionEnabled ? { y: [18, 0] } : undefined}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.7, delay: index * 0.055, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <Link to={`/member/${member.id}`} aria-label={`Explore ${member.name}'s profile`}>
+                <div className="cinema-member-image">
+                  <ResponsiveMemberImage
+                    src={member.photoUrl || member.backupPhotoUrl}
+                    alt={member.name}
+                    sizes="(max-width: 600px) 45vw, (max-width: 1000px) 29vw, 16vw"
+                    style={{ objectPosition: `${member.photoObjectPositionX ?? 50}% ${member.photoObjectPositionY ?? 50}%` }}
+                  />
+                </div>
+                <div className="cinema-member-name"><h3>{member.name}</h3><ArrowForwardIcon aria-hidden="true" /></div>
+                <p>{member.tagline}</p>
+              </Link>
+            </motion.article>
+          ))}
+        </div>
+        <div className="cinema-orbit-bar">
+          <p>A different way to meet the members.</p>
+          <button type="button" className="cinema-text-link" aria-expanded={orbitOpen} aria-controls="member-orbit" onClick={() => setOrbitOpen((open) => !open)}>
+            {orbitOpen ? "Close the 3D universe" : "Enter the 3D universe"} <ArrowForwardIcon aria-hidden="true" />
+          </button>
+        </div>
+        <div id="member-orbit">
+          {orbitOpen && (
+            <Suspense fallback={<div className="cinema-orbit-loading" role="status">Opening the IVE universe…</div>}>
+              <MemberUniverseSection members={members} onSelectMember={(id) => navigate(`/member/${id}`)} motionPaused={!motionEnabled} />
+            </Suspense>
+          )}
+        </div>
+      </section>
+
+      <section className="cinema-moments cinema-section" aria-labelledby="moments-title">
+        <div className="cinema-moments-copy">
+          <h2 id="moments-title">CLOSE TO<br /><span>THE MOMENT.</span></h2>
+          <p>Small gestures. Familiar faces. Memories from Manila, captured by a fellow DIVE.</p>
+          <p className="cinema-contributor">Through the lens of <a href={photographer.profileUrl} target="_blank" rel="noopener noreferrer">@GrantSor <ExternalLinkIcon aria-hidden="true" /></a></p>
+          <Link to="/photo-gallery" className="cinema-button">Open the photo gallery <ArrowForwardIcon aria-hidden="true" /></Link>
+        </div>
+        <div className="cinema-moments-photos">
+          {[fanPhotos[3], fanPhotos[2]].map((photo) => (
+            <figure key={photo.id}>
+              <Link to="/photo-gallery" aria-label={`Explore the gallery featuring ${photo.members.join(" and ")}`}>
+                <FanPhoto photo={photo} sizes="(max-width: 600px) 45vw, 25vw" />
+              </Link>
+              <figcaption>
+                <span>{photo.members.join(" & ")}</span>
+                <a href={photo.postUrl} target="_blank" rel="noopener noreferrer">© GrantSor · Original post <ExternalLinkIcon aria-hidden="true" /></a>
+                <span>Used with permission</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <section className="cinema-community cinema-section" aria-labelledby="community-title">
+        <div className="cinema-section-heading">
+          <h2 id="community-title">STAY IN<br /><span>IVE’S WORLD.</span></h2>
+          <p>A little closer, every day.<br />Explore more of your fan community.</p>
+        </div>
+        <div className="cinema-experience-list">
+          {experiences.map((experience) => (
+            <Link key={experience.to} to={experience.to} className="cinema-experience">
+              <h3>{experience.title}</h3>
+              <p>{experience.detail}</p>
+              <span>{experience.action} <ArrowForwardIcon aria-hidden="true" /></span>
+            </Link>
+          ))}
+        </div>
+        <div className="cinema-closing"><span>Always IVE.<br />Always DIVE.</span><Link to="/about">About this fan project <ArrowForwardIcon aria-hidden="true" /></Link></div>
+      </section>
+    </div>
+  );
+}

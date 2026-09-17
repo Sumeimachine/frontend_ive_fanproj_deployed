@@ -53,8 +53,8 @@ export default function PhotoJournal() {
     >
       <div className="journal-section-heading">
         <div>
-          <p className="journal-kicker">Through a DIVE’s lens</p>
-          <h2 id="photo-journal-title">Manila moments</h2>
+          <p className="journal-kicker">The Manila collection</p>
+          <h2 id="photo-journal-title">Manila, in focus.</h2>
         </div>
         <p>
           IVE Switch Manila fansign · July 12, 2024.
@@ -171,15 +171,21 @@ export default function PhotoJournal() {
         isCentered
         scrollBehavior="inside"
       >
-        <ModalOverlay bg="blackAlpha.800" />
+        <ModalOverlay bg="rgba(0, 0, 0, 0.88)" backdropFilter="blur(8px)" />
         <ModalContent
           className="journal-viewer"
-          bg="#1A1630"
-          color="white"
+          bg="#121217"
+          color="#f6f3f5"
           mx={4}
           onKeyDown={handleViewerKeyDown}
         >
-          <ModalHeader pr={14}>{activePhoto?.title ?? "Fan photo"}</ModalHeader>
+          <ModalHeader
+            pr={14}
+            fontWeight={500}
+            fontSize={{ base: "lg", md: "xl" }}
+          >
+            {activePhoto?.title ?? "Fan photo"}
+          </ModalHeader>
           <ModalCloseButton
             ref={closeButtonRef}
             aria-label="Close photo viewer"

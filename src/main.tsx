@@ -3,10 +3,15 @@ import ReactDOM from "react-dom/client";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { MotionConfig } from "framer-motion";
 import App from "./App";
 import "./index.css";
 
 const theme = extendTheme({
+  fonts: {
+    body: '"Manrope", system-ui, sans-serif',
+    heading: '"Oswald", sans-serif',
+  },
   styles: {
     global: {
       "input::placeholder, textarea::placeholder": {
@@ -116,7 +121,9 @@ const theme = extendTheme({
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <App />
+      <MotionConfig reducedMotion="user">
+        <App />
+      </MotionConfig>
       <Analytics />
       <SpeedInsights />
     </ChakraProvider>

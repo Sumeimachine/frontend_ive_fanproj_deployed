@@ -1,0 +1,144 @@
+.ive-shell {
+  min-height: 100vh;
+  color: #f6f3f5;
+  background: #0a0a0e;
+}
+
+.ive-shell-skip {
+  position: fixed;
+  top: 10px;
+  left: 16px;
+  z-index: 1500;
+  padding: 12px 18px;
+  background: #f6f3f5;
+  color: #0a0a0e;
+  transform: translateY(-160%);
+}
+
+.ive-shell-skip:focus { transform: translateY(0); }
+
+.ive-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 10, 14, .94);
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.ive-shell-header-inner {
+  min-height: 88px;
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: 0 clamp(22px, 4vw, 72px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: clamp(20px, 3vw, 54px);
+}
+
+.ive-shell-brand { display: inline-flex; align-items: center; gap: 20px; width: fit-content; }
+.ive-shell-monogram { font-family: "Oswald", sans-serif; font-size: 39px; font-weight: 600; line-height: 1; letter-spacing: -.075em; }
+.ive-shell-monogram > span { color: #ef9cc2; font-family: sans-serif; font-size: 30px; padding-left: 2px; }
+.ive-shell-brand-caption { display: grid; gap: 5px; font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; }
+.ive-shell-brand-caption > span { color: #b5afb8; font-size: 8px; font-weight: 400; letter-spacing: .035em; }
+.ive-shell-desktop-nav { display: flex; align-items: center; gap: clamp(20px, 2.2vw, 36px); height: 88px; }
+.ive-shell-nav-link { position: relative; display: inline-flex; height: 100%; align-items: center; color: #b5afb8; font-size: 12px; font-weight: 500; white-space: nowrap; transition: color 160ms ease; }
+.ive-shell-nav-link::after { content: ""; position: absolute; height: 2px; left: 0; right: 0; bottom: -1px; background: #ef9cc2; transform: scaleX(0); transform-origin: left; transition: transform 180ms cubic-bezier(.23, 1, .32, 1); }
+.ive-shell-nav-link[aria-current], .ive-shell-nav-link.is-active { color: #f6f3f5; }
+.ive-shell-nav-link[aria-current]::after, .ive-shell-nav-link.is-active::after { transform: scaleX(1); }
+.ive-shell-explore span { display: inline-flex; align-items: center; gap: 7px; }
+.ive-shell-header-actions { display: flex; align-items: center; justify-content: flex-end; min-width: 0; }
+.ive-shell-desktop-account { min-width: 0; }
+.ive-shell-join { display: inline-flex; align-items: center; justify-content: center; gap: 20px; min-height: 42px; padding: 0 19px; border: 1px solid rgba(255, 255, 255, .3); color: #f6f3f5; font-size: 11px; font-weight: 600; transition: background 180ms ease, border-color 180ms ease; }
+.ive-shell-account-button { display: inline-flex; align-items: center; gap: 10px; max-width: 200px; min-height: 44px; color: #f6f3f5; font-size: 12px; }
+.ive-shell-account-button > span { display: inline-flex; align-items: center; gap: 10px; }
+.ive-shell-account-initial { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.22); border-radius: 50%; color: #ef9cc2; flex-shrink: 0; font-size: 11px; }
+.ive-shell-account-name { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ive-shell-mobile-toggle { display: none; align-items: center; justify-content: center; flex-direction: column; gap: 6px; width: 44px; height: 44px; }
+.ive-shell-mobile-toggle > span { width: 22px; height: 1px; background: #f6f3f5; }
+.ive-shell-main { min-width: 0; min-height: 60vh; outline: none; }
+.ive-shell-main:focus-visible { outline: 2px solid #ef9cc2; outline-offset: -2px; }
+
+.ive-shell-menu { font-family: "Manrope", sans-serif; }
+.ive-shell-menu-label { display: block; padding: 10px 12px 8px; color: #b5afb8; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }
+.ive-shell-menu-link { min-height: 40px; font-size: 12px; border-radius: 3px; }
+.ive-shell-menu-link[aria-current] { color: #ef9cc2; background: rgba(239,156,194,.07); }
+.ive-shell-menu-arrow { margin-left: auto; }
+.ive-shell-account-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px; }
+.ive-shell-account-heading strong { font-size: 13px; overflow-wrap: anywhere; }
+.ive-shell-account-heading > span { font-size: 10px; color: #b5afb8; }
+.ive-shell-points { display: flex; flex-direction: column; gap: 10px; margin: 4px; padding: 16px; border: 1px solid rgba(255,255,255,.14); }
+.ive-shell-eyebrow { color: #b5afb8; text-transform: uppercase; letter-spacing: .12em; font-size: 9px; }
+.ive-shell-points strong { font-size: 27px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.ive-shell-points strong > span { font-size: 11px; color: #b5afb8; }
+.ive-shell-reward-state { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; color: #ef9cc2; }
+.ive-shell-reward-state > span { width: 4px; height: 4px; background: currentColor; border-radius: 50%; }
+.ive-shell-reward-state[data-claimed="true"] { color: #afd5bc; }
+.ive-shell-points p { font-size: 10px; color: #b5afb8; line-height: 1.6; max-width: 200px; }
+
+.ive-shell-footer { padding: 58px clamp(22px, 5vw, 80px) 26px; border-top: 1px solid rgba(255,255,255,.14); background: #0a0a0e; }
+.ive-shell-footer-top { max-width: 1440px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 32px; padding-bottom: 40px; }
+.ive-shell-footer-wordmark { font-family: "Oswald", sans-serif; font-size: clamp(30px, 4vw, 58px); line-height: 1.1; letter-spacing: -.02em; font-weight: 500; }
+.ive-shell-footer-wordmark > span { color: #ef9cc2; font-family: "Manrope", sans-serif; margin-left: 20px; font-size: .7em; }
+.ive-shell-footer-top p { color: #b5afb8; font-size: 12px; line-height: 1.9; }
+.ive-shell-footer-bottom { max-width: 1440px; margin: 0 auto; padding-top: 25px; border-top: 1px solid rgba(255,255,255,.14); display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; }
+.ive-shell-footer-bottom p { font-size: 9px; line-height: 1.9; color: #b5afb8; }
+.ive-shell-footer-bottom nav { display: flex; gap: 24px; flex-wrap: wrap; }
+.ive-shell-footer-bottom nav a, .ive-shell-footer-signoff { color: #b5afb8; font-size: 9px; }
+.ive-shell-footer-signoff { white-space: nowrap; }
+.ive-shell-footer-signoff > span { color: #ef9cc2; margin-left: 8px; }
+
+.ive-shell-drawer { font-family: "Manrope", sans-serif; }
+.ive-shell-drawer-heading { font-family: "Oswald", sans-serif; letter-spacing: .03em; }
+.ive-shell-mobile-nav { display: grid; margin-top: 12px; }
+.ive-shell-mobile-nav > a { display: flex; align-items: center; justify-content: space-between; min-height: 68px; border-bottom: 1px solid rgba(255,255,255,.14); font-family: "Oswald", sans-serif; font-size: 31px; font-weight: 400; }
+.ive-shell-mobile-nav > a > span { font-family: "Manrope", sans-serif; color: #b5afb8; font-size: 10px; }
+.ive-shell-mobile-nav > a[aria-current], .ive-shell-mobile-nav > a.is-active, .ive-shell-mobile-explore > a[aria-current] { color: #ef9cc2; }
+.ive-shell-mobile-label { display: block; margin: 30px 0 10px; font-size: 9px; color: #b5afb8; text-transform: uppercase; letter-spacing: .15em; }
+.ive-shell-mobile-explore { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
+.ive-shell-mobile-explore > a { display: flex; align-items: center; min-height: 42px; font-size: 12px; }
+.ive-shell-mobile-account { margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.14); }
+.ive-shell-mobile-account .ive-shell-account-heading { padding: 0 0 14px; }
+.ive-shell-mobile-account .ive-shell-points { margin: 0; }
+.ive-shell-mobile-account .ive-shell-join { display: flex; min-height: 48px; }
+.ive-shell-mobile-logout { display: flex; justify-content: space-between; align-items: center; min-height: 48px; width: 100%; font-size: 12px; margin-top: 8px; }
+
+.ive-shell a:focus-visible, .ive-shell button:focus-visible, .ive-shell-drawer a:focus-visible, .ive-shell-drawer button:focus-visible { outline: 2px solid #ef9cc2; outline-offset: 5px; }
+
+@media (hover: hover) and (pointer: fine) {
+  .ive-shell-nav-link:hover { color: #f6f3f5; }
+  .ive-shell-join:hover { border-color: #ef9cc2; background: rgba(239,156,194,.06); }
+  .ive-shell-footer a:hover { color: #ef9cc2; }
+}
+
+@media (max-width: 1199px) {
+  .ive-shell-brand-caption { display: none; }
+  .ive-shell-header-inner { gap: 24px; }
+}
+
+@media (max-width: 799px) {
+  .ive-shell-header-inner { min-height: 72px; display: flex; justify-content: space-between; padding: 0 20px; }
+  .ive-shell-monogram { font-size: 34px; }
+  .ive-shell-brand { gap: 16px; }
+  .ive-shell-brand-caption { display: grid; font-size: 9px; }
+  .ive-shell-brand-caption > span { font-size: 7px; }
+  .ive-shell-desktop-nav, .ive-shell-desktop-account { display: none; }
+  .ive-shell-mobile-toggle { display: flex; }
+  .ive-shell-footer { padding-top: 38px; }
+  .ive-shell-footer-top { align-items: flex-start; padding-bottom: 30px; }
+  .ive-shell-footer-top p { font-size: 10px; }
+  .ive-shell-footer-bottom { flex-wrap: wrap; gap: 22px; }
+  .ive-shell-footer-bottom p { width: 100%; }
+  .ive-shell-footer-bottom nav { gap: 18px; }
+}
+
+@media (max-width: 480px) {
+  .ive-shell-footer-top { flex-direction: column; gap: 20px; }
+  .ive-shell-footer-signoff { display: block; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ive-shell-nav-link, .ive-shell-nav-link::after, .ive-shell-join { transition: none; }
+}

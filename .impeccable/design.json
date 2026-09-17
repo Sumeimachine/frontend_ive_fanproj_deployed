@@ -1,0 +1,320 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-17T02:01:15.688Z",
+  "title": "Design System: Dive Into IVE PH",
+  "extensions": {
+    "colorMeta": {
+      "stage-black": {
+        "role": "neutral",
+        "displayName": "Stage Black",
+        "canonical": "#0a0a0e",
+        "tonalRamp": [
+          "oklch(15% 0.009 285)",
+          "oklch(26% 0.009 285)",
+          "oklch(38% 0.009 285)",
+          "oklch(49% 0.009 285)",
+          "oklch(61% 0.009 285)",
+          "oklch(72% 0.009 285)",
+          "oklch(84% 0.009 285)",
+          "oklch(95% 0.009 285)"
+        ]
+      },
+      "stage-white": {
+        "role": "neutral",
+        "displayName": "Stage White",
+        "canonical": "#f6f3f5",
+        "tonalRamp": [
+          "oklch(15% 0.005 330)",
+          "oklch(26% 0.005 330)",
+          "oklch(38% 0.005 330)",
+          "oklch(49% 0.005 330)",
+          "oklch(61% 0.005 330)",
+          "oklch(72% 0.005 330)",
+          "oklch(84% 0.005 330)",
+          "oklch(95% 0.005 330)"
+        ]
+      },
+      "stage-muted": {
+        "role": "neutral",
+        "displayName": "Stage Muted",
+        "canonical": "#b5afb8",
+        "tonalRamp": [
+          "oklch(15% 0.013 315)",
+          "oklch(26% 0.013 315)",
+          "oklch(38% 0.013 315)",
+          "oklch(49% 0.013 315)",
+          "oklch(61% 0.013 315)",
+          "oklch(72% 0.013 315)",
+          "oklch(84% 0.013 315)",
+          "oklch(95% 0.013 315)"
+        ]
+      },
+      "stage-pink": {
+        "role": "primary",
+        "displayName": "Stage Pink",
+        "canonical": "#ef9cc2",
+        "tonalRamp": [
+          "oklch(15% 0.09 348)",
+          "oklch(26% 0.09 348)",
+          "oklch(38% 0.09 348)",
+          "oklch(49% 0.09 348)",
+          "oklch(61% 0.09 348)",
+          "oklch(72% 0.09 348)",
+          "oklch(84% 0.09 348)",
+          "oklch(95% 0.09 348)"
+        ]
+      },
+      "stage-pink-hover": {
+        "role": "primary",
+        "displayName": "Stage Pink Hover",
+        "canonical": "#f5bad7",
+        "tonalRamp": [
+          "oklch(15% 0.07 347)",
+          "oklch(26% 0.07 347)",
+          "oklch(38% 0.07 347)",
+          "oklch(49% 0.07 347)",
+          "oklch(61% 0.07 347)",
+          "oklch(72% 0.07 347)",
+          "oklch(84% 0.07 347)",
+          "oklch(95% 0.07 347)"
+        ]
+      },
+      "button-ink": {
+        "role": "neutral",
+        "displayName": "Button Ink",
+        "canonical": "#151017",
+        "tonalRamp": [
+          "oklch(15% 0.015 320)",
+          "oklch(26% 0.015 320)",
+          "oklch(38% 0.015 320)",
+          "oklch(49% 0.015 320)",
+          "oklch(61% 0.015 320)",
+          "oklch(72% 0.015 320)",
+          "oklch(84% 0.015 320)",
+          "oklch(95% 0.015 320)"
+        ]
+      },
+      "photo-frame": {
+        "role": "neutral",
+        "displayName": "Photo Frame",
+        "canonical": "#111015",
+        "tonalRamp": [
+          "oklch(15% 0.012 294)",
+          "oklch(26% 0.012 294)",
+          "oklch(38% 0.012 294)",
+          "oklch(49% 0.012 294)",
+          "oklch(61% 0.012 294)",
+          "oklch(72% 0.012 294)",
+          "oklch(84% 0.012 294)",
+          "oklch(95% 0.012 294)"
+        ]
+      },
+      "viewer-surface": {
+        "role": "neutral",
+        "displayName": "Viewer Surface",
+        "canonical": "#121217",
+        "tonalRamp": [
+          "oklch(15% 0.012 285)",
+          "oklch(26% 0.012 285)",
+          "oklch(38% 0.012 285)",
+          "oklch(49% 0.012 285)",
+          "oklch(61% 0.012 285)",
+          "oklch(72% 0.012 285)",
+          "oklch(84% 0.012 285)",
+          "oklch(95% 0.012 285)"
+        ]
+      },
+      "stage-line": {
+        "role": "neutral",
+        "displayName": "Stage Line",
+        "canonical": "rgba(246, 243, 245, 0.16)",
+        "tonalRamp": [
+          "oklch(15% 0.005 330)",
+          "oklch(26% 0.005 330)",
+          "oklch(38% 0.005 330)",
+          "oklch(49% 0.005 330)",
+          "oklch(61% 0.005 330)",
+          "oklch(72% 0.005 330)",
+          "oklch(84% 0.005 330)",
+          "oklch(95% 0.005 330)"
+        ]
+      },
+      "shell-line": {
+        "role": "neutral",
+        "displayName": "Shell Line",
+        "canonical": "rgba(255, 255, 255, 0.14)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "gallery-line": {
+        "role": "neutral",
+        "displayName": "Gallery Line",
+        "canonical": "#ffffff24",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(26% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(49% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(72% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Home Display",
+        "purpose": "Large Oswald homepage title; mobile sizes are component-specific."
+      },
+      "gallery-display": {
+        "displayName": "Archive Display",
+        "purpose": "Two-line uppercase photographic archive title."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "Home member, moments and community headings."
+      },
+      "body": {
+        "displayName": "Reading",
+        "purpose": "Manrope body copy with relaxed leading."
+      },
+      "navigation": {
+        "displayName": "Navigation",
+        "purpose": "Desktop navigation and route controls."
+      },
+      "label": {
+        "displayName": "Archive Label",
+        "purpose": "Tracked uppercase gallery section labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "feature-photograph",
+        "value": "0 28px 70px rgba(0,0,0,0.28)",
+        "purpose": "Structural depth under the home feature frame."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-feedback",
+        "value": "160ms–180ms ease",
+        "purpose": "Filter, button and navigation hover/press feedback."
+      },
+      {
+        "name": "navigation-underline",
+        "value": "180ms cubic-bezier(.23, 1, .32, 1)",
+        "purpose": "Current-destination underline."
+      },
+      {
+        "name": "member-hover",
+        "value": "500ms cubic-bezier(0.22,1,0.36,1)",
+        "purpose": "Small portrait enlargement for fine-pointer hover only; not applied to GrantSor photos."
+      },
+      {
+        "name": "member-reveal",
+        "value": "0.7s cubic-bezier(0.22,1,0.36,1); stagger 0.055s",
+        "purpose": "Once-in-view member entrance; disabled when home motion is off."
+      },
+      {
+        "name": "gallery-entry",
+        "value": "0.55s cubic-bezier(0.22,1,0.36,1); feature delay 0.1s",
+        "purpose": "Archive header and feature entry; reduced motion uses immediate visible content."
+      },
+      {
+        "name": "stage-light",
+        "value": "14s ease-in-out infinite alternate",
+        "purpose": "Very low-opacity ambient stage beams controlled by Pause motion, reduced-motion and reduced-data preferences."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "home-large",
+        "value": "min-width: 1600px"
+      },
+      {
+        "name": "shell-caption",
+        "value": "max-width: 1199px"
+      },
+      {
+        "name": "gallery-two-columns",
+        "value": "max-width: 1100px"
+      },
+      {
+        "name": "home-three-members",
+        "value": "max-width: 1000px"
+      },
+      {
+        "name": "home-single-column",
+        "value": "max-width: 800px"
+      },
+      {
+        "name": "shell-mobile",
+        "value": "max-width: 799px"
+      },
+      {
+        "name": "gallery-stacked-feature",
+        "value": "max-width: 760px"
+      },
+      {
+        "name": "home-two-members-gallery-one-column",
+        "value": "max-width: 600px"
+      },
+      {
+        "name": "footer-stack",
+        "value": "max-width: 480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled pink action used to explore the site.",
+      "html": "<a class=\"ds-primary\" href=\"/photo-gallery\">Explore the photographs <svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></a>",
+      "css": ".ds-primary{font-family:Manrope,system-ui,sans-serif;display:inline-flex;align-items:center;justify-content:space-between;gap:30px;min-height:52px;padding:16px 22px;background:#ef9cc2;color:#151017;border:1px solid #ef9cc2;border-radius:3px;font-size:12px;font-weight:800;text-decoration:none;transition:background 180ms ease,transform 180ms ease}.ds-primary:hover{background:#f5bad7}.ds-primary:active{transform:scale(.98)}.ds-primary:focus-visible{outline:2px solid #ef9cc2;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Desktop navigation",
+      "kind": "nav",
+      "refersTo": "navigation-link",
+      "description": "Quiet links with a pink active underline.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Example site navigation\"><a href=\"/\">Home</a><a href=\"/photo-gallery\" aria-current=\"page\">Photo Gallery</a></nav>",
+      "css": ".ds-nav{font-family:Manrope,system-ui,sans-serif;display:flex;gap:28px;height:88px;background:#0a0a0e;border-bottom:1px solid rgba(255,255,255,.14);padding:0 20px}.ds-nav a{position:relative;display:inline-flex;align-items:center;color:#b5afb8;font-size:12px;font-weight:500;text-decoration:none;transition:color 160ms ease}.ds-nav a::after{content:\"\";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#ef9cc2;transform:scaleX(0);transform-origin:left;transition:transform 180ms cubic-bezier(.23,1,.32,1)}.ds-nav a[aria-current]{color:#f6f3f5}.ds-nav a[aria-current]::after{transform:scaleX(1)}.ds-nav a:hover{color:#f6f3f5}.ds-nav a:focus-visible{outline:2px solid #ef9cc2;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-nav a,.ds-nav a::after{transition:none}}"
+    },
+    {
+      "name": "Photo filters",
+      "kind": "chip",
+      "refersTo": "photo-filter-selected",
+      "description": "Member filters use a pink selected state and 44px targets; this snippet previews the states.",
+      "html": "<div class=\"ds-filters\" role=\"group\" aria-label=\"Example member filters\"><button type=\"button\" aria-pressed=\"true\">All photos</button><button type=\"button\" aria-pressed=\"false\">Yujin</button><button type=\"button\" aria-pressed=\"false\">Gaeul</button></div>",
+      "css": ".ds-filters{display:flex;flex-wrap:wrap;gap:6px}.ds-filters button{font-family:Manrope,system-ui,sans-serif;min-height:44px;padding:10px 16px;border:1px solid transparent;border-radius:3px;background:transparent;color:#b5afb8;font-size:12px;font-weight:600;cursor:pointer;transition:background-color 160ms ease,color 160ms ease,transform 160ms ease}.ds-filters button[aria-pressed=\"true\"]{background:#ef9cc2;color:#191018}.ds-filters button:hover:not([aria-pressed=\"true\"]){background:#ffffff0d;color:#f6f3f5}.ds-filters button:active{transform:scale(.97)}.ds-filters button:focus-visible{outline:2px solid #ef9cc2;outline-offset:5px}@media(prefers-reduced-motion:reduce){.ds-filters button{transition:none}}"
+    },
+    {
+      "name": "Community destination",
+      "kind": "card",
+      "description": "A spacious text row with a fine rule, taken from the home experience list.",
+      "html": "<a class=\"ds-experience\" href=\"/photo-gallery\"><h3>Photo gallery</h3><p>IVE moments through a fellow DIVE’s lens.</p><span>Explore <svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></span></a>",
+      "css": ".ds-experience{font-family:Manrope,system-ui,sans-serif;display:grid;grid-template-columns:1fr 1fr auto;align-items:center;gap:24px;padding:32px 0;border-block:1px solid rgba(246,243,245,.16);background:#0a0a0e;color:#f6f3f5;text-decoration:none;transition:background 220ms ease}.ds-experience h3{margin:0;font-family:Oswald,sans-serif;font-size:clamp(23px,2.4vw,36px);font-weight:500;line-height:1.3}.ds-experience p{margin:0;color:#b5afb8;font-size:12px;line-height:1.8}.ds-experience>span{display:flex;align-items:center;gap:20px;font-size:11px;color:#ef9cc2}.ds-experience:hover{background:#131116}.ds-experience:focus-visible{outline:2px solid #ef9cc2;outline-offset:5px}@media(max-width:600px){.ds-experience{grid-template-columns:1fr;gap:12px;padding:27px 0}}@media(prefers-reduced-motion:reduce){.ds-experience{transition:none}}"
+    },
+    {
+      "name": "Photographer credit note",
+      "kind": "custom",
+      "description": "Visible attribution and permission context accompanying the photo archive.",
+      "html": "<div class=\"ds-credit\"><span aria-hidden=\"true\">©</span><p>CTTO: all photos in this journal belong to GrantSor and are shared with permission for this non-commercial fan project. Original watermarks are preserved.</p><a href=\"https://x.com/GrantSor\" target=\"_blank\" rel=\"noopener noreferrer\">Visit @GrantSor ↗</a></div>",
+      "css": ".ds-credit{font-family:Manrope,system-ui,sans-serif;display:flex;align-items:center;flex-wrap:wrap;gap:24px;padding:28px 0;border-block:1px solid #ffffff24;background:#0a0a0e}.ds-credit>span{color:#ef9cc2;font-size:32px;font-weight:300}.ds-credit p{flex:1;min-width:180px;max-width:760px;margin:0;color:#b5afb8;font-size:12px;line-height:1.85}.ds-credit a{color:#ef9cc2;font-size:12px;font-weight:600;text-decoration:underline;text-underline-offset:4px}.ds-credit a:hover{color:#fff}.ds-credit a:focus-visible{outline:2px solid #ef9cc2;outline-offset:5px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Concert cinematic"
+  }
+}
