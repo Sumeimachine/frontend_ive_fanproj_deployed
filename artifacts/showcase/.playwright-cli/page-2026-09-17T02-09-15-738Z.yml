@@ -1,0 +1,305 @@
+- generic [ref=e1]:
+  - generic [ref=e240]:
+    - link "Skip to content" [ref=e241] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e242]:
+      - generic [ref=e243]:
+        - link "DIVE INTO IVE home" [ref=e244] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=e245]: IVE•
+          - generic [ref=e246]:
+            - text: DIVE INTO IVE
+            - generic [ref=e247]: A Philippine fan community
+        - navigation "Main navigation" [ref=e248]:
+          - link "Home" [ref=e249] [cursor=pointer]:
+            - /url: /
+          - link "Members" [ref=e250] [cursor=pointer]:
+            - /url: /#members
+          - link "Photo gallery" [ref=e251] [cursor=pointer]:
+            - /url: /photo-gallery
+          - button "Explore" [active] [ref=e252] [cursor=pointer]
+        - button "SumiTest" [ref=e255] [cursor=pointer]:
+          - generic:
+            - generic [aria-hidden]: S
+            - generic: SumiTest
+    - main [ref=e256]:
+      - generic [ref=e1776]:
+        - generic [ref=e1777]:
+          - generic [ref=e1778]:
+            - paragraph [ref=e1779]: IVE quiz stage
+            - heading "Dive Into IVE" [level=2] [ref=e1780]
+            - paragraph [ref=e1781]: First quiz dry run for the website!
+            - generic [ref=e1782]:
+              - generic [ref=e1783]: Graded
+              - generic [ref=e1784]: daily
+              - generic [ref=e1785]: Retake mode
+          - generic [ref=e1787]:
+            - generic [ref=e1788]:
+              - generic [ref=e1789]:
+                - paragraph [ref=e1790]: Progress
+                - paragraph [ref=e1791]: 0/15
+              - generic [ref=e1792]:
+                - progressbar
+            - generic [ref=e1793]:
+              - generic [ref=e1794]:
+                - paragraph [ref=e1795]: Max Score
+                - paragraph [ref=e1796]: "15"
+              - generic [ref=e1797]:
+                - paragraph [ref=e1798]: Attempts
+                - paragraph [ref=e1799]: "1"
+            - paragraph [ref=e1800]: "Active until: Oct 27, 2026, 12:00 AM"
+        - alert [ref=e1801]: You already completed this quiz once. You can retake for fun, but score and rewards are locked after the first counted attempt.
+        - generic [ref=e1805]:
+          - generic [ref=e1806]:
+            - generic [ref=e1807]:
+              - generic [ref=e1808]:
+                - paragraph [ref=e1809]: Question 1
+                - heading "What does IVE stand for?" [level=2] [ref=e1810]
+              - generic [ref=e1811]: 1 pt
+            - generic [ref=e1812]:
+              - button [ref=e1813] [cursor=pointer]:
+                - paragraph [ref=e1815]: I Value Everything
+              - button [ref=e1816] [cursor=pointer]:
+                - paragraph [ref=e1818]: I Have
+              - button [ref=e1819] [cursor=pointer]:
+                - paragraph [ref=e1821]: Idol Vision Energy
+              - button [ref=e1822] [cursor=pointer]:
+                - paragraph [ref=e1824]: International Vocal Elite
+          - generic [ref=e1825]:
+            - generic [ref=e1826]:
+              - generic [ref=e1827]:
+                - paragraph [ref=e1828]: Question 2
+                - heading "Which company manages IVE?" [level=2] [ref=e1829]
+              - generic [ref=e1830]: 1 pt
+            - generic [ref=e1831]:
+              - button [ref=e1832] [cursor=pointer]:
+                - paragraph [ref=e1834]: HYBE
+              - button [ref=e1835] [cursor=pointer]:
+                - paragraph [ref=e1837]: JYP
+              - button [ref=e1838] [cursor=pointer]:
+                - paragraph [ref=e1840]: Starship Entertainment
+              - button [ref=e1841] [cursor=pointer]:
+                - paragraph [ref=e1843]: YG
+          - generic [ref=e1844]:
+            - generic [ref=e1845]:
+              - generic [ref=e1846]:
+                - paragraph [ref=e1847]: Question 3
+                - heading "How many members are in IVE?" [level=2] [ref=e1848]
+              - generic [ref=e1849]: 1 pt
+            - generic [ref=e1850]:
+              - button [ref=e1851] [cursor=pointer]:
+                - paragraph [ref=e1853]: "5"
+              - button [ref=e1854] [cursor=pointer]:
+                - paragraph [ref=e1856]: "6"
+              - button [ref=e1857] [cursor=pointer]:
+                - paragraph [ref=e1859]: "4"
+              - button [ref=e1860] [cursor=pointer]:
+                - paragraph [ref=e1862]: "9"
+          - generic [ref=e1863]:
+            - generic [ref=e1864]:
+              - generic [ref=e1865]:
+                - paragraph [ref=e1866]: Question 4
+                - heading "Which song is their debut track?" [level=2] [ref=e1867]
+              - generic [ref=e1868]: 1 pt
+            - generic [ref=e1869]:
+              - button [ref=e1870] [cursor=pointer]:
+                - paragraph [ref=e1872]: Love Dive
+              - button [ref=e1873] [cursor=pointer]:
+                - paragraph [ref=e1875]: Eleven
+              - button [ref=e1876] [cursor=pointer]:
+                - paragraph [ref=e1878]: After LIKE
+              - button [ref=e1879] [cursor=pointer]:
+                - paragraph [ref=e1881]: I AM
+          - generic [ref=e1882]:
+            - generic [ref=e1883]:
+              - generic [ref=e1884]:
+                - paragraph [ref=e1885]: Question 5
+                - heading "Who is the leader of IVE?" [level=2] [ref=e1886]
+              - generic [ref=e1887]: 1 pt
+            - generic [ref=e1888]:
+              - button [ref=e1889] [cursor=pointer]:
+                - paragraph [ref=e1891]: Wonyoung
+              - button [ref=e1892] [cursor=pointer]:
+                - paragraph [ref=e1894]: Rei
+              - button [ref=e1895] [cursor=pointer]:
+                - paragraph [ref=e1897]: An Yujin
+              - button [ref=e1898] [cursor=pointer]:
+                - paragraph [ref=e1900]: Liz
+              - button [ref=e1901] [cursor=pointer]:
+                - paragraph [ref=e1903]: Gaeul
+              - button [ref=e1904] [cursor=pointer]:
+                - paragraph [ref=e1906]: Leeseo
+          - generic [ref=e1907]:
+            - generic [ref=e1908]:
+              - generic [ref=e1909]:
+                - paragraph [ref=e1910]: Question 6
+                - heading "Which members were part of IZ*ONE?" [level=2] [ref=e1911]
+              - generic [ref=e1912]: 1 pt
+            - generic [ref=e1913]:
+              - button [ref=e1914] [cursor=pointer]:
+                - paragraph [ref=e1916]: Rei & Liz
+              - button [ref=e1917] [cursor=pointer]:
+                - paragraph [ref=e1919]: Gaeul & Leeseo
+              - button [ref=e1920] [cursor=pointer]:
+                - paragraph [ref=e1922]: Jang Wonyoung & An Yujin
+              - button [ref=e1923] [cursor=pointer]:
+                - paragraph [ref=e1925]: All members
+          - generic [ref=e1926]:
+            - generic [ref=e1927]:
+              - generic [ref=e1928]:
+                - paragraph [ref=e1929]: Question 7
+                - heading "Which song includes the line “Narcissistic, my god I love it”?" [level=2] [ref=e1930]
+              - generic [ref=e1931]: 1 pt
+            - generic [ref=e1932]:
+              - button [ref=e1933] [cursor=pointer]:
+                - paragraph [ref=e1935]: Eleven
+              - button [ref=e1936] [cursor=pointer]:
+                - paragraph [ref=e1938]: Love Dive
+              - button [ref=e1939] [cursor=pointer]:
+                - paragraph [ref=e1941]: After LIKE
+              - button [ref=e1942] [cursor=pointer]:
+                - paragraph [ref=e1944]: Kitsch
+          - generic [ref=e1945]:
+            - generic [ref=e1946]:
+              - generic [ref=e1947]:
+                - paragraph [ref=e1948]: Question 8
+                - heading "Who is the Japanese member of IVE?" [level=2] [ref=e1949]
+              - generic [ref=e1950]: 1 pt
+            - generic [ref=e1951]:
+              - button [ref=e1952] [cursor=pointer]:
+                - paragraph [ref=e1954]: Liz
+              - button [ref=e1955] [cursor=pointer]:
+                - paragraph [ref=e1957]: Leeseo
+              - button [ref=e1958] [cursor=pointer]:
+                - paragraph [ref=e1960]: Rei
+              - button [ref=e1961] [cursor=pointer]:
+                - paragraph [ref=e1963]: Gaeul
+          - generic [ref=e1964]:
+            - generic [ref=e1965]:
+              - generic [ref=e1966]:
+                - paragraph [ref=e1967]: Question 9
+                - heading "Who is the maknae?" [level=2] [ref=e1968]
+              - generic [ref=e1969]: 1 pt
+            - generic [ref=e1970]:
+              - button [ref=e1971] [cursor=pointer]:
+                - paragraph [ref=e1973]: Liz
+              - button [ref=e1974] [cursor=pointer]:
+                - paragraph [ref=e1976]: Rei
+              - button [ref=e1977] [cursor=pointer]:
+                - paragraph [ref=e1979]: Gaeul
+              - button [ref=e1980] [cursor=pointer]:
+                - paragraph [ref=e1982]: Leeseo
+          - generic [ref=e1983]:
+            - generic [ref=e1984]:
+              - generic [ref=e1985]:
+                - paragraph [ref=e1986]: Question 10
+                - heading "Which IVE song samples a classic disco hit?" [level=2] [ref=e1987]
+              - generic [ref=e1988]: 1 pt
+            - generic [ref=e1989]:
+              - button [ref=e1990] [cursor=pointer]:
+                - paragraph [ref=e1992]: Love Dive
+              - button [ref=e1993] [cursor=pointer]:
+                - paragraph [ref=e1995]: Eleven
+              - button [ref=e1996] [cursor=pointer]:
+                - paragraph [ref=e1998]: After LIKE
+              - button [ref=e1999] [cursor=pointer]:
+                - paragraph [ref=e2001]: I AM
+          - generic [ref=e2002]:
+            - generic [ref=e2003]:
+              - generic [ref=e2004]:
+                - paragraph [ref=e2005]: Question 11
+                - heading "Who is known for her powerful vocals in IVE?" [level=2] [ref=e2006]
+              - generic [ref=e2007]: 1 pt
+            - generic [ref=e2008]:
+              - button [ref=e2009] [cursor=pointer]:
+                - paragraph [ref=e2011]: Gaeul
+              - button [ref=e2012] [cursor=pointer]:
+                - paragraph [ref=e2014]: Liz
+              - button [ref=e2015] [cursor=pointer]:
+                - paragraph [ref=e2017]: Rei
+              - button [ref=e2018] [cursor=pointer]:
+                - paragraph [ref=e2020]: Leeseo
+          - generic [ref=e2021]:
+            - generic [ref=e2022]:
+              - generic [ref=e2023]:
+                - paragraph [ref=e2024]: Question 12
+                - heading "What is IVE’s fandom name?" [level=2] [ref=e2025]
+              - generic [ref=e2026]: 1 pt
+            - generic [ref=e2027]:
+              - button [ref=e2028] [cursor=pointer]:
+                - paragraph [ref=e2030]: STAY
+              - button [ref=e2031] [cursor=pointer]:
+                - paragraph [ref=e2033]: ONCE
+              - button [ref=e2034] [cursor=pointer]:
+                - paragraph [ref=e2036]: MY
+              - button [ref=e2037] [cursor=pointer]:
+                - paragraph [ref=e2039]: DIVE
+          - generic [ref=e2040]:
+            - generic [ref=e2041]:
+              - generic [ref=e2042]:
+                - paragraph [ref=e2043]: Question 13
+                - heading "Which member is known for her short hair and chic vibe?" [level=2] [ref=e2044]
+              - generic [ref=e2045]: 1 pt
+            - generic [ref=e2046]:
+              - button [ref=e2047] [cursor=pointer]:
+                - paragraph [ref=e2049]: Wonyoung
+              - button [ref=e2050] [cursor=pointer]:
+                - paragraph [ref=e2052]: Gaeul
+              - button [ref=e2053] [cursor=pointer]:
+                - paragraph [ref=e2055]: Liz
+              - button [ref=e2056] [cursor=pointer]:
+                - paragraph [ref=e2058]: Leeseo
+          - generic [ref=e2059]:
+            - generic [ref=e2060]:
+              - generic [ref=e2061]:
+                - paragraph [ref=e2062]: Question 14
+                - heading "Which song marked a more “confident/self-love” concept shift?" [level=2] [ref=e2063]
+              - generic [ref=e2064]: 1 pt
+            - generic [ref=e2065]:
+              - button [ref=e2066] [cursor=pointer]:
+                - paragraph [ref=e2068]: Eleven
+              - button [ref=e2069] [cursor=pointer]:
+                - paragraph [ref=e2071]: Love Dive
+              - button [ref=e2072] [cursor=pointer]:
+                - paragraph [ref=e2074]: I AM
+              - button [ref=e2075] [cursor=pointer]:
+                - paragraph [ref=e2077]: Take It
+          - generic [ref=e2078]:
+            - generic [ref=e2079]:
+              - generic [ref=e2080]:
+                - paragraph [ref=e2081]: Question 15
+                - heading "What year did IVE debut?" [level=2] [ref=e2082]
+              - generic [ref=e2083]: 1 pt
+            - generic [ref=e2084]:
+              - button [ref=e2085] [cursor=pointer]:
+                - paragraph [ref=e2087]: "2020"
+              - button [ref=e2088] [cursor=pointer]:
+                - paragraph [ref=e2090]: "2021"
+              - button [ref=e2091] [cursor=pointer]:
+                - paragraph [ref=e2093]: "2022"
+              - button [ref=e2094] [cursor=pointer]:
+                - paragraph [ref=e2096]: "2023"
+        - button "Retake Quiz (score locked)" [disabled] [ref=e2097]
+    - contentinfo [ref=e438]:
+      - generic [ref=e439]:
+        - link "DIVE INTO IVE" [ref=e440] [cursor=pointer]:
+          - /url: /
+          - text: DIVE INTO IVE↗
+        - paragraph [ref=e441]: For the music. For the moments.For every DIVE.
+      - generic [ref=e442]:
+        - paragraph [ref=e443]: An independent, non-commercial fan project in the Philippines.Not affiliated with IVE or Starship Entertainment.
+        - navigation "Footer navigation" [ref=e444]:
+          - link "About us" [ref=e445] [cursor=pointer]:
+            - /url: /about
+          - link "Photo credits & gallery" [ref=e446] [cursor=pointer]:
+            - /url: /photo-gallery
+          - link "Fan events" [ref=e447] [cursor=pointer]:
+            - /url: /fan-events
+        - generic [ref=e448]: Made for DIVE ✦
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

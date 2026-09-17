@@ -1,0 +1,169 @@
+- generic [ref=e1]:
+  - generic [ref=e240]:
+    - link "Skip to content" [ref=e241] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e242]:
+      - generic [ref=e243]:
+        - link "DIVE INTO IVE home" [ref=e244] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=e245]: IVE•
+          - generic [ref=e246]:
+            - text: DIVE INTO IVE
+            - generic [ref=e247]: A Philippine fan community
+        - navigation "Main navigation" [ref=e248]:
+          - link "Home" [ref=e249] [cursor=pointer]:
+            - /url: /
+          - link "Members" [ref=e250] [cursor=pointer]:
+            - /url: /#members
+          - link "Photo gallery" [active] [ref=e251] [cursor=pointer]:
+            - /url: /photo-gallery
+          - button "Explore" [ref=e252] [cursor=pointer]
+        - button "SumiTest" [ref=e255] [cursor=pointer]:
+          - generic:
+            - generic [aria-hidden]: S
+            - generic: SumiTest
+    - main [ref=e256]:
+      - generic [ref=e2301]:
+        - generic [ref=e2302]:
+          - generic [ref=e2303]:
+            - paragraph [ref=e2304]: The DIVE archive / Photography
+            - heading "Through a DIVE’s lens." [level=1] [ref=e2305]: Through aDIVE’s lens.
+          - generic [ref=e2306]:
+            - paragraph [ref=e2307]:
+              - text: The little moments that stay with us. IVE in Manila, as seen by
+              - link "@GrantSor ↗" [ref=e2308] [cursor=pointer]:
+                - /url: https://x.com/GrantSor
+              - text: .
+            - link "Explore the photographs" [ref=e2309] [cursor=pointer]:
+              - /url: "#photo-journal"
+              - text: Explore the photographs
+              - generic [aria-hidden] [ref=e2310]: ↓
+        - figure [ref=e2311]:
+          - img "Yujin and Gaeul posing back to back with red roses at the IVE Switch Manila fansign." [ref=e2313]
+          - generic [ref=e2314]:
+            - paragraph [ref=e2315]: Featured photograph / 01
+            - generic [ref=e2316]:
+              - heading "A moment between roses" [level=2] [ref=e2317]
+              - paragraph [ref=e2318]:
+                - text: IVE Switch Manila fansign
+                - time [ref=e2319]: July 12, 2024
+              - link "Photo © GrantSor View original post ↗" [ref=e2320] [cursor=pointer]:
+                - /url: https://x.com/GrantSor/status/1834259193140052360
+                - text: Photo © GrantSor
+                - generic [ref=e2321]: View original post ↗
+            - paragraph [ref=e2322]: Shared with permission.A non-commercial fan project.
+        - region [ref=e2323]:
+          - generic [ref=e2324]:
+            - generic [ref=e2325]:
+              - paragraph [ref=e2326]: The Manila collection
+              - heading "Manila, in focus." [level=2] [ref=e2327]
+            - paragraph [ref=e2328]:
+              - text: IVE Switch Manila fansign · July 12, 2024.Photographs by
+              - link "@GrantSor ↗︎" [ref=e2329] [cursor=pointer]:
+                - /url: https://x.com/GrantSor
+              - text: ", shared with permission."
+          - generic [ref=e2330]:
+            - group "Filter photos by member" [ref=e2331]:
+              - button "All photos" [pressed] [ref=e2332] [cursor=pointer]
+              - button "Yujin" [ref=e2333] [cursor=pointer]
+              - button "Gaeul" [ref=e2334] [cursor=pointer]
+              - button "Rei" [ref=e2335] [cursor=pointer]
+              - button "Wonyoung" [ref=e2336] [cursor=pointer]
+              - button "Liz" [ref=e2337] [cursor=pointer]
+              - button "Leeseo" [ref=e2338] [cursor=pointer]
+            - status [ref=e2339]: 6 photos · Manila
+          - generic [ref=e2340]:
+            - figure [ref=e2341]:
+              - button "View A little hello from Yujin full size" [ref=e2342]:
+                - img "Yujin holding up a peace sign in a white jacket at the IVE Switch Manila fansign." [ref=e2343]
+                - generic [aria-hidden]: ↗︎
+              - generic [ref=e2344]:
+                - generic [ref=e2345]:
+                  - heading "A little hello from Yujin" [level=3] [ref=e2346]
+                  - generic [aria-hidden] [ref=e2347]: "01"
+                - paragraph [ref=e2348]: IVE Switch Manila Fansign
+                - link "Photo © GrantSor · Original post ↗︎" [ref=e2349] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1812915914389782753
+            - figure [ref=e2350]:
+              - button "View Gaeul, with love full size" [ref=e2351]:
+                - img "Gaeul making half a heart beside her cheek at the IVE Switch Manila fansign." [ref=e2352]
+                - generic [aria-hidden]: ↗︎
+              - generic [ref=e2353]:
+                - generic [ref=e2354]:
+                  - heading "Gaeul, with love" [level=3] [ref=e2355]
+                  - generic [aria-hidden] [ref=e2356]: "02"
+                - paragraph [ref=e2357]: IVE Switch Manila Fansign
+                - link "Photo © GrantSor · Original post ↗︎" [ref=e2358] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1813755569389367604
+            - figure [ref=e2359]:
+              - button "View Double peace with Rei full size" [ref=e2360]:
+                - img "Rei posing with two peace signs beside her face at the IVE Switch Manila fansign." [ref=e2361]
+                - generic [aria-hidden]: ↗︎
+              - generic [ref=e2362]:
+                - generic [ref=e2363]:
+                  - heading "Double peace with Rei" [level=3] [ref=e2364]
+                  - generic [aria-hidden] [ref=e2365]: "03"
+                - paragraph [ref=e2366]: IVE Switch Manila Fansign
+                - link "Photo © GrantSor · Original post ↗︎" [ref=e2367] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1817003216644767860
+            - figure [ref=e2368]:
+              - button "View Wonyoung in bloom full size" [ref=e2369]:
+                - img "Wonyoung wearing a red flower crown at the IVE Switch Manila fansign." [ref=e2370]
+                - generic [aria-hidden]: ↗︎
+              - generic [ref=e2371]:
+                - generic [ref=e2372]:
+                  - heading "Wonyoung in bloom" [level=3] [ref=e2373]
+                  - generic [aria-hidden] [ref=e2374]: "04"
+                - paragraph [ref=e2375]: IVE Switch Manila Fansign
+                - link "Photo © GrantSor · Original post ↗︎" [ref=e2376] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1813008144957907421
+            - figure [ref=e2377]:
+              - button "View A little peace from Liz full size" [ref=e2378]:
+                - img "Liz holding a peace sign beside her face at the IVE Switch Manila fansign." [ref=e2379]
+                - generic [aria-hidden]: ↗︎
+              - generic [ref=e2380]:
+                - generic [ref=e2381]:
+                  - heading "A little peace from Liz" [level=3] [ref=e2382]
+                  - generic [aria-hidden] [ref=e2383]: "05"
+                - paragraph [ref=e2384]: IVE Switch Manila Fansign
+                - link "Photo © GrantSor · Original post ↗︎" [ref=e2385] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1815680808767865156
+            - figure [ref=e2386]:
+              - button "View Leeseo’s tiger moment full size" [ref=e2387]:
+                - img "Leeseo wearing a tiger-ear headband and playfully raising both hands at the IVE Switch Manila fansign." [ref=e2388]
+                - generic [aria-hidden]: ↗︎
+              - generic [ref=e2389]:
+                - generic [ref=e2390]:
+                  - heading "Leeseo’s tiger moment" [level=3] [ref=e2391]
+                  - generic [aria-hidden] [ref=e2392]: "06"
+                - paragraph [ref=e2393]: IVE Switch Manila Fansign
+                - link "Photo © GrantSor · Original post ↗︎" [ref=e2394] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1814674895223378300
+          - generic [ref=e2395]:
+            - generic [aria-hidden] [ref=e2396]: ©
+            - paragraph [ref=e2397]: "CTTO: all photos in this journal belong to GrantSor and are shared with permission for this non-commercial fan project. Original watermarks are preserved. Please credit the photographer when sharing."
+            - link "Visit @GrantSor ↗︎" [ref=e2398] [cursor=pointer]:
+              - /url: https://x.com/GrantSor
+    - contentinfo [ref=e438]:
+      - generic [ref=e439]:
+        - link "DIVE INTO IVE" [ref=e440] [cursor=pointer]:
+          - /url: /
+          - text: DIVE INTO IVE↗
+        - paragraph [ref=e441]: For the music. For the moments.For every DIVE.
+      - generic [ref=e442]:
+        - paragraph [ref=e443]: An independent, non-commercial fan project in the Philippines.Not affiliated with IVE or Starship Entertainment.
+        - navigation "Footer navigation" [ref=e444]:
+          - link "About us" [ref=e445] [cursor=pointer]:
+            - /url: /about
+          - link "Photo credits & gallery" [ref=e446] [cursor=pointer]:
+            - /url: /photo-gallery
+          - link "Fan events" [ref=e447] [cursor=pointer]:
+            - /url: /fan-events
+        - generic [ref=e448]: Made for DIVE ✦
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

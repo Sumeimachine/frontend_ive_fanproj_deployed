@@ -1,0 +1,177 @@
+- generic [ref=e1]:
+  - generic [ref=e240]:
+    - link "Skip to content" [ref=e241] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e242]:
+      - generic [ref=e243]:
+        - link "DIVE INTO IVE home" [ref=e244] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=e245]: IVE•
+          - generic [ref=e246]:
+            - text: DIVE INTO IVE
+            - generic [ref=e247]: A Philippine fan community
+        - navigation "Main navigation" [ref=e248]:
+          - link "Home" [active] [ref=e249] [cursor=pointer]:
+            - /url: /
+          - link "Members" [ref=e250] [cursor=pointer]:
+            - /url: /#members
+          - link "Photo gallery" [ref=e251] [cursor=pointer]:
+            - /url: /photo-gallery
+          - button "Explore" [ref=e252] [cursor=pointer]
+        - button "SumiTest" [ref=e255] [cursor=pointer]:
+          - generic:
+            - generic [aria-hidden]: S
+            - generic: SumiTest
+    - main [ref=e256]:
+      - generic [ref=e2399]:
+        - region [ref=e2400]:
+          - generic [ref=e2401]:
+            - generic [ref=e2402]: A home for Philippine DIVEs
+            - button "Pause motion" [ref=e2403] [cursor=pointer]
+          - generic [ref=e2408]:
+            - generic [ref=e2409]:
+              - heading "ALL IN. ALL IVE." [level=1] [ref=e2410]: ALL IN.ALL IVE.
+              - paragraph [ref=e2411]: For the songs on repeat.The moments we keep.And the six who bring us together.
+              - generic [ref=e2412]:
+                - link "Meet IVE" [ref=e2413] [cursor=pointer]:
+                  - /url: /#members
+                - link "Explore the gallery" [ref=e2416] [cursor=pointer]:
+                  - /url: /photo-gallery
+            - figure "Yujin & Gaeul IVE Switch Manila Fansign · July 12, 2024 Photo © GrantSor · Original post Used with permission" [ref=e2419]:
+              - img "Yujin and Gaeul posing back to back with red roses at the IVE Switch Manila fansign." [ref=e2421]
+              - generic [ref=e2422]:
+                - generic [ref=e2423]:
+                  - strong [ref=e2424]: Yujin & Gaeul
+                  - text: IVE Switch Manila Fansign · July 12, 2024
+                - link "Photo © GrantSor · Original post" [ref=e2425] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1834259193140052360
+                - generic [ref=e2431]: Used with permission
+          - generic [ref=e2432]:
+            - generic [ref=e2433]: Music. Moments. Community.
+            - link "Keep diving" [ref=e2434] [cursor=pointer]:
+              - /url: "#members"
+        - region [ref=e2437]:
+          - generic [ref=e2438]:
+            - heading "SIX STARS. ONE IVE." [level=2] [ref=e2439]: SIX STARS.ONE IVE.
+            - paragraph [ref=e2440]: Get to know the members.Find the details behind your favorite moments.
+          - generic [ref=e2441]:
+            - article [ref=e2442]:
+              - link "Explore Yujin's profile" [ref=e2443] [cursor=pointer]:
+                - /url: /member/yujin
+                - img "Yujin" [ref=e2446]
+                - heading "Yujin" [level=3] [ref=e2448]
+                - paragraph [ref=e2451]: Leader • Vocalist • Dancer • Charisma Core
+            - article [ref=e2452]:
+              - link "Explore Wonyoung's profile" [ref=e2453] [cursor=pointer]:
+                - /url: /member/wonyoung
+                - img "Wonyoung" [ref=e2456]
+                - heading "Wonyoung" [level=3] [ref=e2458]
+                - paragraph [ref=e2461]: Vocalist • Visual • Center • Elegance Icon
+            - article [ref=e2462]:
+              - link "Explore Liz's profile" [ref=e2463] [cursor=pointer]:
+                - /url: /member/liz
+                - img "Liz" [ref=e2466]
+                - heading "Liz" [level=3] [ref=e2468]
+                - paragraph [ref=e2471]: Main Vocal • Honey Tone
+            - article [ref=e2472]:
+              - link "Explore Gaeul's profile" [ref=e2473] [cursor=pointer]:
+                - /url: /member/gaeul
+                - img "Gaeul" [ref=e2476]
+                - heading "Gaeul" [level=3] [ref=e2478]
+                - paragraph [ref=e2481]: Main Dancer • Rapper • Chic Flow
+            - article [ref=e2482]:
+              - link "Explore Rei's profile" [ref=e2483] [cursor=pointer]:
+                - /url: /member/rei
+                - img "Rei" [ref=e2486]
+                - heading "Rei" [level=3] [ref=e2488]
+                - paragraph [ref=e2491]: Main Rapper • Sub Vocalist • Creative Spark
+            - article [ref=e2492]:
+              - link "Explore Leeseo's profile" [ref=e2493] [cursor=pointer]:
+                - /url: /member/leeseo
+                - img "Leeseo" [ref=e2496]
+                - heading "Leeseo" [level=3] [ref=e2498]
+                - paragraph [ref=e2501]: Maknae • Visual • Bright Power
+          - generic [ref=e2502]:
+            - paragraph [ref=e2503]: A different way to meet the members.
+            - button "Enter the 3D universe" [ref=e2504] [cursor=pointer]
+        - region [ref=e2507]:
+          - generic [ref=e2508]:
+            - heading "CLOSE TO THE MOMENT." [level=2] [ref=e2509]: CLOSE TOTHE MOMENT.
+            - paragraph [ref=e2510]: Small gestures. Familiar faces. Memories from Manila, captured by a fellow DIVE.
+            - paragraph [ref=e2511]:
+              - text: Through the lens of
+              - link "@GrantSor" [ref=e2512] [cursor=pointer]:
+                - /url: https://x.com/GrantSor
+            - link "Open the photo gallery" [ref=e2518] [cursor=pointer]:
+              - /url: /photo-gallery
+          - generic [ref=e2521]:
+            - figure "Wonyoung © GrantSor · Original post Used with permission" [ref=e2522]:
+              - link "Explore the gallery featuring Wonyoung" [ref=e2523] [cursor=pointer]:
+                - /url: /photo-gallery
+                - img "Wonyoung wearing a red flower crown at the IVE Switch Manila fansign." [ref=e2524]
+              - generic [ref=e2525]:
+                - generic [ref=e2526]: Wonyoung
+                - link "© GrantSor · Original post" [ref=e2527] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1813008144957907421
+                - generic [ref=e2533]: Used with permission
+            - figure "Rei © GrantSor · Original post Used with permission" [ref=e2534]:
+              - link "Explore the gallery featuring Rei" [ref=e2535] [cursor=pointer]:
+                - /url: /photo-gallery
+                - img "Rei posing with two peace signs beside her face at the IVE Switch Manila fansign." [ref=e2536]
+              - generic [ref=e2537]:
+                - generic [ref=e2538]: Rei
+                - link "© GrantSor · Original post" [ref=e2539] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1817003216644767860
+                - generic [ref=e2545]: Used with permission
+        - region [ref=e2546]:
+          - generic [ref=e2547]:
+            - heading "STAY IN IVE’S WORLD." [level=2] [ref=e2548]: STAY INIVE’S WORLD.
+            - paragraph [ref=e2549]: A little closer, every day.Explore more of your fan community.
+          - generic [ref=e2550]:
+            - link [ref=e2551] [cursor=pointer]:
+              - /url: /dashboard
+              - heading "Music, in numbers." [level=3] [ref=e2552]
+              - paragraph [ref=e2553]: Explore IVE’s YouTube momentum.
+              - generic [ref=e2554]: View the dashboard
+            - link [ref=e2557] [cursor=pointer]:
+              - /url: /quiz/daily
+              - heading "Make it a daily thing." [level=3] [ref=e2558]
+              - paragraph [ref=e2559]: Put your IVE knowledge to the test.
+              - generic [ref=e2560]: Play the daily quiz
+            - link [ref=e2563] [cursor=pointer]:
+              - /url: /fan-events
+              - heading "Find your fellow DIVEs." [level=3] [ref=e2564]
+              - paragraph [ref=e2565]: Discover community fan events.
+              - generic [ref=e2566]: Explore fan events
+            - link [ref=e2569] [cursor=pointer]:
+              - /url: /card-game
+              - heading "Your next favorite card." [level=3] [ref=e2570]
+              - paragraph [ref=e2571]: Step into the IVE card game.
+              - generic [ref=e2572]: Play the card game
+          - generic [ref=e2575]:
+            - generic [ref=e2576]: Always IVE.Always DIVE.
+            - link "About this fan project" [ref=e2577] [cursor=pointer]:
+              - /url: /about
+    - contentinfo [ref=e438]:
+      - generic [ref=e439]:
+        - link "DIVE INTO IVE" [ref=e440] [cursor=pointer]:
+          - /url: /
+          - text: DIVE INTO IVE↗
+        - paragraph [ref=e441]: For the music. For the moments.For every DIVE.
+      - generic [ref=e442]:
+        - paragraph [ref=e443]: An independent, non-commercial fan project in the Philippines.Not affiliated with IVE or Starship Entertainment.
+        - navigation "Footer navigation" [ref=e444]:
+          - link "About us" [ref=e445] [cursor=pointer]:
+            - /url: /about
+          - link "Photo credits & gallery" [ref=e446] [cursor=pointer]:
+            - /url: /photo-gallery
+          - link "Fan events" [ref=e447] [cursor=pointer]:
+            - /url: /fan-events
+        - generic [ref=e448]: Made for DIVE ✦
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

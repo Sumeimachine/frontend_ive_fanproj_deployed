@@ -1,0 +1,29 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e220]:
+    - generic [ref=e221]:
+      - heading "Account Access" [level=2] [ref=e222]
+      - paragraph [ref=e223]: Welcome back to IVE Neon Dimension.
+    - generic [ref=e224]:
+      - button "Login" [pressed] [ref=e225] [cursor=pointer]
+      - button "Register" [ref=e226] [cursor=pointer]
+      - button "Forgot" [ref=e227] [cursor=pointer]
+      - button "Resend Verify" [ref=e228] [cursor=pointer]
+    - paragraph [ref=e229]: Join the fun—an independent fan project made by Filipino DIVEs.
+    - 'button "Sound: Off" [ref=e230] [cursor=pointer]'
+    - generic [ref=e232]:
+      - group [ref=e233]:
+        - generic [ref=e234]: Username*
+        - textbox "Username" [ref=e235]:
+          - /placeholder: Username or email
+      - group [ref=e236]:
+        - generic [ref=e237]: Password*
+        - textbox "Password" [ref=e238]:
+          - /placeholder: Enter password
+      - button "Sign In" [ref=e239] [cursor=pointer]
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

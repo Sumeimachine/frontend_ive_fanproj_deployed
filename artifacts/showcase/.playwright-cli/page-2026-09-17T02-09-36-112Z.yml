@@ -1,0 +1,230 @@
+- generic [ref=e1]:
+  - generic [ref=e240]:
+    - link "Skip to content" [ref=e241] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e242]:
+      - generic [ref=e243]:
+        - link "DIVE INTO IVE home" [ref=e244] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=e245]: IVE•
+          - generic [ref=e246]:
+            - text: DIVE INTO IVE
+            - generic [ref=e247]: A Philippine fan community
+        - navigation "Main navigation" [ref=e248]:
+          - link "Home" [ref=e249] [cursor=pointer]:
+            - /url: /
+          - link "Members" [ref=e250] [cursor=pointer]:
+            - /url: /#members
+          - link "Photo gallery" [ref=e251] [cursor=pointer]:
+            - /url: /photo-gallery
+          - button "Explore" [active] [ref=e252] [cursor=pointer]
+        - button "SumiTest" [ref=e255] [cursor=pointer]:
+          - generic:
+            - generic [aria-hidden]: S
+            - generic: SumiTest
+    - main [ref=e256]:
+      - main [ref=e2111]:
+        - generic [ref=e2112]:
+          - generic [ref=e2113]:
+            - paragraph [ref=e2114]: IVE fan card game
+            - heading "Play, connect, and build your record" [level=1] [ref=e2115]
+            - paragraph [ref=e2116]: Your wins and losses are saved to your signed-in fan account. Multiplayer rooms still connect peer to peer.
+          - region [ref=e2117]:
+            - generic [ref=e2118]:
+              - generic [ref=e2119]:
+                - paragraph [ref=e2120]: Personal record
+                - heading "SumiTest" [level=2] [ref=e2121]
+              - button "Refresh stats" [ref=e2122] [cursor=pointer]
+            - generic [ref=e2123]:
+              - generic [ref=e2124]:
+                - paragraph [ref=e2125]: Games
+                - paragraph [ref=e2126]: "0"
+              - generic [ref=e2127]:
+                - paragraph [ref=e2128]: Wins
+                - paragraph [ref=e2129]: "0"
+              - generic [ref=e2130]:
+                - paragraph [ref=e2131]: Losses
+                - paragraph [ref=e2132]: "0"
+              - generic [ref=e2133]:
+                - paragraph [ref=e2134]: Win rate
+                - paragraph [ref=e2135]: 0.0%
+          - region "Card game table" [ref=e2136]:
+            - generic [ref=e2138]:
+              - generic [ref=e2139]:
+                - generic [ref=e2140]:
+                  - generic "IVE Night" [ref=e2141]:
+                    - generic [aria-hidden] [ref=e2143]: ✦
+                    - generic [ref=e2144]:
+                      - strong [ref=e2145]: IVE NIGHT
+                      - generic [ref=e2146]: BACKSTAGE PANIC
+                  - paragraph [ref=e2147]:
+                    - text: created by
+                    - strong [ref=e2148]: Sumimachines
+                    - text: from X
+                - navigation "Game information" [ref=e2149]:
+                  - button "How to play" [ref=e2150] [cursor=pointer]
+                  - button "Credits" [ref=e2151] [cursor=pointer]
+                  - link "Play now ↘" [ref=e2152] [cursor=pointer]:
+                    - /url: "#play"
+              - main [ref=e2153]:
+                - generic [ref=e2154]:
+                  - generic [ref=e2155]:
+                    - generic [ref=e2156]: IVE · DIVE EDITION
+                    - heading [level=2] [ref=e2159]:
+                      - text: BACKSTAGE
+                      - generic [ref=e2160]:
+                        - emphasis [ref=e2161]: PANIC
+                        - generic [aria-hidden] [ref=e2162]: ✦
+                    - paragraph [ref=e2163]: Luxury confidence, zero chill. One bad draw and it’s a LOVE DIVE into chaos. Read the room, protect your hand, and keep your spotlight when the stage goes sideways.
+                    - generic [ref=e2164]:
+                      - generic [ref=e2165]:
+                        - generic [ref=e2166]: 02–06
+                        - text: Total seats
+                      - generic [ref=e2167]:
+                        - generic [ref=e2168]: 15–25
+                        - text: Minutes
+                      - generic [ref=e2169]:
+                        - generic [ref=e2170]: "06"
+                        - text: Members
+                    - complementary "Your IVE Night record" [ref=e2171]:
+                      - generic [ref=e2172]: YOUR RECORD
+                      - strong [ref=e2173]: 0W · 0L
+                      - emphasis [ref=e2174]: 0 played
+                  - generic "IVE member cards" [ref=e2175]:
+                    - article [ref=e2178]:
+                      - img "Yujin of IVE at an April 2025 photo call." [ref=e2179]
+                      - generic [ref=e2181]: IVE · PORTRAIT EDIT
+                      - generic [aria-hidden] [ref=e2182]: "Y"
+                      - generic [ref=e2183]: Yujin
+                      - generic [ref=e2184]: Yujin pulled up. Your safe little hand is now a rumor.
+                    - article [ref=e2185]:
+                      - img "Gaeul of IVE at the Senka pop-up event in May 2026." [ref=e2186]
+                      - generic [ref=e2188]: IVE · PORTRAIT EDIT
+                      - generic [aria-hidden] [ref=e2189]: G
+                      - generic [ref=e2190]: Gaeul
+                      - generic [ref=e2191]: Two Gaeuls make one suspiciously stylish heist.
+                    - article [ref=e2192]:
+                      - img "Rei of IVE at a Valentino event in March 2026." [ref=e2193]
+                      - generic [ref=e2195]: IVE · PORTRAIT EDIT
+                      - generic [aria-hidden] [ref=e2196]: R
+                      - generic [ref=e2197]: Rei
+                      - generic [ref=e2198]: "Bias energy: immaculate. Motives: deeply questionable."
+                    - article [ref=e2199]:
+                      - img "Wonyoung of IVE at a W event in October 2025." [ref=e2200]
+                      - generic [ref=e2202]: IVE · PORTRAIT EDIT
+                      - generic [aria-hidden] [ref=e2203]: W
+                      - generic [ref=e2204]: Wonyoung
+                      - generic [ref=e2205]: Collect the pair. Collect somebody else’s card.
+                    - article [ref=e2206]:
+                      - img "Liz of IVE at a Tonymoly pop-up opening in July 2026." [ref=e2207]
+                      - generic [ref=e2209]: IVE · PORTRAIT EDIT
+                      - generic [aria-hidden] [ref=e2210]: L
+                      - generic [ref=e2211]: Liz
+                      - generic [ref=e2212]: Cute photocard. Extremely uncute combo.
+                    - article [ref=e2213]:
+                      - img "Leeseo of IVE at a Maje event in March 2026." [ref=e2214]
+                      - generic [ref=e2216]: IVE · PORTRAIT EDIT
+                      - generic [aria-hidden] [ref=e2217]: L
+                      - generic [ref=e2218]: Leeseo
+                      - generic [ref=e2219]: Serving visuals and mild strategic violence.
+                    - generic [ref=e2220]:
+                      - generic [aria-hidden] [ref=e2221]: ✦
+                      - strong [ref=e2222]: "6"
+                      - generic [ref=e2223]: MEMBERCARDS
+                  - generic [ref=e2225]:
+                    - generic [ref=e2226]:
+                      - generic [ref=e2228]: LIVE MULTIPLAYER
+                      - generic [ref=e2229]: 2–6 TOTAL
+                    - generic "Room type" [ref=e2230]:
+                      - button "Create room" [ref=e2231] [cursor=pointer]
+                      - button "Join room" [ref=e2232] [cursor=pointer]
+                    - generic [ref=e2233]:
+                      - group "Choose artist pack" [ref=e2234]:
+                        - radiogroup "Artist pack" [ref=e2236]:
+                          - radio "IVE 6" [checked] [ref=e2237] [cursor=pointer]:
+                            - generic [ref=e2239]: IVE
+                            - generic [ref=e2240]: "6"
+                        - paragraph [ref=e2241]:
+                          - strong [ref=e2242]: IVE
+                          - generic [ref=e2243]: Luxury confidence, zero chill. One bad draw and it’s a LOVE DIVE into chaos.
+                          - generic [ref=e2244]: "DIVE edition · 6 members · Photo: 티비텐 TV10 · CC BY 3.0"
+                      - button "Add an AI rival Start solo or mix bots with friends" [ref=e2245] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e2246]: AI
+                        - strong [ref=e2247]:
+                          - text: Add an AI rival
+                          - generic [ref=e2248]: Start solo or mix bots with friends
+                        - generic [aria-hidden] [ref=e2249]: +
+                      - generic [ref=e2250]:
+                        - generic [ref=e2251]: Your stage name
+                        - textbox "Your stage name" [ref=e2252]:
+                          - /placeholder: e.g. StageAce
+                          - text: SumiTest
+                      - button "Open backstage room" [ref=e2253] [cursor=pointer]:
+                        - generic [aria-hidden] [ref=e2255]: ↗
+                    - paragraph [ref=e2256]:
+                      - generic [ref=e2257]: ◌
+                      - text: Encrypted browser-to-browser play. AI decisions stay in the host browser.
+                    - button "FIRST SHOW? Lobby, room codes, AI & every card—explained" [ref=e2258] [cursor=pointer]:
+                      - generic [ref=e2259]: FIRST SHOW?
+                      - strong [ref=e2260]: Lobby, room codes, AI & every card—explained
+                      - generic [aria-hidden] [ref=e2261]: ↗
+                - generic [ref=e2263]:
+                  - generic [ref=e2264]: KEEP THE SPOTLIGHT
+                  - generic [aria-hidden] [ref=e2265]: ✦
+                  - generic [ref=e2266]: TRUST NO DRAW
+                  - generic [aria-hidden] [ref=e2267]: ✦
+                  - generic [ref=e2268]: KEEP THE SPOTLIGHT
+                  - generic [aria-hidden] [ref=e2269]: ✦
+                  - generic [ref=e2270]: TRUST NO DRAW
+                  - generic [aria-hidden] [ref=e2271]: ✦
+                - generic [ref=e2272]:
+                  - generic [ref=e2273]:
+                    - text: THE SETLIST
+                    - heading "Easy to learn. Deliciously tense." [level=2] [ref=e2274]: Easy to learn.Deliciously tense.
+                  - generic [ref=e2275]:
+                    - article [ref=e2276]:
+                      - generic [ref=e2277]: "01"
+                      - heading "Play" [level=3] [ref=e2278]
+                      - paragraph [ref=e2279]: Drop an action card, or pair matching members for one tiny, glamorous robbery.
+                    - article [ref=e2280]:
+                      - generic [ref=e2281]: "02"
+                      - heading "Draw" [level=3] [ref=e2282]
+                      - paragraph [ref=e2283]: Every turn ends with a draw. The deck smiles back. Suspiciously.
+                    - article [ref=e2284]:
+                      - generic [ref=e2285]: "03"
+                      - heading "Survive" [level=3] [ref=e2286]
+                      - paragraph [ref=e2287]: Stage Crash? Flash a Spotlight Pass or make the most dramatic exit of your career.
+                    - article [ref=e2288]:
+                      - generic [ref=e2289]: "04"
+                      - heading "Win" [level=3] [ref=e2290]
+                      - paragraph [ref=e2291]: Be the last star standing. Friendship can resume after the encore.
+              - generic [ref=e2292]:
+                - generic "IVE Night" [ref=e2293]:
+                  - generic [aria-hidden] [ref=e2295]: ✦
+                  - generic [ref=e2296]:
+                    - strong [ref=e2297]: IVE NIGHT
+                    - generic [ref=e2298]: BACKSTAGE PANIC
+                - paragraph [ref=e2299]: IVE DIVE edition. Unofficial, non-commercial fan-support project.
+    - contentinfo [ref=e438]:
+      - generic [ref=e439]:
+        - link "DIVE INTO IVE" [ref=e440] [cursor=pointer]:
+          - /url: /
+          - text: DIVE INTO IVE↗
+        - paragraph [ref=e441]: For the music. For the moments.For every DIVE.
+      - generic [ref=e442]:
+        - paragraph [ref=e443]: An independent, non-commercial fan project in the Philippines.Not affiliated with IVE or Starship Entertainment.
+        - navigation "Footer navigation" [ref=e444]:
+          - link "About us" [ref=e445] [cursor=pointer]:
+            - /url: /about
+          - link "Photo credits & gallery" [ref=e446] [cursor=pointer]:
+            - /url: /photo-gallery
+          - link "Fan events" [ref=e447] [cursor=pointer]:
+            - /url: /fan-events
+        - generic [ref=e448]: Made for DIVE ✦
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"

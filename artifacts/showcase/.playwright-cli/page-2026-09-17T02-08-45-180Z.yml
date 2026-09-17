@@ -1,0 +1,191 @@
+- generic [ref=e1]:
+  - generic [ref=e240]:
+    - link "Skip to content" [ref=e241] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e242]:
+      - generic [ref=e243]:
+        - link "DIVE INTO IVE home" [ref=e244] [cursor=pointer]:
+          - /url: /
+          - generic [aria-hidden] [ref=e245]: IVE•
+          - generic [ref=e246]:
+            - text: DIVE INTO IVE
+            - generic [ref=e247]: A Philippine fan community
+        - navigation "Main navigation" [ref=e248]:
+          - link "Home" [ref=e249] [cursor=pointer]:
+            - /url: /
+          - link "Members" [ref=e250] [cursor=pointer]:
+            - /url: /#members
+          - link "Photo gallery" [ref=e251] [cursor=pointer]:
+            - /url: /photo-gallery
+          - button "Explore" [expanded] [ref=e252] [cursor=pointer]
+          - menu [ref=e450]:
+            - generic [ref=e451]: Your DIVE world
+            - menuitem "About us" [active] [ref=e452] [cursor=pointer]
+            - menuitem "Dashboard" [ref=e453] [cursor=pointer]
+            - menuitem "Quiz leaderboards" [ref=e454] [cursor=pointer]
+            - menuitem "Fan events" [ref=e455] [cursor=pointer]
+            - menuitem "Fan pages" [ref=e456] [cursor=pointer]
+            - menuitem "Daily quiz" [ref=e457] [cursor=pointer]
+            - menuitem "Card game" [ref=e458] [cursor=pointer]
+            - separator [ref=e459]
+            - generic [ref=e460]: Manage
+            - menuitem "Content editor" [ref=e461] [cursor=pointer]
+            - menuitem "Quiz manager" [ref=e462] [cursor=pointer]
+            - menuitem "Media library" [ref=e463] [cursor=pointer]
+        - button "SumiTest" [ref=e255] [cursor=pointer]:
+          - generic:
+            - generic [aria-hidden]: S
+            - generic: SumiTest
+    - main [ref=e256]:
+      - generic [ref=e257]:
+        - region [ref=e258]:
+          - generic [ref=e259]:
+            - generic [ref=e260]: A home for Philippine DIVEs
+            - button "Pause motion" [ref=e261] [cursor=pointer]
+          - generic [ref=e266]:
+            - generic [ref=e267]:
+              - heading "ALL IN. ALL IVE." [level=1] [ref=e268]: ALL IN.ALL IVE.
+              - paragraph [ref=e269]: For the songs on repeat.The moments we keep.And the six who bring us together.
+              - generic [ref=e270]:
+                - link "Meet IVE" [ref=e271] [cursor=pointer]:
+                  - /url: /#members
+                - link "Explore the gallery" [ref=e274] [cursor=pointer]:
+                  - /url: /photo-gallery
+            - figure "Yujin & Gaeul IVE Switch Manila Fansign · July 12, 2024 Photo © GrantSor · Original post Used with permission" [ref=e277]:
+              - img "Yujin and Gaeul posing back to back with red roses at the IVE Switch Manila fansign." [ref=e279]
+              - generic [ref=e280]:
+                - generic [ref=e281]:
+                  - strong [ref=e282]: Yujin & Gaeul
+                  - text: IVE Switch Manila Fansign · July 12, 2024
+                - link "Photo © GrantSor · Original post" [ref=e283] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1834259193140052360
+                - generic [ref=e289]: Used with permission
+          - generic [ref=e290]:
+            - generic [ref=e291]: Music. Moments. Community.
+            - link "Keep diving" [ref=e292] [cursor=pointer]:
+              - /url: "#members"
+        - region [ref=e295]:
+          - generic [ref=e296]:
+            - heading "SIX STARS. ONE IVE." [level=2] [ref=e297]: SIX STARS.ONE IVE.
+            - paragraph [ref=e298]: Get to know the members.Find the details behind your favorite moments.
+          - generic [ref=e299]:
+            - article [ref=e300]:
+              - link "Explore Yujin's profile" [ref=e301] [cursor=pointer]:
+                - /url: /member/yujin
+                - img "Yujin" [ref=e304]
+                - heading "Yujin" [level=3] [ref=e306]
+                - paragraph [ref=e309]: Leader • Vocalist • Dancer • Charisma Core
+            - article [ref=e310]:
+              - link "Explore Wonyoung's profile" [ref=e311] [cursor=pointer]:
+                - /url: /member/wonyoung
+                - img "Wonyoung" [ref=e314]
+                - heading "Wonyoung" [level=3] [ref=e316]
+                - paragraph [ref=e319]: Vocalist • Visual • Center • Elegance Icon
+            - article [ref=e320]:
+              - link "Explore Liz's profile" [ref=e321] [cursor=pointer]:
+                - /url: /member/liz
+                - img "Liz" [ref=e324]
+                - heading "Liz" [level=3] [ref=e326]
+                - paragraph [ref=e329]: Main Vocal • Honey Tone
+            - article [ref=e330]:
+              - link "Explore Gaeul's profile" [ref=e331] [cursor=pointer]:
+                - /url: /member/gaeul
+                - img "Gaeul" [ref=e334]
+                - heading "Gaeul" [level=3] [ref=e336]
+                - paragraph [ref=e339]: Main Dancer • Rapper • Chic Flow
+            - article [ref=e340]:
+              - link "Explore Rei's profile" [ref=e341] [cursor=pointer]:
+                - /url: /member/rei
+                - img "Rei" [ref=e344]
+                - heading "Rei" [level=3] [ref=e346]
+                - paragraph [ref=e349]: Main Rapper • Sub Vocalist • Creative Spark
+            - article [ref=e350]:
+              - link "Explore Leeseo's profile" [ref=e351] [cursor=pointer]:
+                - /url: /member/leeseo
+                - img "Leeseo" [ref=e354]
+                - heading "Leeseo" [level=3] [ref=e356]
+                - paragraph [ref=e359]: Maknae • Visual • Bright Power
+          - generic [ref=e360]:
+            - paragraph [ref=e361]: A different way to meet the members.
+            - button "Enter the 3D universe" [ref=e362] [cursor=pointer]
+        - region [ref=e365]:
+          - generic [ref=e366]:
+            - heading "CLOSE TO THE MOMENT." [level=2] [ref=e367]: CLOSE TOTHE MOMENT.
+            - paragraph [ref=e368]: Small gestures. Familiar faces. Memories from Manila, captured by a fellow DIVE.
+            - paragraph [ref=e369]:
+              - text: Through the lens of
+              - link "@GrantSor" [ref=e370] [cursor=pointer]:
+                - /url: https://x.com/GrantSor
+            - link "Open the photo gallery" [ref=e376] [cursor=pointer]:
+              - /url: /photo-gallery
+          - generic [ref=e379]:
+            - figure "Wonyoung © GrantSor · Original post Used with permission" [ref=e380]:
+              - link "Explore the gallery featuring Wonyoung" [ref=e381] [cursor=pointer]:
+                - /url: /photo-gallery
+                - img "Wonyoung wearing a red flower crown at the IVE Switch Manila fansign." [ref=e382]
+              - generic [ref=e383]:
+                - generic [ref=e384]: Wonyoung
+                - link "© GrantSor · Original post" [ref=e385] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1813008144957907421
+                - generic [ref=e391]: Used with permission
+            - figure "Rei © GrantSor · Original post Used with permission" [ref=e392]:
+              - link "Explore the gallery featuring Rei" [ref=e393] [cursor=pointer]:
+                - /url: /photo-gallery
+                - img "Rei posing with two peace signs beside her face at the IVE Switch Manila fansign." [ref=e394]
+              - generic [ref=e395]:
+                - generic [ref=e396]: Rei
+                - link "© GrantSor · Original post" [ref=e397] [cursor=pointer]:
+                  - /url: https://x.com/GrantSor/status/1817003216644767860
+                - generic [ref=e403]: Used with permission
+        - region [ref=e404]:
+          - generic [ref=e405]:
+            - heading "STAY IN IVE’S WORLD." [level=2] [ref=e406]: STAY INIVE’S WORLD.
+            - paragraph [ref=e407]: A little closer, every day.Explore more of your fan community.
+          - generic [ref=e408]:
+            - link [ref=e409] [cursor=pointer]:
+              - /url: /dashboard
+              - heading "Music, in numbers." [level=3] [ref=e410]
+              - paragraph [ref=e411]: Explore IVE’s YouTube momentum.
+              - generic [ref=e412]: View the dashboard
+            - link [ref=e415] [cursor=pointer]:
+              - /url: /quiz/daily
+              - heading "Make it a daily thing." [level=3] [ref=e416]
+              - paragraph [ref=e417]: Put your IVE knowledge to the test.
+              - generic [ref=e418]: Play the daily quiz
+            - link [ref=e421] [cursor=pointer]:
+              - /url: /fan-events
+              - heading "Find your fellow DIVEs." [level=3] [ref=e422]
+              - paragraph [ref=e423]: Discover community fan events.
+              - generic [ref=e424]: Explore fan events
+            - link [ref=e427] [cursor=pointer]:
+              - /url: /card-game
+              - heading "Your next favorite card." [level=3] [ref=e428]
+              - paragraph [ref=e429]: Step into the IVE card game.
+              - generic [ref=e430]: Play the card game
+          - generic [ref=e433]:
+            - generic [ref=e434]: Always IVE.Always DIVE.
+            - link "About this fan project" [ref=e435] [cursor=pointer]:
+              - /url: /about
+    - contentinfo [ref=e438]:
+      - generic [ref=e439]:
+        - link "DIVE INTO IVE" [ref=e440] [cursor=pointer]:
+          - /url: /
+          - text: DIVE INTO IVE↗
+        - paragraph [ref=e441]: For the music. For the moments.For every DIVE.
+      - generic [ref=e442]:
+        - paragraph [ref=e443]: An independent, non-commercial fan project in the Philippines.Not affiliated with IVE or Starship Entertainment.
+        - navigation "Footer navigation" [ref=e444]:
+          - link "About us" [ref=e445] [cursor=pointer]:
+            - /url: /about
+          - link "Photo credits & gallery" [ref=e446] [cursor=pointer]:
+            - /url: /photo-gallery
+          - link "Fan events" [ref=e447] [cursor=pointer]:
+            - /url: /fan-events
+        - generic [ref=e448]: Made for DIVE ✦
+  - generic:
+    - region "Notifications-top"
+    - region "Notifications-top-left"
+    - region "Notifications-top-right"
+    - region "Notifications-bottom-left"
+    - region "Notifications-bottom"
+    - region "Notifications-bottom-right"
