@@ -231,8 +231,8 @@
       },
       {
         "name": "stage-light",
-        "value": "14s ease-in-out infinite alternate",
-        "purpose": "Very low-opacity ambient stage beams controlled by Pause motion, reduced-motion and reduced-data preferences."
+        "value": "9s / 11s cubic-bezier(0.45,0,0.55,1) infinite alternate",
+        "purpose": "Visible, soft-edged pink stage beams with separate sweeping paths and responsive sizing. Pause freezes the beams in place and resume continues their animation; reduced-motion and reduced-data preferences disable movement."
       }
     ],
     "breakpoints": [

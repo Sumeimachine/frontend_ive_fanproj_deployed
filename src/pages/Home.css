@@ -19,8 +19,9 @@
 .cinema-motion-bars i { display: block; width: 2px; height: 5px; background: var(--stage-accent); }
 .cinema-motion-bars i:nth-child(2) { height: 13px; }
 .cinema-motion-bars i:nth-child(3) { height: 9px; }
-.cinema-motion .cinema-motion-bars i { animation: stage-signal 1.6s ease-in-out infinite alternate; }
-.cinema-motion .cinema-motion-bars i:nth-child(2) { animation-delay: -0.8s; }
+.cinema-motion-bars i { animation: stage-signal 1.6s ease-in-out infinite alternate; animation-play-state: paused; }
+.cinema-motion-bars i:nth-child(2) { animation-delay: -0.8s; }
+.cinema-motion .cinema-motion-bars i { animation-play-state: running; }
 .cinema-hero-grid { display: grid; grid-template-columns: 0.9fr 1.35fr; align-items: center; gap: 4vw; min-height: min(750px, 83dvh); padding: 45px 0 64px; }
 .cinema-hero-copy { position: relative; z-index: 1; }
 .cinema-hero h1 { font-size: clamp(5rem, 9.2vw, 9.5rem); line-height: 1.02; margin: 0 0 30px; }
@@ -46,10 +47,29 @@
 .cinema-hero-bottom { padding: 22px 0; border-top: 1px solid var(--stage-line); }
 .cinema-hero-bottom a { display: inline-flex; align-items: center; gap: 16px; color: #f6f3f5; }
 .cinema-beams { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-.cinema-beams i { position: absolute; width: 38%; height: 140%; top: -45%; left: 35%; background: linear-gradient(90deg, transparent, rgba(239,156,194,0.035), transparent); transform: rotate(-26deg); transform-origin: top; }
-.cinema-beams i + i { left: 75%; transform: rotate(25deg); opacity: 0.8; }
-.cinema-motion .cinema-beams i { animation: stage-light 14s ease-in-out infinite alternate; }
-.cinema-motion .cinema-beams i + i { animation-delay: -7s; animation-direction: alternate-reverse; }
+.cinema-beams i {
+  position: absolute;
+  width: 56%;
+  height: 165%;
+  top: -40%;
+  left: -13%;
+  background: linear-gradient(90deg, transparent 5%, rgba(239,156,194,.06) 28%, rgba(239,156,194,.24) 50%, rgba(239,156,194,.08) 68%, transparent 95%);
+  mask-image: conic-gradient(from 155deg at 50% 0, transparent, #000 12deg, #000 38deg, transparent 50deg), linear-gradient(to bottom, transparent, #000 24%, #000 65%, transparent);
+  mask-composite: intersect;
+  transform-origin: 50% 0;
+  transform: rotate(-22deg);
+  animation: stage-light-left 9s cubic-bezier(.45,0,.55,1) infinite alternate;
+  animation-play-state: paused;
+}
+.cinema-beams i + i {
+  left: 38%;
+  background: linear-gradient(90deg, transparent 5%, rgba(255,220,238,.04) 28%, rgba(255,220,238,.17) 50%, rgba(239,156,194,.06) 68%, transparent 95%);
+  transform: rotate(24deg);
+  animation-name: stage-light-right;
+  animation-duration: 11s;
+  animation-delay: -5s;
+}
+.cinema-motion .cinema-beams i { animation-play-state: running; }
 .cinema-section { max-width: 1600px; margin: 0 auto; padding: 112px 5vw; }
 .cinema-section h2 { font-size: clamp(3rem, 5vw, 5.5rem); line-height: 1.13; }
 .cinema-section h2 span { color: var(--stage-muted); }
@@ -96,7 +116,8 @@
   .cinema-member a:hover .cinema-member-name svg { transform: translateX(4px); color: var(--stage-accent); }
   .cinema-experience:hover { background: #131116; }
 }
-@keyframes stage-light { from { transform: rotate(-25deg); } to { transform: rotate(5deg); } }
+@keyframes stage-light-left { from { transform: rotate(-22deg); } to { transform: rotate(24deg); } }
+@keyframes stage-light-right { from { transform: rotate(24deg); } to { transform: rotate(-28deg); } }
 @keyframes stage-signal { from { transform: scaleY(0.5); } to { transform: scaleY(1); } }
 @media (min-width:1600px) { .cinema-hero-grid { gap: 80px; } }
 @media (max-width:1000px) {
@@ -111,6 +132,8 @@
   .cinema-experience > span { grid-column: 2; }
 }
 @media (max-width:800px) {
+  .cinema-beams i { width: 100%; height: 125%; top: -20%; left: -42%; }
+  .cinema-beams i + i { left: 10%; }
   .cinema-hero-grid { grid-template-columns: 1fr; gap: 40px; padding-top: 36px; padding-bottom: 36px; min-height: auto; }
   .cinema-hero h1 { font-size: clamp(78px,16vw,132px); }
   .cinema-hero-copy > p { font-size: 15px; }
@@ -144,7 +167,7 @@
   .cinema-experience > span { grid-column: auto; margin-top: 4px; }
   .cinema-closing { padding-top: 65px; flex-direction: column; align-items: flex-start; }
 }
-.cinema-still .cinema-beams i, .cinema-still .cinema-motion-bars i { animation: none; }
+.cinema-still .cinema-beams i, .cinema-still .cinema-motion-bars i { animation-play-state: paused; }
 .cinema-still .cinema-member-image img, .cinema-still .cinema-experience { transition: none; }
 @media (prefers-reduced-motion:reduce) {
   .cinema-home *, .cinema-home *::before, .cinema-home *::after { animation: none !important; transition: none !important; scroll-behavior: auto; }
